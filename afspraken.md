@@ -7,7 +7,7 @@ Meetings minstens 1 dag op voorhand communiceren. Iedereen is meestal beschikbaa
 
 ## Manier van contact
 * **Discord**: Algemene communicatie
-* **Github Issues**: Updates status
+* **Github Issues**: Updates status features
 
 ## Taken
 
