@@ -17,4 +17,4 @@ Groepsleden dienen andere groepsleden minstens 1 dag op voorhand te informeren o
 | Datum | Doel | Aanwezigen |
 |-------|------|------------|
 | 10/10 | * Eerste kennismaking <br>* backlog maken <br>* brainstormen eerste ideëen | Volledige groep |
-| 14/10 | * Afspraken vastleggen <br>* Finale projectkeuzes maken <br>* Pitches verdelen | Volledige groep zonder Safwaan |
+| 14/10 | * Afspraken vastleggen <br>* Finale projectkeuzes maken <br>* Pitches verdelen | Volledige |
