@@ -6,7 +6,8 @@ Meetings minstens 1 dag op voorhand communiceren. Iedereen is meestal beschikbaa
 **Calvin:** 5 December
 
 ## Manier van contact
-Discord
+* **Discord**: Algemene communicatie
+* **Github Issues**: Updates status
 
 ## Taken
 
