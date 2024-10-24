@@ -1,0 +1,2 @@
+## Technologie
+Voor de GUI zullen we gebruik maken van Qt 6.8, deze zullen we in C++ programmeren. Alle online communicatie zal via een webserver lopen die we met FastAPI versie 0.115.3 maken in Python, respectievelijk. Via deze webserver zullen we met onze MySQL database communiceren.
