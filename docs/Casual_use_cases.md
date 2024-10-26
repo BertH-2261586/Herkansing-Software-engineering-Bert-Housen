@@ -63,7 +63,7 @@ Als de vriend nog niet in je vriendenlijst zit kan die worden toegevoegd worden 
 <br>
 
 **Use Case:** Maak groep aan<br>
-**Actoren:** Leerkracht<br>
+**Actoren:** Docent <br>
 **Beschrijving:**
 * <u>Hoofdscenario:</u><br>
 De leerkracht heeft zijn examen/vragenset gemaakt en wil deze uiteindelijk delen aan de studenten. Dus hij maakt een groep aan. Hier kan hij andere gebruikers voor uitnodigen.
@@ -71,7 +71,7 @@ De leerkracht heeft zijn examen/vragenset gemaakt en wil deze uiteindelijk delen
 <br>
 
 **Use Case:** Voeg leden toe aan groep<br>
-**Actoren:** Leerkracht <br>
+**Actoren:** Docent <br>
 **Beschrijving:**
 * <u>Hoofdscenario:</u><br>
 De leerkracht heeft ondertussen een groep aangemaakt en wenst leden toe te voegen, de leerkracht kan gebruikers individueel uitnodigen aan de hand van hun id/naam.
@@ -81,7 +81,7 @@ Indien de leerkracht de id’s en namen van de gebruikers niet heeft of het een 
 <br>
 
 **Use Case:** Zet vragenset of oefenexamen in groep<br>
-**Actoren:** Leerkracht<br>
+**Actoren:** Docent <br>
 **Beschrijving:**
 * <u>Hoofdscenario:</u><br>
 De leerkracht heeft zijn examen of vragenset gemaakt en wil deze uiteindelijk delen aan de studenten. De leerkracht drukt dan op de share knop van wat hij/zij wil delen en selecteert een groep om het mee te delen.
