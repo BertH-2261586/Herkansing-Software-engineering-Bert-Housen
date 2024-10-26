@@ -13,9 +13,9 @@ Indien de gebruiker een invulvraag selecteert kan de gebruiker een variabele sel
 **Actoren:** Student, Docent<br>
 **Beschrijving:**
 * <u>Hoofdscenario:</u><br>
-De student of leerkracht wilt vragen aanmaken dus dient eerst een vragenset aan te maken. Op het hoofdscherm selecteert de gebruiker de optie om een nieuwe vragenset aan te maken en geeft de gebruiker een naam in voor deze vragenset. De gebruiker drukt op confirm om de vragenset aan te maken.
+De student of leerkracht wilt vragen aanmaken dus dient eerst een vragenset aan te maken. Op het hoofdscherm selecteert de gebruiker de optie om een nieuwe vragenset aan te maken en geeft de gebruiker een naam in voor deze vragenset.
 * <u>Alternatieve scenario's:</u><br>
-De gebruiker vindt de default kleur van de vragenset niet mooi en kiest een andere kleur erna drukt de gebruiker op confirm om de vragenset aan te maken.
+De gebruiker vindt de default kleur van de vragenset niet mooi en kiest een andere kleur.
 
 <br>
 
@@ -70,7 +70,7 @@ De leerkracht heeft zijn examen/vragenset gemaakt en wil deze uiteindelijk delen
 
 <br>
 
-**Use Case:** Voeg leden toe aan groep<br>
+**Use Case:** Nodig gebruikers uit tot groep <br>
 **Actoren:** Docent <br>
 **Beschrijving:**
 * <u>Hoofdscenario:</u><br>
