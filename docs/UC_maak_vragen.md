@@ -39,7 +39,7 @@
 5c. Als de vraag een invulvraag is: 
 1. de gebruiker vult de “Vraag” en “Antwoord” velden in. In het vraag veld kan de gebruiker verschillende variabelen invoegen voor een meer dynamisch antwoord. Je kan hier dan een bereik aan geven, zodat het systeem tijdens een ondervraging hier dynamisch een waarde aan geeft.
 
-5c. Gebruiker slaat variabele elementen over:
+5d. Gebruiker slaat variabele elementen over:
 1. Het systeem toont een foutmelding en vraagt de gebruiker om de ontbrekende elementen in te vullen.
 
 6*. Ongeldige of Onvolledige Invoer:
