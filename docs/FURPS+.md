@@ -1,13 +1,52 @@
 ### Functionality
-Het systeem moet:
 <ol>
-    <li>vragen kunnen creëren</li>
-    <li>vragen delen</li>
-    <li>een keuze maken over welke vraag als volgende in de ondervraging komt op basis van vorige prestaties</li>
-    <li>toelaten om ondervragingen te customizen(aantal vragen, tijd per vraag, ...)</li>
-    <li>oefenexamens kunnen genereren</li>
-    <li>accounts kunnen (creëren, beheren)</li>
-    <li>lokaal kunnen opslaan en online indien mogelijk(ingelogd met actieve internetverbinding)</li>
+    <li> Vragen: </li>
+        <ol type="i">
+            <li> Kan een vraag maken</li>
+            <li> Je kan kiezen wat voor soort vraag je wilt maken (meerkeuze, invulvraag, flashcard)</li>
+            <li> Kan afbeeldingen, audio, videos toevoegen aan vragen als hulpmiddel</li>
+            <li> Kan vragen delen met vrienden </li>
+        </ol>
+    <li> Ondervragingen: </li>
+        <ol>
+            <li> Je kan een ondervraging maken op basis van geselecteerde vragen </li>
+            <li> Je kan ze customizen </li>
+            <ol type="a">
+                <li> Je kan een tijd per vraag instellen </li>
+                <li> Het aantal vragen kan gekozen worden </li>
+            </ol>
+            <li> Totaaltijd Dat je bezig bent wordt bijgehouden </li>
+            <li> Een keuze maken over welke vraag als volgende in de ondervraging komt op basis van vorige prestaties, de voormalig fout ingevulde vragen worden herhaald.</li>
+        </ol>
+    <li>Oefenexamens:</li>
+        <ol  type="i">
+            <li> Je kan een proefexamen maken op basis van geselecteerde vragen.</li>
+            <li> Je kan deze customizen </li>
+                <ol type="a">
+                    <li> Het aantal vragen </li>
+                    <li> Je kan een maximum totaaltijd instellen </li>
+                </ol>
+            <li> Neemt een subset van geselecteerde vragen zonder rekening te houden met prestaties </li>
+        </ol>
+    <li> Accounts: </li>
+        <ol type="i"> 
+            <li> Kan accounts aanmaken en beheren </li>
+                <ol type="a">
+                    <li> Docent account </li>
+                    <li> Student account </li>
+                </ol>
+        </ol>
+    <li> Groepen: </li>
+        <ol type="i">
+            <li> Een docent kan een groep aanmaken </li>
+            <li> Kan vragen delen in de groep </li>
+            <li> De docent ontvangt info over hoe de studenten de ondervragingen gemaakt hebben </li>
+        </ol>
+    <li> Opslaan van vragen: </li>
+        <ol type="i">
+            <li> Lokaal opslaan </li>
+            <li> Indien de gebruiker ingelogd is, dan kan de gebruiker online een back-up hiervan op de server opslaan </li>
+        </ol>
 </ol>
 
 ### Usability

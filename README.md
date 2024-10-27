@@ -28,6 +28,8 @@
 
 ### Use cases
 
+[Link](docs/UC_maak_vragen.md) naar de fully dressed use case "Maak vragen"
+[Link](docs/UC_doorloop_vragen.md) naar de fully dressed use case "doorloop vragen"
 [Link](docs/Casual_use_cases.md) naar de pagina van alle casual use cases
 
 </details>
