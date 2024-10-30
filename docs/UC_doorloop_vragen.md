@@ -45,11 +45,11 @@ Herhaal deze stappen totdat je alle vragen hebt beantwoord.
 2. De gebruiker bevestigt de timer.
 3. Het systeem stelt de timer in.
 
-1a. De student is bezig met een proefexamen:
+1b. De student is bezig met een proefexamen:
 1. De gebruiker kan tussen vragen navigeren naar eigen wil (vooruit, teruggaan, etc. zoals in een echt examen).
 2. Na het beantwoorden van alle vragen beeindigt de gebruiker de ondervraging.
 
-1b. De gebruiker stelt een tijdslimiet in voor het proefexamen:
+1c. De gebruiker stelt een tijdslimiet in voor het proefexamen:
 1. Het systeem vermeld aan de gebruiker dat de ingegeven timer voor het hele proefexamen telt.
 2. De gebruiker bevestigt de timer.
 3. Het systeem stelt de timer in.
