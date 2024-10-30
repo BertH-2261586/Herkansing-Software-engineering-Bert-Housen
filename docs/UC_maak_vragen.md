@@ -42,10 +42,10 @@
 5d. Gebruiker slaat variabele elementen over:
 1. Het systeem toont een foutmelding en vraagt de gebruiker om de ontbrekende elementen in te vullen.
 
-6*. Ongeldige of Onvolledige Invoer:
+6a. Ongeldige of Onvolledige Invoer:
 1. Het systeem toont een foutmelding en vraagt de gebruiker om de ontbrekende of ongeldige velden aan te passen.
 
-7*. De gebruiker is offline:
+7a. De gebruiker is offline:
 1. De gebruiker kan de vraag dan alleen lokaal opslaan.
 
 9a. Opslagfout (Bv. netwerkinstabiliteit tijdens het opslaan):
