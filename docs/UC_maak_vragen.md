@@ -59,3 +59,71 @@
 
 ## Systeem Sequentie Diagram
 ![Systeem Sequentie Diagram](./Images/SSD_MaakVraag.png)
+
+## Contracten
+### **Naam:** Open vragenset<br/>
+**Cross References:** 
+* **Use cases:** Maak vraag<br/>
+* **SSD’s:** Maak vraag
+  
+**Pre-condities:** Er bestaat een vragenset<br/>
+**Post-condities:** 
+* **Instance creation:** GUI vragenset werd getoond<br/>
+
+---
+
+### **Naam:** Begin aanmaak nieuwe vraag<br/>
+**Cross References:** 
+* **Use cases:** Maak vraag<br/>
+* **SSD’s:** Maak vraag
+  
+**Pre-condities:** Vragenset dient geopend te zijn<br/>
+**Post-condities:** 
+* **Instance creation:** GUI vraag aanmaken werd getoond<br/>
+
+---
+
+### **Naam:** Selecteer type vraag<br/>
+**Cross References:**
+* **Use cases:** Maak vraag<br/>
+* **SSD’s:** Maak vraag
+  
+**Pre-condities:** GUI vraag aanmaken dient geopend te zijn<br/>
+**Post-condities:** 
+* **Attribute modification:** Type vraag werd bepaald<br/>
+* **Attribute modification:** GUI werd aangepast naar correct antwoordformaat<br/>
+
+---
+
+### **Naam:** Gebruiker vult gegevens vraag in<br/>
+**Cross References:** 
+* **Use cases:** Maak vraag<br/>
+* **SSD’s:** Maak vraag
+  
+**Pre-condities:** GUI vraag aanmaken dient geopend te zijn<br/>
+**Post-condities:** 
+* **Attribute modification:** Antwoord en vraag werd bepaald<br/>
+
+---
+
+### **Naam:** Kies opslagmethode<br/>
+**Cross References:** 
+* **Use cases:** Maak vraag<br/>
+* **SSD’s:** Maak vraag
+  
+**Pre-condities:** GUI vraag aanmaken dient geopend te zijn<br/>
+**Post-condities:** 
+* **Attribute modification:** Opslag methode werd bepaald<br/>
+
+---
+
+### **Naam:** Sla vraag op<br/>
+**Cross References:** 
+* **Use cases:** Maak vraag<br/>
+* **SSD’s:** Maak vraag
+  
+**Pre-condities:** GUI vraag aanmaken dient geopend te zijn<br/>
+**Post-condities:** 
+* **Instance creation:** Vraag werd opgeslagen<br/>
+* **Association formed:** Wordt geconnecteerd met een vragenset<br/>
+* **Association formed:** Nodige files worden gelinkt (fotos, videos, etc.)<br/>
