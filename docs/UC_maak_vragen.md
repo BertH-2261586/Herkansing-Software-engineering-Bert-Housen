@@ -56,3 +56,6 @@
 **Technology and Data Variations List:** Geen
 
 **Frequency of Occurences:** Dit wordt redelijk frequent uitgevoerd door studenten en docenten die vragen willen maken om te willen leren/delen.
+
+## Systeem Sequentie Diagram
+![Systeem Sequentie Diagram](./Images/SSD_MaakVraag.png)
