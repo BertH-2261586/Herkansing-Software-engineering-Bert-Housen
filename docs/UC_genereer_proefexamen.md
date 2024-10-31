@@ -52,3 +52,63 @@
 
 ## Systeem Sequentie Diagram
 ![Systeem Sequentie Diagram](./Images/SSD_genereer_proefexamen.png)
+
+## Contracten
+
+### **Naam:** Open proefexamen generator
+
+**Cross References:** 
+* **Use cases:** Genereer proefexamen<br/>
+* **SSD’s:** Genereer proefexamen
+  
+**Pre-condities:** Geen
+
+**Post-condities:** 
+* **Instance creation:** GUI generator proefexamen wordt getoond
+
+---
+
+### **Naam:** Selecteer vragenset
+
+**Cross References:** 
+* **Use cases:** Genereer proefexamen<br/>
+* **SSD’s:** Genereer proefexamen
+  
+**Pre-condities:** 
+* GUI vragenset aanmaken dient geopend te zijn.<br/>
+* De gebruiker dient minstens 1 vragenset te hebben die bestaat uit minstens 1 vraag
+
+**Post-condities:** 
+* **Attribute modification:** Geselecteerde vragensets worden ingesteld.
+
+---
+
+### **Naam:** Stel instellingen in
+
+**Cross References:** 
+* **Use cases:** Genereer proefexamen<br/>
+* **SSD’s:** Genereer proefexamen
+  
+**Pre-condities:** 
+* GUI genereer proefexamen dient geopend te zijn.
+
+**Post-condities:** 
+* **Attribute modification:** tijd en aantal vragen worden ingesteld.
+
+---
+
+### **Naam:** Selecteer een optie
+
+**Cross References:** 
+* **Use cases:** Genereer proefexamen, Doorloop vragen<br/>
+* **SSD’s:** Genereer proefexamen
+  
+**Pre-condities:** 
+* GUI genereer proefexamen dient geopend te zijn.
+
+**Post-condities:** 
+* Indien proefexamen wordt opgeslagen
+    * **Instance creation:** Proefexamen wordt opgeslagen.
+* Indien proefexamen meteen wordt gemaakt
+    * **Instance creation:** Er wordt een proefexamen ondervraging gestart. Zie “Doorloop vragen” Use Case.
+
