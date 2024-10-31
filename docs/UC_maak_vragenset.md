@@ -41,3 +41,39 @@
 
 ## Systeem Sequentie Diagram
 ![Systeem Sequentie Diagram](./Images/SSD_MaakVragenset.png)
+
+## Contracten
+
+### **Naam:** Begin aanmaak nieuwe vragenset<br/>
+**Cross References:** 
+* **Use cases:** Maak vragenset<br/>
+* **SSD’s:** Maak vragenset
+  
+**Pre-condities:** Geen<br/>
+**Post-condities:** 
+* **Instance creation:** GUI vragenset aanmaken wordt getoond.<br/>
+
+---
+
+### **Naam:** Gebruiker vult gegevens vragenset in<br/>
+**Cross References:** 
+* **Use cases:** Maak vragenset<br/>
+* **SSD’s:** Maak vragenset
+  
+**Pre-condities:** GUI vragenset aanmaken dient geopend te zijn.<br/>
+**Post-condities:** 
+* **Attribute modification:** Naam en kleur worden bepaald.<br/>
+
+---
+
+### **Naam:** Sla vragenset op<br/>
+**Cross References:** 
+* **Use cases:** Maak vragenset<br/>
+* **SSD’s:** Maak vragenset
+  
+**Pre-condities:** 
+* GUI vragenset aanmaken dient geopend te zijn.<br/>
+* Ingegeven velden dienen correct te zijn.<br\>
+
+**Post-condities:** 
+* **Instance creation:** Vraag wordt opgeslagen.<br/>
