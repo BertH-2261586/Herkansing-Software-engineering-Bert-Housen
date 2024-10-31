@@ -28,7 +28,7 @@ Herhaal deze stappen totdat je alle vragen hebt beantwoord.
 7. Systeem geeft algemeen feedback over beantwoorde vragen
 8. De gebruiker sluit de ondervraging af
 
-**Extensions:**
+**Uitbreidingen (Alternatieve Stromen):**
 
 *a. De ingestelde timer voor het proefexamen loopt af:
 1. Het systeem stopt het proefexamen
