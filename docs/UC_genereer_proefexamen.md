@@ -33,7 +33,7 @@
 2. Het systeem slaat het proefexamen op in de database.
 3. Bij succesvolle opslag ontvangt de gebruiker een bevestiging.
 
-8b. De gebruiker kiest om het proefexamen:
+8b. De gebruiker kiest om het proefexamen te maken:
 1. De gebruiker begint deze dan te maken
 
 5a. De gebruiker laat een van de instelling velden open:
