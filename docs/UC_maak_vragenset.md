@@ -1,4 +1,4 @@
-# Fully dressed use case maak vragenset
+## Fully dressed use case
 **Use case:** Maak vragenset
 
 **Scope:** Offline deel van Leerhulpmiddel
@@ -39,7 +39,7 @@
 
 **Frequency of Occurences:** Dit wordt zelden gebruikt. Als de gebruiker initieel al zijn vragensets heeft gemaakt zal hij zelden een nieuwe maken.
 
-## Systeem Sequentie Diagram
+## Systeemsequentiediagram
 ![Systeem Sequentie Diagram](./Images/SSD_MaakVragenset.png)
 
 ## Contracten
@@ -77,3 +77,8 @@
 
 **Post-condities:** 
 * **Instance creation:** Vraag wordt opgeslagen.<br/>
+
+## UML Diagrammen ontwerp
+![Open Vragenset sequentie diagram](./Images/Open_Vragenset.png)
+![Sla Vragenset Op sequentie diagram](./Images/Sla_Vraag_Op.png)
+![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)
