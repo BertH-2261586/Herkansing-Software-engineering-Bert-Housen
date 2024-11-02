@@ -1,11 +1,11 @@
 #include "Flashcard.h"
 
-Flashcard::Flashcard(string name, string question, string answer) : Question(name), m_question(question), m_answer(answer) {}
+Flashcard::Flashcard(QString name, QString question, QString answer) : Question(name), m_question(question), m_answer(answer) {}
 
-string Flashcard::getQuestion() const {
+QString Flashcard::getQuestion() const {
     return m_question;
 }
 
-string Flashcard::getAnswer() const {
+QString Flashcard::getAnswer() const {
     return m_answer;
 }

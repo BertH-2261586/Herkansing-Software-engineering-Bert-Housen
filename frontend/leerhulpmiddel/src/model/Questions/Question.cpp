@@ -1,3 +1,3 @@
 #include "Question.h"
 
-Question::Question(string name) : m_name(name) {}
+Question::Question(QString name) : m_name(name) {}

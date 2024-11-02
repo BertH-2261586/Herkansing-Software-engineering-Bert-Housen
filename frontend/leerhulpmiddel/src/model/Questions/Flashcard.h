@@ -1,16 +1,16 @@
 #include "Question.h"
 
-#include <string>
+#include <QString>
 
 using namespace std;
 
 class Flashcard : public Question {
 public:
-    Flashcard(string name, string question, string answer);
+    Flashcard(QString name, QString question, QString answer);
 
-    string getQuestion() const override;
-    string getAnswer() const override;
+    QString getQuestion() const override;
+    QString getAnswer() const override;
 private:
-    string m_question;
-    string m_answer;
+    QString m_question;
+    QString m_answer;
 };

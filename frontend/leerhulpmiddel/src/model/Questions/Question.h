@@ -1,15 +1,15 @@
 #pragma once 
 
-#include <string>
+#include <QString>
 
 using namespace std;
 
 class Question {
 public:
-    Question(string name);
+    Question(QString name);
 
-    virtual string getQuestion() const = 0;
-    virtual string getAnswer() const = 0;
+    virtual QString getQuestion() const = 0;
+    virtual QString getAnswer() const = 0;
 private:
-    string m_name;
+    QString m_name;
 };
