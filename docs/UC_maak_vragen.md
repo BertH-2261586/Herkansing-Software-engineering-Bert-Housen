@@ -1,4 +1,4 @@
-# Fully dressed use case maak vragen
+## Fully dressed use case
 **Use case:** Maak vraag
 
 **Scope:** Offline deel van Leerhulpmiddel
@@ -57,7 +57,7 @@
 
 **Frequency of Occurences:** Dit wordt redelijk frequent uitgevoerd door studenten en docenten die vragen willen maken om te willen leren/delen.
 
-## Systeem Sequentie Diagram
+## Systeemsequentiediagram
 ![Systeem Sequentie Diagram](./Images/SSD_MaakVraag.png)
 
 ## Contracten
@@ -127,3 +127,10 @@
 * **Instance creation:** Vraag werd opgeslagen<br/>
 * **Association formed:** Wordt geconnecteerd met een vragenset<br/>
 * **Association formed:** Nodige files worden gelinkt (fotos, videos, etc.)<br/>
+
+## UML Diagrammen ontwerp
+Open vragenset toont de system flow wanneer er een vragenset wordt geopend door de gebruiker.
+![Open Vragenset sequentie diagram](./Images/Open_Vragenset.png)
+Sla vraag op toont de system flow wanneer er een vraag wordt opgeslagen.
+![Sla Vraag Op sequentie diagram](./Images/Sla_Vraag_Op.png)
+![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)
