@@ -79,6 +79,3 @@
 * **Instance creation:** Vraag wordt opgeslagen.<br/>
 
 ## UML Diagrammen ontwerp
-![Open Vragenset sequentie diagram](./Images/Open_Vragenset.png)
-![Sla Vragenset Op sequentie diagram](./Images/Sla_Vraag_Op.png)
-![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)
