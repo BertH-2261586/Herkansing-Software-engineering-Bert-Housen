@@ -1,4 +1,8 @@
 #include "Answer.h"
+#include <QJsonArray>
+
+
+
 
 
 /**
@@ -44,4 +48,28 @@ bool Answer::operator==(const Answer& other) const
 	}
 
 	return true;
+}
+
+/**
+ * Converts the Answer object to a QJsonObject
+ * @return QJsonObject the Answer object as a QJsonObject
+ */
+
+QJsonObject Answer::toJson() const {
+	QJsonObject jsonObject;
+	QJsonArray answersArray;
+	QJsonArray correctAnswersArray;
+
+	for (const QString& answer : m_answer) {
+		answersArray.append(answer);
+	}
+
+	for (int correctAnswer : m_correctAnswers) {
+		correctAnswersArray.append(correctAnswer);
+	}
+
+	jsonObject["answers"] = answersArray;
+	jsonObject["correctAnswers"] = correctAnswersArray;
+
+	return jsonObject;
 }

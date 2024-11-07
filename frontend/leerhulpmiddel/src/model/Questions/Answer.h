@@ -2,6 +2,8 @@
 
 #include <QString>
 #include <QList>
+#include <QJsonObject>
+
 
 class Answer{
 public:
@@ -9,6 +11,8 @@ public:
 	int getAmountAnswers() const { return m_answer.size(); }
 	QList<QString> getCorrectAnswers() const;
 	QList<QString> getAnswers() const { return m_answer; }
+
+	QJsonObject toJson() const;
 
 	bool operator==(const Answer& other) const;
 	bool operator!=(const Answer& other) const { return !(*this == other); }

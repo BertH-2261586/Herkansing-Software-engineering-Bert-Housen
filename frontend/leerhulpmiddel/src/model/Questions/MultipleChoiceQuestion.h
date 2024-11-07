@@ -10,13 +10,13 @@ class MultipleChoiceQuestion : public Question
 {
 public:
 
-    MultipleChoiceQuestion(QString name, QString question, QString answer) : Question(name, QuestionType::MultipleChoice), m_question(question), m_answer(answer) {}
+    MultipleChoiceQuestion(QString name, QString question, Answer answer) : Question(name, QuestionType::MultipleChoice), m_question(question), m_answer(answer) {}
 
     QString getQuestion() const override { return m_question; }
-    QString getAnswer() const override { return m_answer; }
+    Answer getAnswer() const override { return m_answer; }
 
 private:
     QString m_question;
-    QString m_answer;
+    Answer m_answer;
 };
 

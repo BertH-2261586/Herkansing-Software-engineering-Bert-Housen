@@ -1,5 +1,13 @@
 {
-    "Answer": "4",
+    "Answer": {
+        "answers": [
+            "test",
+            "test2"
+        ],
+        "correctAnswers": [
+            1
+        ]
+    },
     "Question": "wat is 2+2",
     "QuestionType": "MultipleChoice"
 }

@@ -6,6 +6,7 @@
 #include <QDir>
 
 #include "model/Questions/Question.h"
+#include "model/Questions/Answer.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ private:
     QString getPath() const;
     QMap<QString, QVariantList> loadFilesAndQuestions(const QDir& dir, int currentDepth = 0) const;
 public:
+    Answer convertToAnswerObject(QJsonObject answer) const;
     QMap<QString, QVariantList> loadQuestionSets(QString path = "") const;
     void makeQuestionSet(QString path, QString fileName) const;
     void saveQuestionToJSON(const string questionPath, const Question& question) const;

@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <filesystem>
+#include <QJsonArray>
 
 #include "fileManager.h"
 #include "model/Questions/MultipleChoiceQuestion.h"
@@ -134,9 +135,9 @@ QMap<QString, QVariantList> FileManager::loadFilesAndQuestions(const QDir& dir, 
  */
 void FileManager::saveQuestionToJSON(const string questionPath, const Question& question) const {
     QJsonObject jsonObject;
-    jsonObject["QuestionType"] = QString::fromStdString(question.questionTypeToString().toStdString());
-    jsonObject["Question"] = QString::fromStdString(question.getQuestion().toStdString());
-    jsonObject["Answer"] = QString::fromStdString(question.getAnswer().toStdString());
+    jsonObject["QuestionType"] = question.questionTypeToString();
+    jsonObject["Question"] = question.getQuestion();
+    jsonObject["Answer"] = question.getAnswer().toJson();
 
     // Wrap the JSON object in a QJsonDocument
     QJsonDocument jsonDoc(jsonObject);
@@ -197,16 +198,32 @@ unique_ptr<Question> FileManager::loadQuestionFromJSON(const string questionPath
     QString questionTypeString = jsonObject["QuestionType"].toString();
     QuestionType questionType = Question::stringToQuestionType(questionTypeString);
     QString question = jsonObject["Question"].toString();
-    QString answer = jsonObject["Answer"].toString();
+    Answer answer = convertToAnswerObject(jsonObject["Answer"].toObject());
 
     switch (questionType) {
         case QuestionType::FillIn:
-            return std::make_unique<FillInQuestion>(questionName.toStdString(), question.toStdString(), answer.toStdString());
+            return std::make_unique<FillInQuestion>(questionName, question, answer);
         case QuestionType::MultipleChoice:
-            return std::make_unique<MultipleChoiceQuestion>(questionName.toStdString(), question.toStdString(), answer.toStdString());
+            return std::make_unique<MultipleChoiceQuestion>(questionName, question, answer);
         case QuestionType::Flashcard:
-            return std::make_unique<Flashcard>(questionName.toStdString(), question.toStdString(), answer.toStdString());
+            return std::make_unique<Flashcard>(questionName, question, answer);
         default:
             throw loadException("Unsupported QuestionType");
     }
 }
+
+Answer FileManager::convertToAnswerObject(QJsonObject answer) const {
+    QList<QString> answers;
+    QList<int> correctAnswers;
+    QJsonArray answersArray = answer["answers"].toArray();
+    for (const QJsonValue& value : answersArray) {
+        answers.append(value.toString());
+    }
+
+    QJsonArray correctAnswersArray = answer["correctAnswers"].toArray();
+    for (const QJsonValue& value : correctAnswersArray) {
+        correctAnswers.append(value.toInt());
+    }
+    return Answer(answers, correctAnswers);
+}
+
