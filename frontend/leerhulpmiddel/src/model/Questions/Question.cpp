@@ -1,9 +1,7 @@
 #include "Question.h"
 
-<<<<<<< HEAD
-Question::Question(QString name) : m_name(name) {}
-=======
-string Question::questionTypeToString() const {
+
+QString Question::questionTypeToString() const {
     switch (m_questionType) {
         case QuestionType::MultipleChoice: 
             return "MultipleChoice";
@@ -26,4 +24,3 @@ QuestionType Question::stringToQuestionType(const QString questionTypeStr) {
     if (questionTypeStr == "None")
         return QuestionType::None;
 }
->>>>>>> main

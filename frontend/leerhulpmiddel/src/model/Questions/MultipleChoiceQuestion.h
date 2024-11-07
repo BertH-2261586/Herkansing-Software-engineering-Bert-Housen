@@ -9,17 +9,11 @@ using namespace std;
 class MultipleChoiceQuestion : public Question
 {
 public:
-<<<<<<< HEAD
-    MultipleChoiceQuestion(QString name, QString question, QString answer);
-    QString getQuestion() const override;
-    QString getAnswer() const override;
-=======
-    MultipleChoiceQuestion(string name, string question, string answer) 
-        : Question(name, QuestionType::MultipleChoice), m_question(question), m_answer(answer) {}
 
-    string getQuestion() const override { return m_question; }
-    string getAnswer() const override { return m_answer; }
->>>>>>> main
+    MultipleChoiceQuestion(QString name, QString question, QString answer) : Question(name, QuestionType::MultipleChoice), m_question(question), m_answer(answer) {}
+
+    QString getQuestion() const override { return m_question; }
+    QString getAnswer() const override { return m_answer; }
 
 private:
     QString m_question;
