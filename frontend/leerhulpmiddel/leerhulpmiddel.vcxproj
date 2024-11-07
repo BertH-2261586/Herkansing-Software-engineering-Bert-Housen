@@ -70,7 +70,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -95,6 +95,7 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\fileManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\Questions\FillInQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
@@ -102,10 +103,12 @@
     <ClCompile Include="src\model\Questions\Question.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\fileManager.h" />
     <ClInclude Include="src\model\Questions\FillInQuestion.h" />
     <ClInclude Include="src\model\Questions\Flashcard.h" />
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\Question.h" />
+    <ClInclude Include="src\questionType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

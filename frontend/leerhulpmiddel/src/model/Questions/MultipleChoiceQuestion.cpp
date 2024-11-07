@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "MultipleChoiceQuestion.h"
 
 
@@ -13,3 +14,6 @@ QString MultipleChoiceQuestion::getAnswer() const
     return m_answer;
 }
 
+=======
+#include "MultipleChoiceQuestion.h"
+>>>>>>> main
