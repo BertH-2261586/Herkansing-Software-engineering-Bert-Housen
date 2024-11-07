@@ -8,9 +8,9 @@
 #include <QJsonArray>
 
 #include "fileManager.h"
-#include "model/Questions/MultipleChoiceQuestion.h"
-#include "model/Questions/Flashcard.h"
-#include "model/Questions/FillInQuestion.h"
+#include "Questions/MultipleChoiceQuestion.h"
+#include "Questions/Flashcard.h"
+#include "Questions/FillInQuestion.h"
 
 namespace filesystem = std::filesystem; 
 

@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QMainWindow>
 
-#include "fileManager.h"
+#include "model/fileManager.h"
 #include "model/Questions/MultipleChoiceQuestion.h"
 
 int main(int argc, char *argv[]) {
@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
     mainWindow.setWindowTitle("Leerhulpmiddel");
     mainWindow.showMaximized();
 
+    /*
     try {
         FileManager FileManager;
         QMap<QString, QVariantList> questionsets = FileManager.loadQuestionSets();
@@ -34,6 +35,6 @@ int main(int argc, char *argv[]) {
     catch (const loadException& e) {
         qDebug() << "an error has occured: " << e.what();
     }
-
+    */
     return app.exec();
 }

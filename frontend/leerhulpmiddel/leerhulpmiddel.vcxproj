@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\model\Questions\Answer.cpp" />
-    <ClCompile Include="src\fileManager.cpp" />
+    <ClCompile Include="src\model\fileManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\Questions\FillInQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
@@ -105,12 +105,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\model\Questions\Answer.h" />
-    <ClInclude Include="src\fileManager.h" />
+    <ClInclude Include="src\model\fileManager.h" />
     <ClInclude Include="src\model\Questions\FillInQuestion.h" />
     <ClInclude Include="src\model\Questions\Flashcard.h" />
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\Question.h" />
-    <ClInclude Include="src\questionType.h" />
+    <ClInclude Include="src\model\Questions\questionType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

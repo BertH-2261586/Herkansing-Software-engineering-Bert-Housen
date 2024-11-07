@@ -5,8 +5,8 @@
 #include <stdexcept>
 #include <QDir>
 
-#include "model/Questions/Question.h"
-#include "model/Questions/Answer.h"
+#include "Questions/Question.h"
+#include "Questions/Answer.h"
 
 using namespace std;
 

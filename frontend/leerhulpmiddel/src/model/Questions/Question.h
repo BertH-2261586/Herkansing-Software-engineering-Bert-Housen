@@ -5,7 +5,7 @@
 #include <QString>
 
 #include "Answer.h"
-#include "../../questionType.h"
+#include "questionType.h"
 
 using namespace std;
 
