@@ -95,6 +95,7 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\model\Questions\Answer.cpp" />
     <ClCompile Include="src\fileManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\Questions\FillInQuestion.cpp" />
@@ -103,6 +104,7 @@
     <ClCompile Include="src\model\Questions\Question.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\model\Questions\Answer.h" />
     <ClInclude Include="src\fileManager.h" />
     <ClInclude Include="src\model\Questions\FillInQuestion.h" />
     <ClInclude Include="src\model\Questions\Flashcard.h" />

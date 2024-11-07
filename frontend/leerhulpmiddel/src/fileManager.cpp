@@ -134,15 +134,15 @@ QMap<QString, QVariantList> FileManager::loadFilesAndQuestions(const QDir& dir, 
  */
 void FileManager::saveQuestionToJSON(const string questionPath, const Question& question) const {
     QJsonObject jsonObject;
-    jsonObject["QuestionType"] = QString::fromStdString(question.questionTypeToString());
-    jsonObject["Question"] = QString::fromStdString(question.getQuestion());
-    jsonObject["Answer"] = QString::fromStdString(question.getAnswer());
+    jsonObject["QuestionType"] = QString::fromStdString(question.questionTypeToString().toStdString());
+    jsonObject["Question"] = QString::fromStdString(question.getQuestion().toStdString());
+    jsonObject["Answer"] = QString::fromStdString(question.getAnswer().toStdString());
 
     // Wrap the JSON object in a QJsonDocument
     QJsonDocument jsonDoc(jsonObject);
 
     // Open de file in write-only mode. Dit maakt de JSON file indien deze niet bestaat
-    QString path = getPath() + "/" + QString::fromStdString(question.getName()) + ".json";
+    QString path = getPath() + "/" + QString::fromStdString(question.getName().toStdString()) + ".json";
     QFile file(path);
     if (file.exists()) {
         throw saveException("This file already exists.");
