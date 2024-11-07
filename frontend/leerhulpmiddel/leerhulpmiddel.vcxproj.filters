@@ -46,7 +46,22 @@
     <ClCompile Include="src\model\Questions\Question.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fileManager.cpp">
+    <ClCompile Include="src\model\Questions\Answer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\fileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\create questions\CreateQuestionView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,11 +78,28 @@
     <ClInclude Include="src\model\Questions\Question.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\questionType.h">
+    <ClInclude Include="src\model\Questions\Answer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\fileManager.h">
+    <ClInclude Include="src\model\fileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\model\Questions\questionType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\create questions\CreateFlashcardView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\create questions\CreateFillInQuestionView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\view\create questions\CreateQuestionView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 
 #include "model/fileManager.h"
 #include "model/Questions/MultipleChoiceQuestion.h"
+#include "view/create questions/CreateQuestionView.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
@@ -12,6 +13,15 @@ int main(int argc, char *argv[]) {
     mainWindow.setWindowTitle("Leerhulpmiddel");
     mainWindow.showMaximized();
 
+    //TEMP
+    CreateQuestionView* createView = new CreateQuestionView(&mainWindow);
+
+    //Center
+    int x = mainWindow.geometry().x() + (mainWindow.width() / 2) + (createView->width() / 2);
+    int y = mainWindow.geometry().y() + (mainWindow.height() / 2) + (createView->height() / 2);
+    createView->move(x, y);
+
+    createView->show();
     /*
     try {
         FileManager FileManager;

@@ -95,6 +95,9 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp" />
+    <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp" />
+    <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp" />
     <ClCompile Include="src\model\Questions\Answer.cpp" />
     <ClCompile Include="src\model\fileManager.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -102,8 +105,12 @@
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Question.cpp" />
+    <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\view\create questions\CreateFillInQuestionView.h" />
+    <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
+    <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
     <ClInclude Include="src\model\Questions\Answer.h" />
     <ClInclude Include="src\model\fileManager.h" />
     <ClInclude Include="src\model\Questions\FillInQuestion.h" />
@@ -111,6 +118,7 @@
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\Question.h" />
     <ClInclude Include="src\model\Questions\questionType.h" />
+    <QtMoc Include="src\view\create questions\CreateQuestionView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
