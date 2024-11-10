@@ -93,12 +93,15 @@
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\view\create questions\CreateFillInQuestionView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\view\create questions\CreateQuestionView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\create questions\BracketHighlighter.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

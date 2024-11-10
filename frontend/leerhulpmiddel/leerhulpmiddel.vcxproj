@@ -95,7 +95,12 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp" />
+    <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp" />
     <ClCompile Include="src\model\Questions\Answer.cpp" />
@@ -108,7 +113,8 @@
     <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\view\create questions\CreateFillInQuestionView.h" />
+    <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h" />
+    <QtMoc Include="src\view\create questions\BracketHighlighter.h" />
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
     <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
     <ClInclude Include="src\model\Questions\Answer.h" />
