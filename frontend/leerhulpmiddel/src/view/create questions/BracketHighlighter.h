@@ -2,13 +2,16 @@
 
 #include <QSyntaxHighlighter>
 #include <QRegularExpression>
+#include <QPalette>
 
 class BracketHighlighter : public QSyntaxHighlighter {
 	Q_OBJECT
 public:
 	BracketHighlighter(QTextDocument* parent = nullptr) : QSyntaxHighlighter(parent) {
-		m_bracketFormat.setForeground(Qt::black);
-		m_bracketFormat.setBackground(Qt::blue);
+		QPalette palette = qApp->palette();
+
+		m_bracketFormat.setForeground(palette.color(QPalette::WindowText));
+		m_bracketFormat.setBackground(palette.color(QPalette::Highlight).lighter(150));
 		m_bracketFormat.setFontWeight(QFont::Bold);
 
 		m_bracketPattern = QRegularExpression(R"(\[[^\[\]]*\])");
