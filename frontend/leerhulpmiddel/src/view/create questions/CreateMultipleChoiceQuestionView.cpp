@@ -1,9 +1,12 @@
 #include "CreateMultipleChoiceQuestionView.h"
+#include "../ToastMessage.h"
+
 #include <QPushButton>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QIcon>
 #include <QScrollArea>
+#include <QMessageBox>
 
 CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* parent) : QWidget(parent), m_txtQuestion{ new QTextEdit(this)} {
 
@@ -17,7 +20,6 @@ CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* pare
 
 
 	m_layout = new QVBoxLayout(this);
-
 	
 
 
@@ -39,34 +41,48 @@ CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* pare
 	setLayout(outerLayout);
 }
 
+
+
 void CreateMultipleChoiceQuestionView::addAnswer() {
-	QHBoxLayout* answerLayout = new QHBoxLayout;
 
-	QTextEdit* txtAnswer = new QTextEdit(this);
-	txtAnswer->setPlaceholderText("Enter an answer");
-	txtAnswer->setFixedHeight(50);
+	if (m_layout->count() > 15)
+	{
+		ToastMessage* toast = new ToastMessage("You can only add 15 answers", this);
+		toast->setFixedWidth(200);  // Adjust width as needed
+		toast->move((width() - toast->width()) / 2, height() - 50);  // Position near the bottom center
+		toast->show();
+	}
+	else
+	{
+
+		QHBoxLayout* answerLayout = new QHBoxLayout;
+
+		QTextEdit* txtAnswer = new QTextEdit(this);
+		txtAnswer->setPlaceholderText("Enter an answer");
+		txtAnswer->setFixedHeight(50);
 
 
-	QPushButton *removeButton = new QPushButton(this);
+		QPushButton* removeButton = new QPushButton(this);
 
-	removeButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
-
-
-	answerLayout->addWidget(txtAnswer);
-	answerLayout->addWidget(removeButton);
+		removeButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
 
 
-	m_layout->addLayout(answerLayout);
+		answerLayout->addWidget(txtAnswer);
+		answerLayout->addWidget(removeButton);
 
-	connect(removeButton, &QPushButton::clicked, [this, answerLayout]() {
-		m_layout->removeItem(answerLayout);
-		QLayoutItem* child;
-		while ((child = answerLayout->takeAt(0)) != nullptr) {
-			delete child->widget(); // delete the widget
-			delete child;   // delete the layout item
-		}
-		delete answerLayout;
-		});
 
-	update();
+		m_layout->addLayout(answerLayout);
+
+		connect(removeButton, &QPushButton::clicked, [this, answerLayout]() {
+			m_layout->removeItem(answerLayout);
+			QLayoutItem* child;
+			while ((child = answerLayout->takeAt(0)) != nullptr) {
+				delete child->widget(); // delete the widget
+				delete child;   // delete the layout item
+			}
+			delete answerLayout;
+			});
+
+		update();
+	}
 }

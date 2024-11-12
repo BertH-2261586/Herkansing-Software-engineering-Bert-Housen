@@ -113,6 +113,7 @@
     <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\view\ToastMessage.h" />
     <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h" />
     <QtMoc Include="src\view\create questions\BracketHighlighter.h" />
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
