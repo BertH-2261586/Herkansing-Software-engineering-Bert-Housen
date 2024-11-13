@@ -7,6 +7,7 @@
 #include <QIcon>
 #include <QScrollArea>
 #include <QMessageBox>
+#include <QStringList>
 
 CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* parent) : QWidget(parent), m_txtQuestion{ new QTextEdit(this)} {
 
@@ -39,6 +40,14 @@ CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* pare
 	outerLayout->addWidget(btnAddAnswer);
 	outerLayout->addWidget(scrollArea);
 	setLayout(outerLayout);
+}
+
+QString CreateMultipleChoiceQuestionView::getQuestion() const {
+	return m_txtQuestion->toPlainText();
+}
+
+Answer CreateMultipleChoiceQuestionView::getAnswer() const {
+	return Answer({});
 }
 
 

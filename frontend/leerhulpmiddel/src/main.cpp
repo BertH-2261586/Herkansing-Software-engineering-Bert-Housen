@@ -6,6 +6,7 @@
 #include "model/fileManager.h"
 #include "model/Questions/MultipleChoiceQuestion.h"
 #include "view/create questions/CreateQuestionView.h"
+#include "Controller/questionmanagercontroller.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
@@ -19,8 +20,11 @@ int main(int argc, char *argv[]) {
     QMainWindow mainWindow = QMainWindow();
     mainWindow.show();
 
+    //Create controller
+    QuestionManagerController* questionManagerController = new QuestionManagerController(qManager);
+
     //TEMP
-    CreateQuestionView* createView = new CreateQuestionView(&mainWindow);
+    CreateQuestionView* createView = new CreateQuestionView(questionManagerController, &mainWindow);
 
     //Center
     int x = mainWindow.geometry().x() + (mainWindow.width() / 2) + (createView->width() / 2);
