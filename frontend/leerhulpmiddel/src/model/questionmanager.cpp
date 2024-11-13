@@ -1,0 +1,44 @@
+
+#include "questionmanager.h"
+#include "Questions/Flashcard.h"
+
+QuestionManager::QuestionManager()
+{
+    //hier temp data inzetten
+
+    m_questionsets.append(new Questionset(
+            "naam1",
+        {new Flashcard("ah", "", ""), new Flashcard("bah", "", "")},
+        {new Questionset("subset1", {new Flashcard("boop", "", ""), new Flashcard("boop2", "", "")}, {})},
+        {255, 0, 255}
+        ));
+    m_questionsets.append(new Questionset(
+        "naam2aaaaaaaaaa",
+        {new Flashcard("eh", "", ""), new Flashcard("bo", "", "")},
+        {new Questionset("subset1", {new Flashcard("boop", "", ""), new Flashcard("boop2", "", "")}, {})},
+        {255, 255, 0}
+        ));
+    m_questionsets.append(new Questionset(
+        "naam3",
+        {new Flashcard("bap", "", ""), new Flashcard("bop", "", "")},
+        {new Questionset("subset1", {new Flashcard("boop", "", ""), new Flashcard("boop2", "", "")}, {})},
+        {0, 255, 255}
+        ));
+    m_questionsets.append(new Questionset(
+        "naam4",
+        {new Flashcard("ah", "", ""), new Flashcard("bah", "", "")},
+        {new Questionset("subset1", {new Flashcard("boop", "", ""), new Flashcard("boop2", "", "")}, {})},
+        {0, 100, 255}
+        ));
+}
+
+
+//free up heap memeory
+QuestionManager::~QuestionManager()
+{
+    for (int i = 0; i < m_questionsets.length(); i++)
+    {
+        delete m_questionsets[i];
+    }
+}
+
