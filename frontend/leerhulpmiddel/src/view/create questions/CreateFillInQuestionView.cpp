@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QRegularExpression>
 
 #include "BracketHighlighter.h"
 
@@ -27,6 +28,28 @@ CreateFillInQuestionView::CreateFillInQuestionView(QWidget* parent) {
 		this, &CreateFillInQuestionView::insertAnswer);
 
 	BracketHighlighter* highlighter = new BracketHighlighter(m_txtQuestion->document());	//Highlights answers
+}
+
+QString CreateFillInQuestionView::getQuestion() const {
+	return m_txtQuestion->toPlainText();
+}
+
+Answer CreateFillInQuestionView::getAnswer() const {
+	QStringList answers;
+
+	QString question = m_txtQuestion->toPlainText();
+
+	//Use regex to get all answers
+	QRegularExpression regex = QRegularExpression(R"(\[(.*?)\])");
+	QRegularExpressionMatchIterator matches = regex.globalMatch(question);
+
+	//Get all answers
+	while (matches.hasNext()) {
+		QRegularExpressionMatch match = matches.next();
+		answers.append(match.captured(1));
+	}
+
+	return Answer(answers);
 }
 
 

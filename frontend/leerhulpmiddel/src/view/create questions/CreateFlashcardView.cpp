@@ -22,3 +22,13 @@ CreateFlashcardView::CreateFlashcardView(QWidget* parent) : QWidget(parent) {
 
 	setLayout(mainLayout);
 }
+
+QString CreateFlashcardView::getQuestion() const {
+	return m_txtQuestion->toPlainText();
+}
+
+ Answer CreateFlashcardView::getAnswer() const {
+	 Answer answer = Answer({ m_txtAnswer->toPlainText() });
+
+	 return answer;
+}
