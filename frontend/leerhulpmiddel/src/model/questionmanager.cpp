@@ -8,30 +8,9 @@ QuestionManager::QuestionManager()
 {
     //hier temp data inzetten
 
-    m_questionsets.append(new Questionset(
-            "naam1",
-        {new Flashcard("ah", "", Answer({})), new Flashcard("bah", "", Answer({}))},
-        {new Questionset("subset1", {new Flashcard("boop", "", Answer({})), new Flashcard("boop2", "", Answer({}))}, {})},
-        {255, 0, 255}
-        ));
-    m_questionsets.append(new Questionset(
-        "naam2aaaaaaaaaa",
-        {new Flashcard("eh", "", Answer({})), new Flashcard("bo", "", Answer({}))},
-        {new Questionset("subset1", {new Flashcard("boop", "", Answer({})), new Flashcard("boop2", "", Answer({}))}, {})},
-        {255, 255, 0}
-        ));
-    m_questionsets.append(new Questionset(
-        "naam3",
-        {new Flashcard("bap", "", Answer({})), new Flashcard("bop", "", Answer({}))},
-        {new Questionset("subset1", {new Flashcard("boop", "", Answer({})), new Flashcard("boop2", "", Answer({}))}, {})},
-        {0, 255, 255}
-        ));
-    m_questionsets.append(new Questionset(
-        "naam4",
-        {new Flashcard("ah", "", Answer({})), new Flashcard("bah", "", Answer({}))},
-        {new Questionset("subset1", {new Flashcard("boop", "", Answer({})), new Flashcard("boop2", "", Answer({}))}, {})},
-        {0, 100, 255}
-        ));
+    FileManager fManager = FileManager();
+    m_questionsets = fManager.loadQuestionSetsObject();
+
 }
 
 

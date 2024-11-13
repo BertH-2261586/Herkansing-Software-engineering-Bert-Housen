@@ -32,11 +32,12 @@ int main(int argc, char *argv[]) {
     int y = mainWindow.geometry().y() + (mainWindow.height() / 2) + (createView->height() / 2);
     createView->move(x, y);
 
+    createView->show();
     /*
     try{
-    createView->show();
 
         FileManager FileManager;
+        qDebug() << FileManager.loadQuestionSets();
         QList<Questionset*> questionsets = FileManager.loadQuestionSetsObject();
         qDebug() << questionsets;
         FileManager.makeQuestionSet("placeholder", "testingfolder");
