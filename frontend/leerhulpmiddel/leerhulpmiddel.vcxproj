@@ -95,6 +95,10 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
+    <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
+    <ClCompile Include="src\model\questionmanager.cpp" />
+    <ClCompile Include="src\model\questionset.cpp" />
     <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
@@ -111,11 +115,18 @@
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Question.cpp" />
     <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
+    <ClCompile Include="src\view\HomeScreen\questionsetwidget.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\view\HomeScreen\questionsetwidget.h" />
+    <QtMoc Include="src\view\HomeScreen\mylineedit.h" />
     <QtMoc Include="src\view\ToastMessage.h" />
     <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h" />
     <QtMoc Include="src\view\create questions\BracketHighlighter.h" />
+    <QtMoc Include="src\model\questionset.h" />
+    <QtMoc Include="src\model\questionmanager.h" />
+    <ClInclude Include="src\Controller\questionmanagercontroller.h" />
+    <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
     <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
     <ClInclude Include="src\model\Questions\Answer.h" />

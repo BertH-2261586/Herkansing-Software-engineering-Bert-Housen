@@ -16,8 +16,11 @@ int main(int argc, char *argv[]) {
     //LeerhulpmiddelMainWindow mainWindow(qManager);
     //mainWindow.show();
 
+    QMainWindow mainWindow = QMainWindow();
+    mainWindow.show();
+
     //TEMP
-    //CreateQuestionView* createView = new CreateQuestionView(&mainWindow);
+    CreateQuestionView* createView = new CreateQuestionView(&mainWindow);
 
     //Center
     int x = mainWindow.geometry().x() + (mainWindow.width() / 2) + (createView->width() / 2);

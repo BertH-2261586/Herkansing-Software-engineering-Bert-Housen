@@ -64,6 +64,21 @@
     <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\model\questionmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\questionset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Exceptions\invalidtypeerror.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\HomeScreen\questionsetwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller\questionmanagercontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\model\Questions\FillInQuestion.h">
@@ -93,6 +108,15 @@
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Exceptions\invalidtypeerror.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Controller\questionmanagercontroller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\HomeScreen\questionsetwidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\view\create questions\CreateQuestionView.h">
@@ -102,6 +126,18 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\view\create questions\BracketHighlighter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\ToastMessage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\questionset.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\questionmanager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\HomeScreen\mylineedit.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

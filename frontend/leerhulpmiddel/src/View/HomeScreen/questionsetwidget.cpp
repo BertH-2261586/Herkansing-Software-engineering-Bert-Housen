@@ -1,4 +1,4 @@
-
+/*
 #include "questionsetwidget.h"
 #include <QHBoxLayout>
 #include "homescreen.h"
@@ -48,3 +48,4 @@ QuestionsetWidget::~QuestionsetWidget()
     delete m_underlyingTree;
 }
 
+*/

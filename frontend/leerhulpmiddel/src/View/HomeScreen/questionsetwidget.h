@@ -1,11 +1,11 @@
-
+/*
 #ifndef QUESTIONSETWIDGET_H
 #define QUESTIONSETWIDGET_H
 
 
 #include <QWidget>
 #include "../../model/questionset.h"
-#include "questionsettreewidget.h"
+//#include "questionsettreewidget.h"
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
@@ -61,3 +61,4 @@ signals:
 };
 
 #endif // QUESTIONSETWIDGET_H
+*/
