@@ -16,6 +16,21 @@ Questionset::~Questionset()
     }
 }
 
+void Questionset::addQuestion(Question* question, QString subsetName) {
+    if (subsetName == "") {
+        m_looseQuestions.append(question);
+    }
+    else {
+        for (Questionset* subset : m_subSets) {
+            if (subset->GetName() == subsetName) {
+                subset->addQuestion(question);
+            }
+        }
+
+        qDebug() << "Subset " << subsetName << " not found";
+    }
+}
+
 void Questionset::addComponent(Questionset* subset)
 {
 

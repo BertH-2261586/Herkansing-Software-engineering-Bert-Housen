@@ -1,4 +1,4 @@
-#include "View/leerhulpmiddelmainwindow.h"
+//#include "view/leerhulpmiddelmainwindow.h"
 #include "model/questionmanager.h"
 #include <QApplication>
 #include <QMainWindow>
@@ -13,11 +13,11 @@ int main(int argc, char *argv[]) {
     // Create the main window
     QuestionManager qManager;
 
-    LeerhulpmiddelMainWindow mainWindow(qManager);
-    mainWindow.show();
+    //LeerhulpmiddelMainWindow mainWindow(qManager);
+    //mainWindow.show();
 
     //TEMP
-    CreateQuestionView* createView = new CreateQuestionView(&mainWindow);
+    //CreateQuestionView* createView = new CreateQuestionView(&mainWindow);
 
     //Center
     int x = mainWindow.geometry().x() + (mainWindow.width() / 2) + (createView->width() / 2);

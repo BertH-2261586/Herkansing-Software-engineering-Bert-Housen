@@ -26,6 +26,8 @@ public:
         return m_subSets;
     };
     QColor GetColor(){return m_color;}
+
+    void addQuestion(Question* question, QString subsetName = "");
 private:
     QString m_name;
 
