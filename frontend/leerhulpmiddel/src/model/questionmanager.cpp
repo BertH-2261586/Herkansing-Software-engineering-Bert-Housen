@@ -47,7 +47,7 @@ QuestionManager::~QuestionManager()
 void QuestionManager::addQuestion(QString questionSetName, QString subsection, Question* question) {
     FileManager fManager = FileManager();
 
-    fManager.saveQuestionToJSON("", *question);
+    fManager.saveQuestionToJSON(questionSetName, subsection, *question);
 
     Questionset* questionSet = getQuestionSet(questionSetName);
     questionSet->addQuestion(question, subsection);

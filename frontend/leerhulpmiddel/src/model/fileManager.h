@@ -7,6 +7,7 @@
 
 #include "Questions/Question.h"
 #include "Questions/Answer.h"
+#include "questionset.h"
 
 using namespace std;
 
@@ -32,11 +33,12 @@ private:
     QString getPath() const;
     QMap<QString, QVariantList> loadFilesAndQuestions(const QDir& dir, int currentDepth = 0) const;
 public:
+    QList<Questionset*> loadQuestionSetsObject(const QString path = "") const;
     Answer convertToAnswerObject(QJsonObject answer) const;
     QMap<QString, QVariantList> loadQuestionSets(QString path = "") const;
     void makeQuestionSet(QString path, QString fileName) const;
-    void saveQuestionToJSON(const string questionPath, const Question& question) const;
-    unique_ptr<Question> loadQuestionFromJSON(const string questionPath, const QString questionName) const;
+    void saveQuestionToJSON(const QString questionSet, const QString subset, const Question& question) const;
+    unique_ptr<Question> loadQuestionFromJSON(const string questionSet, const string subset, const QString questionName) const;
 };
 
 

@@ -6,6 +6,7 @@
 #include "model/fileManager.h"
 #include "model/Questions/MultipleChoiceQuestion.h"
 #include "view/create questions/CreateQuestionView.h"
+#include "model/questionset.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
@@ -27,16 +28,17 @@ int main(int argc, char *argv[]) {
     int y = mainWindow.geometry().y() + (mainWindow.height() / 2) + (createView->height() / 2);
     createView->move(x, y);
 
-    createView->show();
     /*
-    try {
+    try{
+    createView->show();
+
         FileManager FileManager;
-        QMap<QString, QVariantList> questionsets = FileManager.loadQuestionSets();
+        QList<Questionset*> questionsets = FileManager.loadQuestionSetsObject();
         qDebug() << questionsets;
         FileManager.makeQuestionSet("placeholder", "testingfolder");
         MultipleChoiceQuestion multiquestion = MultipleChoiceQuestion("wiskunde", "wat is 2+2", Answer(QList<QString>{"test","test2"}, QList<int> {1}));
-        FileManager.saveQuestionToJSON("placeholder", multiquestion);
-        unique_ptr<Question> loadedquestion = FileManager.loadQuestionFromJSON("placeholder", "wiskunde");
+        FileManager.saveQuestionToJSON("test", "", multiquestion);
+        unique_ptr<Question> loadedquestion = FileManager.loadQuestionFromJSON("test", "", "wiskunde");
         qDebug() << loadedquestion->getName() << " " << loadedquestion->getQuestion() << " " << loadedquestion->getAnswer().getAnswers();
     }
     catch (const FolderQuestionSetMovedException& e) {
