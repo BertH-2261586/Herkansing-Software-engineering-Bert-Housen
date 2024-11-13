@@ -1,4 +1,6 @@
 #include "CreateFillInQuestionView.h"
+#include "../../Exceptions/EmptyFieldException.h"
+
 
 #include <QLabel>
 #include <QVBoxLayout>
@@ -31,6 +33,10 @@ CreateFillInQuestionView::CreateFillInQuestionView(QWidget* parent) {
 }
 
 QString CreateFillInQuestionView::getQuestion() const {
+	if (m_txtQuestion->toPlainText().isEmpty())
+	{
+		throw EmptyFieldException("Please fill in the question");
+	}
 	return m_txtQuestion->toPlainText();
 }
 

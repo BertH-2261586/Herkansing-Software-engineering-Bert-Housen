@@ -118,6 +118,7 @@
     <ClCompile Include="src\view\HomeScreen\questionsetwidget.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
     <ClInclude Include="src\view\HomeScreen\questionsetwidget.h" />
     <QtMoc Include="src\view\HomeScreen\mylineedit.h" />
     <QtMoc Include="src\view\ToastMessage.h" />

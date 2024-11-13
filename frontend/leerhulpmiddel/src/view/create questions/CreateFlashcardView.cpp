@@ -1,4 +1,6 @@
 #include "CreateFlashcardView.h"
+#include "../../Exceptions/EmptyFieldException.h"
+
 
 #include <QLabel>
 #include <QVBoxLayout>
@@ -24,10 +26,19 @@ CreateFlashcardView::CreateFlashcardView(QWidget* parent) : QWidget(parent) {
 }
 
 QString CreateFlashcardView::getQuestion() const {
+	if (m_txtQuestion->toPlainText().isEmpty())
+	{
+		throw EmptyFieldException("Please fill in the question");
+	}
+
 	return m_txtQuestion->toPlainText();
 }
 
  Answer CreateFlashcardView::getAnswer() const {
+	 if (m_txtQuestion->toPlainText().isEmpty())
+	 {
+		 throw EmptyFieldException("Please fill in the answer");
+	 }
 	 Answer answer = Answer({ m_txtAnswer->toPlainText() });
 
 	 return answer;

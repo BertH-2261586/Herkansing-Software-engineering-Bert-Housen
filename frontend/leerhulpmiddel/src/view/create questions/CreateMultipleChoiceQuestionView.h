@@ -12,10 +12,9 @@ public:
 	CreateMultipleChoiceQuestionView(QWidget* parent = nullptr);
 
 	QString getQuestion() const;
-	Answer getAnswer() const;
+	Answer getAnswer();
 private:
 	void addAnswer();
-
 	QTextEdit* m_txtQuestion;
 	QBoxLayout* m_layout;
 };

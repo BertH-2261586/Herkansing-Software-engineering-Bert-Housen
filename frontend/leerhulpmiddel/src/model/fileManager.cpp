@@ -249,7 +249,7 @@ QList<Questionset*> FileManager::loadQuestionSetsObject(const QString path) cons
 
            //if a json File is found
 		   if (file.canConvert<QString>()) {
-			   QString questionName = v.toString();
+			   QString questionName = file.toString();
                questionName.chop(5); //remove .json
 			   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName.toStdString(), "", questionName);
 			   questions.append(loadedQuestion.release());

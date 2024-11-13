@@ -1,5 +1,6 @@
 #include "CreateMultipleChoiceQuestionView.h"
 #include "../ToastMessage.h"
+#include "../../Exceptions/EmptyFieldException.h"
 
 #include <QPushButton>
 #include <QLabel>
@@ -8,6 +9,7 @@
 #include <QScrollArea>
 #include <QMessageBox>
 #include <QStringList>
+#include <QCheckBox>
 
 CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* parent) : QWidget(parent), m_txtQuestion{ new QTextEdit(this)} {
 
@@ -43,11 +45,41 @@ CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* pare
 }
 
 QString CreateMultipleChoiceQuestionView::getQuestion() const {
+	if (m_txtQuestion->toPlainText().isEmpty())
+	{
+		throw EmptyFieldException("Please fill in the question");
+	}
 	return m_txtQuestion->toPlainText();
 }
 
-Answer CreateMultipleChoiceQuestionView::getAnswer() const {
-	return Answer({});
+Answer CreateMultipleChoiceQuestionView::getAnswer(){
+
+	QList<QString> answers;
+	QList<int> correctAnswers;
+
+	int count = 0;
+
+	for (QObject* answer : m_layout->children())
+	{
+		QHBoxLayout* answerLayout = qobject_cast<QHBoxLayout*>(answer);
+		QString input = qobject_cast<QTextEdit*>(answerLayout->itemAt(0)->widget())->toPlainText();
+
+		if (input.isEmpty())
+		{
+			throw EmptyFieldException("Please fill in all the answer options");
+		}
+
+		answers.append(input);
+
+		if (qobject_cast<QCheckBox*>(answerLayout->itemAt(2)->widget())->isChecked())
+		{
+			correctAnswers.append(count);
+		}
+		count++;
+
+
+	}
+	return Answer(answers,correctAnswers);
 }
 
 
@@ -75,10 +107,12 @@ void CreateMultipleChoiceQuestionView::addAnswer() {
 
 		removeButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
 
+		QCheckBox* correctCheckBox = new QCheckBox(this);
+
 
 		answerLayout->addWidget(txtAnswer);
 		answerLayout->addWidget(removeButton);
-
+		answerLayout->addWidget(correctCheckBox);
 
 		m_layout->addLayout(answerLayout);
 

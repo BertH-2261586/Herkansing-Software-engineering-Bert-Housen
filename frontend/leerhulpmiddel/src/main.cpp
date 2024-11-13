@@ -12,6 +12,8 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+
+
     // Create the main window
     QuestionManager qManager;
 
