@@ -38,7 +38,7 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
 
     if (m_homeScreenParent != nullptr)
     {
-        connect(m_underlyingTree, &QuestionsetTreeWidget::DisplayVraag, m_homeScreenParent, &HomeScreen::DisplayVraag);
+        connect(m_underlyingTree, &QuestionsetTreeWidget::Display, m_homeScreenParent, &HomeScreen::DisplayWidget);
     }
 }
 

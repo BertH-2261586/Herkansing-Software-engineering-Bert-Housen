@@ -1,15 +1,20 @@
 #include "questionsettreewidget.h"
+#include "mylineedit.h"
 #include <QDebug>
 
-QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, QList<QString> pathTaken, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
-    m_questionset(questionset), m_pathTaken(pathTaken), m_questionsetWidgetParent(questionsetWidgetParent)
+QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
+    m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation)
 {
-    m_pathTaken.append(m_questionset->GetName());            //TODO dit mogelijks weghalen, zien of het nodig is als alle connecties staan
     m_underlyingTree = MakeVragenTree(m_questionset->GetLooseQuestions(), m_questionset->GetSubSets(), indentation + 1);           //1 laag van de boom maken
+
+    connect(this, &QuestionsetTreeWidget::addSubset, questionset, &Questionset::addSubSet);
+    connect(questionset, &Questionset::displayNewSubSet, this, &QuestionsetTreeWidget::insertSubset);
+
 
     if (questionsetWidgetParent != nullptr)
     {
-        setLayout(MakeExpandableVragensetButton(m_questionset->GetName(), indentation, m_underlyingTree));   //de knop om de boom te openen samen met de boom packagen en layouts goed zetten
+        QVBoxLayout* container = MakeExpandableVragensetButton(m_questionset->GetName(), indentation, m_underlyingTree);
+        setLayout(container);   //de knop om de boom te openen samen met de boom packagen en layouts goed zetten
     }
     else
     {
@@ -19,6 +24,7 @@ QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, QList<QSt
 
         m_underlyingTree->show();
         container->addWidget(m_underlyingTree);
+
         setLayout(container);
     }
 }
@@ -28,23 +34,21 @@ QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, QList<QSt
 // gaat de boom opbouwen van de vragen die onder een vragenset horen, kan recursief werken normaal om zo subdelen te maken onder een vragenset
 QWidget* QuestionsetTreeWidget::MakeVragenTree(QList<Question*> looseQuestions, QList<Questionset *> subSets, int indentation)
 {
-    QVBoxLayout* container = new QVBoxLayout();
-    container->setAlignment(Qt::AlignTop);
-    container->setContentsMargins(0, 0, 0, 0);
-    container->setSpacing(0);
+    m_underlyingTreeContainer = new QVBoxLayout();
+    m_underlyingTreeContainer->setAlignment(Qt::AlignTop);
+    m_underlyingTreeContainer->setContentsMargins(0, 0, 0, 0);
+    m_underlyingTreeContainer->setSpacing(0);
 
     for (int i = 0; i < subSets.length(); i++)
     {
-        QList<QString> pathTaken = m_pathTaken;
-        pathTaken.append(m_questionset->GetName());
-        QWidget* subPart = new QuestionsetTreeWidget(subSets[i], pathTaken, indentation, this);
+        QWidget* subPart = new QuestionsetTreeWidget(subSets[i], indentation, this);
 
-        container->addWidget(subPart);
+        m_underlyingTreeContainer->addWidget(subPart);
     }
-    AddLooseVragenToTree(container, looseQuestions, indentation);
+    AddLooseVragenToTree(m_underlyingTreeContainer, looseQuestions, indentation);
 
     QWidget* outputTree = new QWidget();
-    outputTree->setLayout(container);
+    outputTree->setLayout(m_underlyingTreeContainer);
     outputTree->hide();
 
     return outputTree;
@@ -52,7 +56,8 @@ QWidget* QuestionsetTreeWidget::MakeVragenTree(QList<Question*> looseQuestions, 
 
 
 //maak een "folder" button die uitklapt met alles wat er onder zit
-QLayout* QuestionsetTreeWidget::MakeExpandableVragensetButton(QString name, int indentation, QWidget* treeToHide)
+//TODO deze mogelijks in zijn eigen klasse zetten
+QVBoxLayout* QuestionsetTreeWidget::MakeExpandableVragensetButton(QString name, int indentation, QWidget* treeToHide)
 {
     QWidget* questionsetWidget = new QWidget();
     questionsetWidget->setStyleSheet(
@@ -106,14 +111,18 @@ QLayout* QuestionsetTreeWidget::MakeExpandableVragensetButton(QString name, int 
     addToQuestionset->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     QMenu* addToQuestionsetMenu = new QMenu(this);
-    addToQuestionsetMenu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
-    addToQuestionsetMenu->addAction("Voeg vraag toe");
+    QAction* addSubsetAction = addToQuestionsetMenu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
+    QAction* addQuestionAction = addToQuestionsetMenu->addAction("Voeg vraag toe");
     addToQuestionsetMenu->setStyleSheet("background-color: #4d4d4d;");
 
     connect(addToQuestionset, &QPushButton::clicked, addToQuestionsetMenu, [=]{
        addToQuestionsetMenu->popup(addToQuestionset->mapToGlobal(QPoint(0, addToQuestionset->height())));
     });
 
+    connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
+    connect(addQuestionAction, &QAction::triggered, this, [=] {
+        //sendDisplayQuestionSignal()
+    });
 
     questionsetContainer->addWidget(questionsetButton, 15);
     questionsetContainer->addWidget(addToQuestionset, 1);
@@ -154,7 +163,7 @@ void QuestionsetTreeWidget::AddLooseVragenToTree(QVBoxLayout* container, QList<Q
                                 ).arg((10 * indentation) + 30));
 
         QObject::connect(looseVraagButton, &QPushButton::clicked, this, [this, vraagName]() {
-            sendDisplayQuestionSignal(vraagName);
+            sendDisplayQuestionSignal(new QLabel(vraagName));
 
             });
 
@@ -164,24 +173,65 @@ void QuestionsetTreeWidget::AddLooseVragenToTree(QVBoxLayout* container, QList<Q
 
 
 //mogelijks scuffed, het was did of een pointer naar het homescreen meegeven aan iedere instance van questionsetWidget
-void QuestionsetTreeWidget::sendDisplayQuestionSignal(QString tempNaam)
+void QuestionsetTreeWidget::sendDisplayQuestionSignal(QWidget* toBeDisplayed)
 {
     if (m_questionsetWidgetParent != nullptr)
     {
-        m_questionsetWidgetParent->sendDisplayQuestionSignal(tempNaam);
+        m_questionsetWidgetParent->sendDisplayQuestionSignal(toBeDisplayed);
     }
     else
     {
-        emit DisplayVraag(tempNaam);
+        emit Display(toBeDisplayed);
     }
 }
 
-
-void QuestionsetTreeWidget::addSubset(Questionset* newSubset)
+void QuestionsetTreeWidget::CreateNewQuestionset()
 {
+    MyLineEdit* textfield = new MyLineEdit();
 
+    if (m_underlyingTree->isHidden())
+    {
+        m_underlyingTree->show();
+    }
+
+    m_underlyingTreeContainer->insertWidget(0, textfield, 0);
+    textfield->setFocus();
+
+    connect(textfield, &MyLineEdit::lostFocus, m_underlyingTreeContainer, [=]{            //zodat de invulbox er niet blijft staan als je eruit klikt en hij is leeg
+            m_underlyingTreeContainer->removeWidget(textfield);
+            textfield->setParent(nullptr);
+            textfield->deleteLater();
+        }, Qt::AutoConnection);
+
+    connect(textfield, &MyLineEdit::returnPressed, m_underlyingTreeContainer, [=]{
+            QString input = textfield->text();
+
+            if (input != "")
+            {
+                emit addSubset(input);
+
+                m_underlyingTreeContainer->removeWidget(textfield);
+                textfield->setParent(nullptr);
+                textfield->deleteLater();
+
+
+            }
+            else
+            {
+                m_underlyingTreeContainer->removeWidget(textfield);
+                textfield->setParent(nullptr);
+                textfield->deleteLater();
+            }
+
+        }, Qt::AutoConnection);
 }
-void QuestionsetTreeWidget::addquestion(Question* newQuestion)
+
+
+void QuestionsetTreeWidget::insertSubset(Questionset* newSubSet, int index)
+{
+    m_underlyingTreeContainer->insertWidget(index, new QuestionsetTreeWidget(newSubSet, m_indentation + 1, this), 0);
+}
+void QuestionsetTreeWidget::insertQuestion(Question* newQuestion)
 {
 
 }
