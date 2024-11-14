@@ -8,6 +8,7 @@ Questionset::Questionset(QString name, QList<Question*> looseQuestions, QList<Qu
 };
 
 //questionset zijn verandtwoordelijkheid om de onderliggende questions op te ruimen
+//TODO subsets ook opruimen
 Questionset::~Questionset()
 {
     for (int i = 0; i < m_looseQuestions.length(); i++)
@@ -16,9 +17,14 @@ Questionset::~Questionset()
     }
 }
 
-void Questionset::addComponent(Questionset* subset)
+//TODO mogelijks alles alfabetisch displayen en hier dan de goede index aan megeven
+void Questionset::addSubSet(QString name)
 {
+    Questionset* newSubSet = new Questionset(name, {}, {});
 
+    m_subSets.append(newSubSet);
+
+    emit displayNewSubSet(newSubSet, 0);
 }
 
 void Questionset::addComponent(Question* question)

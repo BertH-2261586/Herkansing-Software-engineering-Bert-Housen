@@ -1,4 +1,3 @@
-
 #ifndef QUESTIONSET_H
 #define QUESTIONSET_H
 
@@ -34,8 +33,11 @@ private:
 
     QColor m_color;
 
+signals:
+    void displayNewSubSet(Questionset* subSet, int index);
+
 public slots:
-    void addComponent(Questionset* subset);
+    void addSubSet(QString name);
     void addComponent(Question* question);
 };
 
