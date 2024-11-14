@@ -35,7 +35,7 @@ QString CreateFlashcardView::getQuestion() const {
 }
 
  Answer CreateFlashcardView::getAnswer() const {
-	 if (m_txtQuestion->toPlainText().isEmpty())
+	 if (m_txtAnswer->toPlainText().isEmpty())
 	 {
 		 throw EmptyFieldException("Please fill in the answer");
 	 }
