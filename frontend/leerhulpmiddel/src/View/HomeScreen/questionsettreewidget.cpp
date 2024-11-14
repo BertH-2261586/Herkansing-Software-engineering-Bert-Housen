@@ -120,6 +120,9 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableVragensetButton(QString name, 
     });
 
     connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
+    connect(addQuestionAction, &QAction::triggered, this, [=] {
+        //sendDisplayQuestionSignal()
+    });
 
     questionsetContainer->addWidget(questionsetButton, 15);
     questionsetContainer->addWidget(addToQuestionset, 1);
