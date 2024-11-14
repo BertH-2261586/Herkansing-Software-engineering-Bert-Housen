@@ -707,6 +707,9 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# Questions jsons
+frontend/leerhulpmiddel/questionSets/
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
