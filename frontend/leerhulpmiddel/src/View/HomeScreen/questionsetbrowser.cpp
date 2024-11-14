@@ -78,7 +78,7 @@ QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, Hom
         widgetProxy->setZValue(m_allQuestionsets.length() - i);
         widgetProxy->setRotation(90);
 
-        questionsetWidgetPosition += questionsetWidget->width() * 3 / 4;            //TODO hier nog aanpassen dat de tabbladen allemaal mooi ondermekaar komen
+        questionsetWidgetPosition += questionsetWidget->width() * 3 / 4;            //hier wordt de spacing tussen tabladen gezet
     }
 
 
@@ -140,7 +140,7 @@ void QuestionsetBrowser::CreateNewQuestionset()
                 QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}));     //TODO er voor zorgen dat de memory veilig werdt behandelt
                 if (m_parent != nullptr)
                 {
-                    connect(tempVragensetWidget, &QuestionsetTreeWidget::DisplayVraag, m_parent, &HomeScreen::DisplayVraag);
+                    connect(tempVragensetWidget, &QuestionsetTreeWidget::Display, m_parent, &HomeScreen::DisplayWidget);
                 }
                 m_container->insertWidget(1, tempVragensetWidget, 0);
             }

@@ -160,7 +160,7 @@ void QuestionsetTreeWidget::AddLooseVragenToTree(QVBoxLayout* container, QList<Q
                                 ).arg((10 * indentation) + 30));
 
         QObject::connect(looseVraagButton, &QPushButton::clicked, this, [this, vraagName]() {
-            sendDisplayQuestionSignal(vraagName);
+            sendDisplayQuestionSignal(new QLabel(vraagName));
 
             });
 
@@ -170,15 +170,15 @@ void QuestionsetTreeWidget::AddLooseVragenToTree(QVBoxLayout* container, QList<Q
 
 
 //mogelijks scuffed, het was did of een pointer naar het homescreen meegeven aan iedere instance van questionsetWidget
-void QuestionsetTreeWidget::sendDisplayQuestionSignal(QString tempNaam)
+void QuestionsetTreeWidget::sendDisplayQuestionSignal(QWidget* toBeDisplayed)
 {
     if (m_questionsetWidgetParent != nullptr)
     {
-        m_questionsetWidgetParent->sendDisplayQuestionSignal(tempNaam);
+        m_questionsetWidgetParent->sendDisplayQuestionSignal(toBeDisplayed);
     }
     else
     {
-        emit DisplayVraag(tempNaam);
+        emit Display(toBeDisplayed);
     }
 }
 

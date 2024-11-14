@@ -23,7 +23,7 @@ private:
 
 
 public slots:
-    void DisplayVraag(QString tempString);      //Dit veranderen naar een vraag klasse
+    void DisplayWidget(QWidget* displayWidget);
 };
 
 #endif // HOMESCREEN_H

@@ -28,7 +28,7 @@ private:
     void CreateNewQuestionset();
     bool doesQuestionsetExist(QString name);
 
-    void sendDisplayQuestionSignal(QString tempNaam);
+    void sendDisplayQuestionSignal(QWidget* toBeDisplayed);
 
     QWidget* m_underlyingTree;
     QVBoxLayout* m_underlyingTreeContainer;
@@ -38,7 +38,7 @@ private:
 
 
 signals:
-    void DisplayVraag(QString tempNaam);
+    void Display(QWidget* displayWidget);
 
     void addSubset(QString name);
 

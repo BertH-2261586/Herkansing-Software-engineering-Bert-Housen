@@ -21,14 +21,12 @@ HomeScreen::HomeScreen(QuestionManager& manager)
 }
 
 
-void HomeScreen::DisplayVraag(QString tempString)
+void HomeScreen::DisplayWidget(QWidget* displayWidget)
 {
-    QWidget* tempWidget = new QLabel(tempString);
-
-    m_container->replaceWidget(m_rightSideScreen, tempWidget);
+    m_container->replaceWidget(m_rightSideScreen, displayWidget);
 
     m_rightSideScreen->setParent(nullptr);
     m_rightSideScreen->deleteLater();
 
-    m_rightSideScreen = tempWidget;
+    m_rightSideScreen = displayWidget;
 }
