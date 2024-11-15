@@ -27,7 +27,7 @@ void MultipleChoiceExaminationView::setQuestion(MultipleChoiceQuestion* question
 // This function sets the question label correctly
 void MultipleChoiceExaminationView::setQuestionLabel() {
     // Initialize the label 
-    m_questionLabel = new QLabel(QString::fromStdString(m_currentQuestion->getQuestion()), this);
+    m_questionLabel = new QLabel(m_currentQuestion->getQuestion(), this);
     m_questionLabel->setStyleSheet(
         "color: palette(windowText); "
         "font-size: 25px; "

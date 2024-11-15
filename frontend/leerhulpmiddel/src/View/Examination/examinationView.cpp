@@ -9,11 +9,11 @@
 
 ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_currentQuestionIndex(0) {
     // Dummy data
-    m_questions.append(new MultipleChoiceQuestion("multi", "Wat is 2+2? Hoeveel kom je uit met deze rekenkundige som. Dit is een test qua lengte", "4"));
+    m_questions.append(new MultipleChoiceQuestion("multi", "Wat is 2+2? Hoeveel kom je uit met deze rekenkundige som. Dit is een test qua lengte", Answer({ "4" })));
     //m_questions.append(new FillInQuestion("fillin", "[Bob] is cool net gelijk [Bob2] en [bob3]", "Bob"));
-    m_questions.append(new Flashcard("flashcard", "Question testing word how", "Answer!"));
-    m_questions.append(new MultipleChoiceQuestion("multi", "Wat is 2+2? Hoeveel kom je uit met deze rekenkundige som. Dit is een test qua lengte", "4"));
-    m_questions.append(new Flashcard("flashcard", "Question testing word how", "Answer!"));
+    m_questions.append(new Flashcard("flashcard", "Question testing word how", Answer({"Answer!"})));
+    m_questions.append(new MultipleChoiceQuestion("multi", "Wat is 2+2? Hoeveel kom je uit met deze rekenkundige som. Dit is een test qua lengte", Answer({ "4" })));
+    m_questions.append(new Flashcard("flashcard", "Question testing word how", Answer({ "Answer!" })));
     m_totalAmountQuestions = m_questions.count();
 
     setCurrentQuestionView();

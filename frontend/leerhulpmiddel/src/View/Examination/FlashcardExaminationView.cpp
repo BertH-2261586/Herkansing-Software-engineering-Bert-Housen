@@ -28,7 +28,7 @@ void FlashcardExaminationView::setQuestion(Flashcard* question) {
 // This function sets the question label correctly
 void FlashcardExaminationView::setQuestionLabel() {
     m_questionLabel = new QLabel(this);
-    m_questionLabel->setText(QString::fromStdString(m_currentQuestion->getQuestion()));
+    m_questionLabel->setText(m_currentQuestion->getQuestion());
     m_questionLabel->setStyleSheet(
         "color: palette(windowText); "
         "border: 3px solid palette(mid); "
@@ -71,10 +71,12 @@ bool FlashcardExaminationView::eventFilter(QObject* watched, QEvent* event) {
     if (watched == m_questionLabel && event->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
-            if (m_showingQuestion) 
-                m_questionLabel->setText(QString::fromStdString(m_currentQuestion->getAnswer()));
+            if (m_showingQuestion) {
+                Answer answer = m_currentQuestion->getAnswer();
+                m_questionLabel->setText(answer.getAnswers().first());
+            }
             else
-                m_questionLabel->setText(QString::fromStdString(m_currentQuestion->getQuestion()));
+                m_questionLabel->setText(m_currentQuestion->getQuestion());
 
             m_showingQuestion = !m_showingQuestion;
             return true;  // Event handled

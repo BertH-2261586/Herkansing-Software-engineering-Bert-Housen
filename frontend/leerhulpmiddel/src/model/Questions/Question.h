@@ -1,6 +1,4 @@
 #pragma once 
-
-
 #include <string>
 #include <QString>
 
@@ -17,6 +15,7 @@ public:
     virtual QString getQuestion() const = 0;
     virtual Answer getAnswer() const = 0;
     QString getName() const { return (m_name); }
+    QuestionType getQuestionType() const { return m_questionType; }
     QString questionTypeToString() const;
     static QuestionType stringToQuestionType(const QString questionType);
 private:

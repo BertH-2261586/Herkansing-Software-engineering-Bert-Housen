@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
+    <ClCompile Include="src\model\countdownTimer.cpp" />
     <ClCompile Include="src\model\questionmanager.cpp" />
     <ClCompile Include="src\model\questionset.cpp" />
     <ClCompile Include="src\model\Questions\Answer.cpp" />
@@ -106,6 +107,10 @@
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Question.cpp" />
+    <ClCompile Include="src\view\Examination\examinationView.cpp" />
+    <ClCompile Include="src\view\Examination\FillInExaminationView.cpp" />
+    <ClCompile Include="src\view\Examination\FlashcardExaminationView.cpp" />
+    <ClCompile Include="src\view\Examination\MultipleChoiceExaminationView.cpp" />
     <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
     <ClCompile Include="src\view\HomeScreen\questionsetbrowser.cpp" />
     <ClCompile Include="src\view\HomeScreen\questionsettreewidget.cpp" />
@@ -117,6 +122,7 @@
     <QtMoc Include="src\model\questionmanager.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
     <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
+    <QtMoc Include="src\model\countdownTimer.h" />
     <ClInclude Include="src\model\Questions\Answer.h" />
     <ClInclude Include="src\model\fileManager.h" />
     <ClInclude Include="src\model\Questions\FillInQuestion.h" />
@@ -124,6 +130,10 @@
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\Question.h" />
     <ClInclude Include="src\model\Questions\questionType.h" />
+    <QtMoc Include="src\view\Examination\examinationView.h" />
+    <QtMoc Include="src\view\Examination\FillInExaminationView.h" />
+    <QtMoc Include="src\view\Examination\FlashcardExaminationView.h" />
+    <QtMoc Include="src\view\Examination\MultipleChoiceExaminationView.h" />
     <ClInclude Include="src\view\HomeScreen\homescreen.h" />
     <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />

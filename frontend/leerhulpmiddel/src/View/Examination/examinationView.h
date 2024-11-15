@@ -8,12 +8,13 @@
 #include <QVBoxLayout>
 #include <QMessageBox>
 
-#include "../../fileManager.h"
+#include "../../model/fileManager.h"
 #include "../../model/Questions/Question.h"
 #include "../../model/Questions/MultipleChoiceQuestion.h"
 #include "../../model/Questions/FillInQuestion.h"
 #include "../../model/Questions/Flashcard.h"
 #include "../../model/countdownTimer.h"
+#include "../../model/Questions/Answer.h"
 #include "FlashcardExaminationView.h"
 #include "FillInExaminationView.h"
 #include "MultipleChoiceExaminationView.h"

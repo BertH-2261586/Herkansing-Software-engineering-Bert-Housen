@@ -18,7 +18,7 @@ void FillInExaminationView::setQuestion(FillInQuestion* question) {
     // Create a row of text with a space for user input
     QHBoxLayout* questionLayout = new QHBoxLayout;
 
-    QString questionString = QString::fromStdString(question->getQuestion());
+    QString questionString = question->getQuestion();
 
     QRegularExpression re("\\[([^\\]]+)\\]");
     QRegularExpressionMatchIterator i = re.globalMatch(questionString);
