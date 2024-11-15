@@ -112,3 +112,11 @@
 * Indien proefexamen meteen wordt gemaakt
     * **Instance creation:** Er wordt een proefexamen ondervraging gestart. Zie “Doorloop vragen” Use Case.
 
+## UML Diagrammen ontwerp
+Het systeem toont alle vragensets waar de gebruiker uit kan kiezen waaruit hij/zij hun examen uit wil vormen.
+![Toon Vragenset sequentie diagram](./Images/genereer_proefexamen_toon_vragensets.png)</br>
+Het proefexamen wordt hier gestart door de user en het systeem geeft een confirmatie dat deze opstart is gelukt.
+![Genereer proefexamen sequentie diagram](./Images/genereer_proefexamen_genereer_proef.png)
+
+## Klassen diagram
+![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)

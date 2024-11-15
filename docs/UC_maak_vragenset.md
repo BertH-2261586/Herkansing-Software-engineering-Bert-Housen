@@ -79,3 +79,8 @@
 * **Instance creation:** Vraag wordt opgeslagen.<br/>
 
 ## UML Diagrammen ontwerp
+Dit toont hoe de vragenset opgeslagen wordt door het systeem.
+![Sla vragenset op sequentie diagram](./Images/maak_vragenset_sla_vragenset_op.png)
+
+## Klassen diagram
+![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)

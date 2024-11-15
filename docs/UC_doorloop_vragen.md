@@ -74,3 +74,67 @@ Geen
 
 **Frequency of Occurences:** 
 Dit wordt frequent gebruikt, namelijk wanneer de gebruiker studeert aan de hand van ondervragingen of oefenexamens
+
+## Systeemsequentiediagram
+![Systeem Sequentie Diagram](./Images/SSD_doorloop_vragen.png)
+
+## Contracten
+
+### **Naam:** Kies vragenset<br/>
+**Cross References:** 
+* **Use cases:** Doorloop vragen<br/>
+* **SSD’s:** Doorloop vragen
+  
+**Pre-condities:** Er bestaat minstens 1 vragenset die kan geselecteerd worden en deze bevat minstens 1 vraag<br/>
+**Post-condities:** 
+* **Associations formed:** De geselecteerde vragenset wordt gekoppeld aan de ondervraging
+* **Instance creation:** Een ondervraging instantie wordt aangemaakt.
+
+---
+
+### **Naam:** Beantwoord de vraag<br/>
+**Cross References:** 
+* **Use cases:**  Doorloop vragen<br/>
+* **SSD’s:** Doorloop vragen
+  
+**Pre-condities:** De huidige vraag is geladen en weergegeven aan de gebruiker.
+**Post-condities:** 
+* **Attribute modification:** Het gebruiker gegenereerde antwoord wordt opgeslagen.
+
+---
+
+### **Naam:** Ga naar de volgende vraag<br/>
+**Cross References:** 
+* **Use cases:** Doorloop vragen<br/>
+* **SSD’s:** Doorloop vragen
+  
+**Pre-condities:** 
+* De huidige vraag is beantwoord door de gebruiker.
+* Er is een volgende vraag beschikbaar om te tonen
+
+**Post-condities:** 
+* **Attribute modification:** De voortgang van de ondervraging wordt bijgewerkt (Vraagnummer).
+* **Associations formed:** De nieuwe vraag wordt gekoppeld aan de ondervraging.
+* **Associations broken:** De vorige vraag wordt losgekoppeld van de huidige ondervraging zodra deze beantwoord is.
+
+---
+
+### **Naam:** Sluit de ondervraging <br/>
+**Cross References:** 
+* **Use cases:** Doorloop vragen<br/>
+* **SSD’s:** Doorloop vragen
+  
+**Pre-condities:** De ondervraging is gestart.
+
+**Post-condities:** 
+* **Association broken:** De verbinding tussen vragenset en de ondervraging wordt onderbroken
+* **Instance creation:** Er wordt een eindverslag van de ondervraging aangemaakt 
+
+## UML Diagrammen ontwerp
+De gebruiker kiest de vragenset die ze willen gebruiken voor hun ondervraging
+![Kies vragenset sequentie diagram](./Images/doorloop_vragen_kies_vragenset.png)</br>
+Dit toont de system flow wanneer de gebruiker een vraag in de ondervraging beantwoord en hoe ze het correct resultaat krijgen weergegeven.
+![Beantwoord vraag in ondervraging sequentie diagram](./Images/doorloop_vragen_beantwoord_vraag.png)
+
+## Klassen diagram
+![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)
