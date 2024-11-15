@@ -97,12 +97,12 @@
   <ItemGroup>
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\countdownTimer.cpp" />
     <ClCompile Include="src\model\questionmanager.cpp" />
     <ClCompile Include="src\model\questionset.cpp" />
     <ClCompile Include="src\model\Questions\Answer.cpp" />
     <ClCompile Include="src\model\fileManager.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\Questions\FillInQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />

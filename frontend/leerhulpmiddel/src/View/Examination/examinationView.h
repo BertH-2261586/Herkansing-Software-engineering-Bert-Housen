@@ -28,7 +28,7 @@ public:
 private slots:
     void nextQuestion();
     void checkAnswer();
-    void closeWindow() { close(); }
+    void closeWindow() { this->close(); }
     void closeEvent(QCloseEvent* event) override; // Override close event
     void onCountdownFinished();
 

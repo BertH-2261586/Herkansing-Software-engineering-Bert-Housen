@@ -3,16 +3,20 @@
 #include <QApplication>
 #include <QMainWindow>
 
-#include "model/fileManager.h"
-#include "model/Questions/MultipleChoiceQuestion.h"
+#include "view/Examination/examinationView.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     // Create the main window
-    QuestionManager qManager;
+    //QuestionManager qManager;
+    //LeerhulpmiddelMainWindow mainWindow(qManager);
 
-    LeerhulpmiddelMainWindow mainWindow(qManager);
+    QMainWindow mainWindow;
+    ExaminationView ex;
+    mainWindow.setCentralWidget(&ex);  
+    mainWindow.setWindowTitle("Leerhulpmiddel"); 
+    mainWindow.showMaximized();        
     mainWindow.show();
 
     /*
