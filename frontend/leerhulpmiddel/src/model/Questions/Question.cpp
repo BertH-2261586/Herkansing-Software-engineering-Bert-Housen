@@ -8,7 +8,7 @@ QString Question::questionTypeToString() const {
         case QuestionType::FillIn: 
             return "FillIn";
         case QuestionType::Flashcard:
-            return "TrueFalse";
+            return "Flashcard";
         default: 
             return "None";
     }
@@ -17,10 +17,10 @@ QString Question::questionTypeToString() const {
 QuestionType Question::stringToQuestionType(const QString questionTypeStr) {
     if (questionTypeStr == "FillIn") 
         return QuestionType::FillIn;
-    if (questionTypeStr == "MultipleChoice") 
+    else if (questionTypeStr == "MultipleChoice") 
         return QuestionType::MultipleChoice;
-    if (questionTypeStr == "FlashCard") 
+    else if (questionTypeStr == "Flashcard") 
         return QuestionType::Flashcard;
-    if (questionTypeStr == "None")
+    else if (questionTypeStr == "None")
         return QuestionType::None;
 }

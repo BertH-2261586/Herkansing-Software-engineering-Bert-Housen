@@ -1,10 +1,9 @@
-
 #ifndef HOMESCREEN_H
 #define HOMESCREEN_H
 
 #include "qwidget.h"
 #include "questionsetbrowser.h"
-#include "../../model/questionmanager.h"
+#include "../../model/manager/questionmanager.h"
 #include <QGridLayout>
 #include <QHBoxLayout>
 

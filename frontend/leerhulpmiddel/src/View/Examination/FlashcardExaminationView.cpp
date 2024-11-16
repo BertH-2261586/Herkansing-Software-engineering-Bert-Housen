@@ -6,7 +6,7 @@
 * @pre the question parameter is a question class that is filled with the correct and filled variables (for example: no empty answer)
 * @param question this is the question where you'll get the data for the question from
 */
-void FlashcardExaminationView::setQuestion(Flashcard* question) {
+void FlashcardExaminationView::setQuestion(const Flashcard* question) {
     // Clear previous question widgets and layout (to avoid memory leaks)
     clearPreviousQuestion();
 
@@ -71,14 +71,7 @@ bool FlashcardExaminationView::eventFilter(QObject* watched, QEvent* event) {
     if (watched == m_questionLabel && event->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
-            if (m_showingQuestion) {
-                Answer answer = m_currentQuestion->getAnswer();
-                m_questionLabel->setText(answer.getAnswers().first());
-            }
-            else
-                m_questionLabel->setText(m_currentQuestion->getQuestion());
-
-            m_showingQuestion = !m_showingQuestion;
+            handleQuestionClicked();
             return true;  // Event handled
         }
     }
@@ -107,4 +100,17 @@ void FlashcardExaminationView::clearPreviousQuestion() {
     m_questionLabel = nullptr; // Reset QLabel pointer
     m_scrollArea = nullptr;    // Reset QScrollArea pointer
     m_currentQuestion = nullptr; // Reset the Flashcard pointer
+}
+
+void FlashcardExaminationView::handleQuestionClicked() {
+    if (m_showingQuestion) {
+        Answer answer = m_currentQuestion->getAnswer();
+        m_questionLabel->setText(answer.getAnswers().first());
+        emit flashcardHasBeenFlipped();
+    }
+    else {
+        m_questionLabel->setText(m_currentQuestion->getQuestion());
+    }
+
+    m_showingQuestion = !m_showingQuestion;
 }

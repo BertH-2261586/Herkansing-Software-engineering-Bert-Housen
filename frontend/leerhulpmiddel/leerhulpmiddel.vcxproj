@@ -95,11 +95,15 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Controller\examinationController.cpp" />
+    <QtMoc Include="src\Controller\examinationController.h" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <QtMoc Include="src\model\manager\examinationManager.h" />
     <ClCompile Include="src\model\countdownTimer.cpp" />
-    <ClCompile Include="src\model\questionmanager.cpp" />
+    <ClCompile Include="src\model\manager\examinationManager.cpp" />
+    <ClCompile Include="src\model\manager\questionmanager.cpp" />
     <ClCompile Include="src\model\questionset.cpp" />
     <ClCompile Include="src\model\Questions\Answer.cpp" />
     <ClCompile Include="src\model\fileManager.cpp" />
@@ -119,10 +123,11 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\model\questionset.h" />
-    <QtMoc Include="src\model\questionmanager.h" />
+    <QtMoc Include="src\model\manager\questionmanager.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
     <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
     <QtMoc Include="src\model\countdownTimer.h" />
+    <ClInclude Include="src\model\examination.h" />
     <ClInclude Include="src\model\Questions\Answer.h" />
     <ClInclude Include="src\model\fileManager.h" />
     <ClInclude Include="src\model\Questions\FillInQuestion.h" />

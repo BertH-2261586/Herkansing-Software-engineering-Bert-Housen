@@ -1,10 +1,9 @@
-
 #ifndef QUESTIONMANAGER_H
 #define QUESTIONMANAGER_H
 
 
 #include <QObject>
-#include "questionset.h"
+#include "../questionset.h"
 #include <QList>
 
 

@@ -15,23 +15,21 @@ class MultipleChoiceExaminationView : public QWidget {
 
 public:
     MultipleChoiceExaminationView(QWidget* parent = nullptr) {}
-    void setQuestion(MultipleChoiceQuestion* question);
+    void setQuestion(const MultipleChoiceQuestion* question);
     void clearPreviousQuestion();
+    void showAnswer(const MultipleChoiceQuestion* question);
 
 private:
-    void setQuestionLabel();
+    void setQuestionLabel(const MultipleChoiceQuestion* question);
     void setRadioButtons();
-    //bool eventFilter(QObject* watched, QEvent* event) override;
 
     // All GUI elements
     QLabel* m_questionLabel = nullptr;
     QVBoxLayout* m_mainQuestionLayout = nullptr;
     QGridLayout* m_radioButtonLayout = nullptr;
-    QList<QRadioButton*> m_radioButtonList = { nullptr };
+    QVector<QRadioButton*> m_radioButtonList = { nullptr };
     // Make a button group so that functionality can be shared (for example only be able to select up to 1 radio button)
     QButtonGroup* m_buttonGroup = nullptr;               
-    
-    MultipleChoiceQuestion* m_currentQuestion = nullptr;
 };
 
 #endif

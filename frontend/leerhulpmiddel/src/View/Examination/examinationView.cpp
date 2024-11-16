@@ -1,25 +1,12 @@
 #include "examinationView.h"
+#include "../../Controller/examinationController.h"
 
 #include <QCloseEvent>
 #include <QToolTip>
-#include <QScrollArea>
-#include <QPalette>
 
-// QPalet
-
-ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_currentQuestionIndex(0) {
-    // Dummy data
-    m_questions.append(new MultipleChoiceQuestion("multi", "Wat is 2+2? Hoeveel kom je uit met deze rekenkundige som. Dit is een test qua lengte", Answer({ "4" })));
-    //m_questions.append(new FillInQuestion("fillin", "[Bob] is cool net gelijk [Bob2] en [bob3]", "Bob"));
-    m_questions.append(new Flashcard("flashcard", "Question testing word how", Answer({"Answer!"})));
-    m_questions.append(new MultipleChoiceQuestion("multi", "Wat is 2+2? Hoeveel kom je uit met deze rekenkundige som. Dit is een test qua lengte", Answer({ "4" })));
-    m_questions.append(new Flashcard("flashcard", "Question testing word how", Answer({ "Answer!" })));
-    m_totalAmountQuestions = m_questions.count();
-
-    setCurrentQuestionView();
-
+ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_examinationController(new ExaminationController(this)) {
     // Create the widgets directly for the page
-    amountOfQuestionsAnswered = new QLabel(QString::number(m_currentQuestionIndex + 1) + "/" + QString::number(m_totalAmountQuestions), this);
+    amountOfQuestionsAnswered = new QLabel("", this);
     amountOfQuestionsAnswered->setStyleSheet(
         "color: palette(windowText); "
         "font-size: 25px; "
@@ -36,7 +23,7 @@ ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_currentQu
         "font-size: 25px; "
         "font-weight: bold;"
     );
-    connect(timePerQuestion, &CountdownTimer::countdownFinished, this, &ExaminationView::onCountdownFinished);
+    connect(timePerQuestion, &CountdownTimer::countdownFinished, this, &ExaminationView::checkAnswer);
 
     submitButton = new QPushButton("Submit Answer", this);
     submitButton->setStyleSheet(
@@ -55,6 +42,7 @@ ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_currentQu
         "}"
     );
     submitButton->setCursor(Qt::PointingHandCursor);
+    connect(submitButton, &QPushButton::clicked, this, &ExaminationView::checkAnswer);
 
     closeButton = new QPushButton("X", this);
     closeButton->setStyleSheet(
@@ -73,13 +61,41 @@ ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_currentQu
     connect(closeButton, &QPushButton::clicked, this, &ExaminationView::closeWindow);
 
     nextQuestionButton = new QPushButton("Next Question ->", this);
-    nextQuestionButton->setStyleSheet("color: palette(windowText);");
+    nextQuestionButton->setStyleSheet(
+        "QPushButton {"
+        "   color: palette(ButtonText); "
+        "   background-color: palette(button);"             // Background color (green)
+        "   border: 2px solid palette(mid);"             // Border with a darker green
+        "   border-radius: 5px;"                    // Rounded corners
+        "   padding: 8px 16px;"                     // Padding for a better button shape
+        "   margin-bottom: 25px;"
+        "   font-size: 16px;"                       // Font size
+        "   max-width: 175px;"                      // Limit the width of the button
+        "}"
+        "QPushButton:hover {"
+        "   background-color: palette(mid);"             // Darker green on hover
+        "}"
+    );
     nextQuestionButton->setCursor(Qt::PointingHandCursor);
-    connect(nextQuestionButton, &QPushButton::clicked, this, &ExaminationView::nextQuestion);
+    connect(nextQuestionButton, &QPushButton::clicked, this, &ExaminationView::nextQuestionView);
     nextQuestionButton->hide();
 
     endExaminationButton = new QPushButton("End the examination", this);
-    endExaminationButton->setStyleSheet("color: palette(windowText);");
+    endExaminationButton->setStyleSheet(
+        "QPushButton {"
+        "   color: palette(ButtonText); "
+        "   background-color: palette(button);"             // Background color (green)
+        "   border: 2px solid palette(mid);"             // Border with a darker green
+        "   border-radius: 5px;"                    // Rounded corners
+        "   padding: 8px 16px;"                     // Padding for a better button shape
+        "   margin-bottom: 25px;"
+        "   font-size: 16px;"                       // Font size
+        "   max-width: 175px;"                      // Limit the width of the button
+        "}"
+        "QPushButton:hover {"
+        "   background-color: palette(mid);"             // Darker green on hover
+        "}"
+    );
     endExaminationButton->setCursor(Qt::PointingHandCursor);
     connect(endExaminationButton, &QPushButton::clicked, this, [this]() {
         m_closeFromExaminationEnd = true;
@@ -99,56 +115,67 @@ ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_currentQu
     questionInfoLayout->addWidget(timePerQuestion, 0, Qt::AlignTop);
     mainLayout->addLayout(questionInfoLayout);
 
+    connect(&flashcardView, &FlashcardExaminationView::flashcardHasBeenFlipped, this, &ExaminationView::flashcardHasBeenFlipped);
     mainLayout->addWidget(&flashcardView, 0, Qt::AlignHCenter);
     mainLayout->addWidget(&multipleChoiceView, 0, Qt::AlignHCenter);
     mainLayout->addWidget(&fillInView, 0, Qt::AlignHCenter);
 
     // Add the question label, answer input, and submit button
     mainLayout->addWidget(submitButton, 0, Qt::AlignHCenter);
-    mainLayout->addWidget(nextQuestionButton);
+    mainLayout->addWidget(nextQuestionButton, 0, Qt::AlignHCenter);
+    mainLayout->addWidget(endExaminationButton, 0, Qt::AlignHCenter);
 
     // Set the layout for the window
     setLayout(mainLayout);
 
-    // Connect submitButton's signal to checkAnswer
-    connect(submitButton, &QPushButton::clicked, this, [this]() {
-        checkAnswer();  // Pass the captured text to checkAnswer function
-    });
+    startExamination("C:/Users/evens/project-software-engineering-groep_7/frontend/leerhulpmiddel/questionSets/test");
 }
 
-void ExaminationView::nextQuestion() {
-    clearPreviousQuestionView();
-    qDebug() << "next";
-    submitButton->show();
-    nextQuestionButton->hide();
-    ++m_currentQuestionIndex;
-    timePerQuestion->resetTimer();
-    timePerQuestion->startCountdown();
+void ExaminationView::questionLoadedView() {
+    int questionIndex = m_examinationController->getCurrentQuestionNumber();
+    int totalQuestionAmount = m_examinationController->getTotalAmountOfQuestions();
+    amountOfQuestionsAnswered->setText(QString::number(questionIndex) + "/" + QString::number(totalQuestionAmount));
 
     setCurrentQuestionView();
+}
 
-    amountOfQuestionsAnswered->setText(QString::number(m_currentQuestionIndex + 1) + "/" + QString::number(m_totalAmountQuestions));
+void ExaminationView::nextQuestionView() {
+    clearPreviousQuestionView();
+
+    emit nextQuestion();
+
+    if (m_examinationController->getCurrentQuestionType() != QuestionType::Flashcard) {
+        submitButton->show();
+    }
+    nextQuestionButton->hide();
+
+    timePerQuestion->resetTimer();
+    timePerQuestion->startCountdown();
 }
 
 void ExaminationView::checkAnswer() {
     timePerQuestion->pauseCountdown();
 
-    if (m_currentQuestionIndex + 1 == m_questions.count()) {        // Tel bij de index + 1, want het begint te tellen van 0 i.p.v. 1
+    //m_examinationController.checkAnswer();
+    QuestionType questionType = m_examinationController->getCurrentQuestionType();
+    if (questionType == QuestionType::Flashcard) {
+        flashcardView.handleQuestionClicked();
+        nextQuestionButton->show();
+    }
+    else if (questionType == QuestionType::MultipleChoice) {
+        multipleChoiceView.showAnswer(dynamic_cast<const MultipleChoiceQuestion*>(m_examinationController->getQuestion()));
+    }
+    //else if (questionType == QuestionType::FillIn) {
+    //    fillInView.setQuestion(dynamic_cast<FillInQuestion*>(m_questions[m_currentQuestionIndex]));
+    //}
+
+    if (m_examinationController->getCurrentQuestionNumber() == m_examinationController->getTotalAmountOfQuestions()) {       
         endExaminationButton->show();
     }
     else {
         nextQuestionButton->show();
     }
     submitButton->hide();
-
-    Question* currentQuestion = m_questions[m_currentQuestionIndex];
-    QuestionType questionType = currentQuestion->getQuestionType();
-    //questionLabel->setText(QString::fromStdString(currentQuestion->getAnswer()));
-}
-
-void ExaminationView::onCountdownFinished() {
-    qDebug() << "times up";
-    checkAnswer();
 }
 
 void ExaminationView::closeEvent(QCloseEvent* event) {
@@ -177,12 +204,12 @@ void ExaminationView::closeEvent(QCloseEvent* event) {
 }
 
 void ExaminationView::setCurrentQuestionView() {
-    QuestionType questionType = m_questions[m_currentQuestionIndex]->getQuestionType();
+    QuestionType questionType = m_examinationController->getCurrentQuestionType();
     if (questionType == QuestionType::Flashcard) {
-        flashcardView.setQuestion(dynamic_cast<Flashcard*>(m_questions[m_currentQuestionIndex]));
+        flashcardView.setQuestion(dynamic_cast<const Flashcard*>(m_examinationController->getQuestion()));
     }
     else if (questionType == QuestionType::MultipleChoice) {
-        multipleChoiceView.setQuestion(dynamic_cast<MultipleChoiceQuestion*>(m_questions[m_currentQuestionIndex]));
+        multipleChoiceView.setQuestion(dynamic_cast<const MultipleChoiceQuestion*>(m_examinationController->getQuestion()));
     }
     //else if (questionType == QuestionType::FillIn) {
     //    fillInView.setQuestion(dynamic_cast<FillInQuestion*>(m_questions[m_currentQuestionIndex]));
@@ -190,7 +217,7 @@ void ExaminationView::setCurrentQuestionView() {
 }
 
 void ExaminationView::clearPreviousQuestionView() {
-    QuestionType questionType = m_questions[m_currentQuestionIndex]->getQuestionType();
+    QuestionType questionType = m_examinationController->getCurrentQuestionType();
     if (questionType == QuestionType::Flashcard) {
         flashcardView.clearPreviousQuestion();
     }
@@ -200,4 +227,9 @@ void ExaminationView::clearPreviousQuestionView() {
     //else if (questionType == QuestionType::FillIn) {
     //    fillInView.setQuestion(dynamic_cast<FillInQuestion*>(m_questions[m_currentQuestionIndex]));
     //}
+}
+
+void ExaminationView::flashcardHasBeenFlipped() { 
+    nextQuestionButton->show(); 
+    timePerQuestion->pauseCountdown(); 
 }

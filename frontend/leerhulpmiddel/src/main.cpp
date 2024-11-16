@@ -1,5 +1,5 @@
 #include "View/leerhulpmiddelmainwindow.h"
-#include "model/questionmanager.h"
+#include "model/manager/questionmanager.h"
 #include <QApplication>
 #include <QMainWindow>
 

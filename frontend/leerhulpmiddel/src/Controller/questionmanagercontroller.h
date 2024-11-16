@@ -1,8 +1,7 @@
-
 #ifndef QUESTIONMANAGERCONTROLLER_H
 #define QUESTIONMANAGERCONTROLLER_H
 
-#include "../model/questionmanager.h"
+#include "../model/manager/questionmanager.h"
 
 
 class QuestionManagerController

@@ -1,6 +1,5 @@
-
 #include "questionmanager.h"
-#include "Questions/Flashcard.h"
+#include "../Questions/Flashcard.h"
 
 QuestionManager::QuestionManager()
 {

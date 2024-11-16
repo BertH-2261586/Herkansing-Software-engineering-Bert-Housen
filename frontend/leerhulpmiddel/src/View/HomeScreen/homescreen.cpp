@@ -1,7 +1,7 @@
 #include "homescreen.h"
 #include "qlabel.h"
 #include <QDebug>
-#include "../../model/questionmanager.h"
+#include "../../model/manager/questionmanager.h"
 
 HomeScreen::HomeScreen(QuestionManager& manager)
 {

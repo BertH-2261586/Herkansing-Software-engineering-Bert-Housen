@@ -67,7 +67,7 @@
     <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\model\questionmanager.cpp">
+    <ClCompile Include="src\model\manager\questionmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\model\questionset.cpp">
@@ -77,6 +77,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\countdownTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\examinationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\FillInExaminationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\FlashcardExaminationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\MultipleChoiceExaminationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller\examinationController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\manager\examinationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -117,6 +138,9 @@
     <ClInclude Include="src\Controller\questionmanagercontroller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\model\examination.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\view\HomeScreen\mylineedit.h">
@@ -131,8 +155,29 @@
     <QtMoc Include="src\model\questionset.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\model\questionmanager.h">
+    <QtMoc Include="src\model\manager\questionmanager.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\countdownTimer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\examinationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\FillInExaminationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\FlashcardExaminationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\MultipleChoiceExaminationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Controller\examinationController.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\manager\examinationManager.h">
+      <Filter>Source Files</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

@@ -6,15 +6,14 @@
 * @pre the question parameter is a question class that is filled with the correct and filled variables (for example: no empty answer)
 * @param question this is the question where you'll get the data for the question from
 */
-void MultipleChoiceExaminationView::setQuestion(MultipleChoiceQuestion* question) {
+void MultipleChoiceExaminationView::setQuestion(const MultipleChoiceQuestion* question) {
     // Clear previous question widgets and layout (to avoid memory leaks)
     clearPreviousQuestion();    
 
     m_mainQuestionLayout = new QVBoxLayout(this);
-    m_currentQuestion = question;
 
     // Set the question label and radio buttons correctly
-    setQuestionLabel();
+    setQuestionLabel(question);
     setRadioButtons();
 
     // Add them to the layout
@@ -25,9 +24,9 @@ void MultipleChoiceExaminationView::setQuestion(MultipleChoiceQuestion* question
 }
 
 // This function sets the question label correctly
-void MultipleChoiceExaminationView::setQuestionLabel() {
+void MultipleChoiceExaminationView::setQuestionLabel(const MultipleChoiceQuestion* question) {
     // Initialize the label 
-    m_questionLabel = new QLabel(m_currentQuestion->getQuestion(), this);
+    m_questionLabel = new QLabel(question->getQuestion(), this);
     m_questionLabel->setStyleSheet(
         "color: palette(windowText); "
         "font-size: 25px; "
@@ -144,6 +143,12 @@ void MultipleChoiceExaminationView::clearPreviousQuestion() {
         m_mainQuestionLayout = nullptr; 
     }
 
+    for (QRadioButton* button : m_radioButtonList) {
+        if (button) {
+            button->deleteLater();
+        }
+    }
+
     // Delete and reset the button group if it exists
     if (m_buttonGroup) {
         delete m_buttonGroup; 
@@ -152,23 +157,49 @@ void MultipleChoiceExaminationView::clearPreviousQuestion() {
 
     // Reset the remaining member variables associated with the previous question
     m_questionLabel = nullptr; 
-    m_currentQuestion = nullptr; 
     m_radioButtonList.clear();
 }
 
-//bool MultipleChoiceExaminationView::eventFilter(QObject* watched, QEvent* event) {
-//    if (watched == questionLabel && event->type() == QEvent::MouseButtonPress) {
-//        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-//        if (mouseEvent->button() == Qt::LeftButton) {
-//            if (m_showingQuestion)
-//                questionLabel->setText(QString::fromStdString(m_currentQuestion->getAnswer()));
-//            else
-//                questionLabel->setText(QString::fromStdString(m_currentQuestion->getQuestion()));
-//
-//            m_showingQuestion = !m_showingQuestion;
-//            return true;  // Event handled
-//        }
-//    }
-//    // Pass the event to the base class
-//    return QWidget::eventFilter(watched, event);
-//}
+void MultipleChoiceExaminationView::showAnswer(const MultipleChoiceQuestion* question) {
+    for (QRadioButton* radio : m_radioButtonList) {
+        radio->setEnabled(false);
+    }
+    m_radioButtonList[0]->setStyleSheet(
+        "QRadioButton {"
+            "color: red; "
+        "}"
+        // The indicator of the radio button
+        "QRadioButton::indicator {"
+            "width: 10px;"
+            "height: 10px;"
+            "border-radius: 6px;"
+            "border: 1px solid palette(dark);"
+            "background-color: palette(base);"
+        "}"
+        // The indicator is checked/selected
+        "QRadioButton::indicator:checked {"
+            "background-color: palette(highlight);"
+            "border: 2px solid palette(dark);"
+            "border-radius: 6px;"
+        "}"
+    );
+    m_radioButtonList[1]->setStyleSheet(
+        "QRadioButton {"
+        "color: red; "
+        "}"
+        // The indicator of the radio button
+        "QRadioButton::indicator {"
+        "width: 10px;"
+        "height: 10px;"
+        "border-radius: 6px;"
+        "border: 1px solid palette(dark);"
+        "background-color: palette(base);"
+        "}"
+        // The indicator is checked/selected
+        "QRadioButton::indicator:checked {"
+        "background-color: palette(highlight);"
+        "border: 2px solid palette(dark);"
+        "border-radius: 6px;"
+        "}"
+    );
+}

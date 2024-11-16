@@ -1,4 +1,3 @@
-
 #ifndef LEERHULPMIDDELMAINWINDOW_H
 #define LEERHULPMIDDELMAINWINDOW_H
 
@@ -7,7 +6,7 @@
 #include <QGridLayout>
 #include <QBoxLayout>
 #include <QLabel>
-#include "../model/questionmanager.h"
+#include "../model/manager/questionmanager.h"
 
 
 class LeerhulpmiddelMainWindow: public QMainWindow

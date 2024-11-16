@@ -15,10 +15,14 @@
 class FlashcardExaminationView : public QWidget {
     Q_OBJECT
 
+signals:
+    void flashcardHasBeenFlipped();
+
 public:
     FlashcardExaminationView(QWidget* parent = nullptr) {}
-    void setQuestion(Flashcard* question);
+    void setQuestion(const Flashcard* question);
     void clearPreviousQuestion();
+    void handleQuestionClicked();
 
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
@@ -29,7 +33,7 @@ private:
     QScrollArea* m_scrollArea = nullptr;
     QVBoxLayout* m_mainQuestionLayout = nullptr;
 
-    Flashcard* m_currentQuestion = nullptr;
+    const Flashcard* m_currentQuestion;
     bool m_showingQuestion = true;
 };
 
