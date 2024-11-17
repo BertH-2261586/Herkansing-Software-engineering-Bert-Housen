@@ -293,12 +293,11 @@ Answer FileManager::convertToAnswerObject(QJsonObject answer) const {
 * @param questionSetPath this is the path to the question set where you want all the questions from
 * @return QVector<Question*> this vector contains all the questions in the question set
 */
-/*
 QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const QString questionSetPath) const {
     QVector<shared_ptr<Question>> questions;  // Create the vector where you'll store the questions 
 
     // Create a QDir object to access the question set folder
-    QDir dir(questionSetPath);
+    QDir dir = getPath() + "/test";
 
     // Filter only JSON files and directories
     dir.setFilter(QDir::Files | QDir::Dirs);  // Consider both files and directories
@@ -322,7 +321,9 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
                 QString fileName = subFileInfo.baseName();
                 try {
                     // Load question from the file in the subdirectory
-                    auto question = loadQuestionFromJSON(subDir.absolutePath(), fileName);
+
+                    //HARDCODED FOR DEMO, NEEDS TO CHANGE
+                    auto question = loadQuestionFromJSON("test", "testingfolder", fileName);
                     questions.append(std::move(question));  // Add the loaded question to the vector
                 }
                 catch (const std::exception& e) {
@@ -335,7 +336,9 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
             QString fileName = fileFolderInfo.baseName();
             try {
                 // Load question from the main directory
-                auto question = loadQuestionFromJSON(questionSetPath, fileName);
+
+                //HARDCODED FOR DEMO, NEEDS TO CHANGE
+                auto question = loadQuestionFromJSON("test", "", fileName);
                 questions.append(std::move(question));  // Add the loaded question to the vector
             }
             catch (const std::exception& e) {
@@ -350,4 +353,3 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
 
     return questions;
 }
-*/

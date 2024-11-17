@@ -29,6 +29,8 @@ void Questionset::addQuestion(Question* question, QString subsetName) {
 
         qDebug() << "Subset " << subsetName << " not found";
     }
+
+    emit displayNewQuestion(question, 0);
 }
 
 //TODO mogelijks alles alfabetisch displayen en hier dan de goede index aan megeven

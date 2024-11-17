@@ -128,7 +128,7 @@ ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_examinati
     // Set the layout for the window
     setLayout(mainLayout);
 
-    startExamination("C:/Users/evens/project-software-engineering-groep_7/frontend/leerhulpmiddel/questionSets/test");
+    startExamination("C:/Users/calvi/Documents/3de Bach/Software Engineering/project-software-engineering-groep_7/frontend/leerhulpmiddel/questionSets/test");
 }
 
 void ExaminationView::questionLoadedView() {

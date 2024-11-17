@@ -1,18 +1,28 @@
 #include "leerhulpmiddelmainwindow.h"
 #include "HomeScreen/homescreen.h"
 #include <QDebug>
+#include <QPushButton>
 
-LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManager& questionManager)
+#include "Examination/examinationView.h"
+
+LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManagerController* questionManagerController)
 {
     setWindowTitle("Qt 6.8 Boilerplate Window");
     setWindowState(Qt::WindowMaximized);
 
-    m_container = new QBoxLayout(QBoxLayout::TopToBottom);
+    m_container = new QVBoxLayout();
+
+    QPushButton* btnStartExamination = new QPushButton("Start Examination");
+
+    connect(btnStartExamination, &QPushButton::pressed, this, [=] {
+        SetMainViewport(new ExaminationView());
+    });
 
     //TODO nog een default widget zetten
-    m_containedWidget = new HomeScreen(questionManager);
+    m_containedWidget = new HomeScreen(questionManagerController);
     m_containedWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+    m_container->addWidget(btnStartExamination);
     m_container->addWidget(m_containedWidget);
     m_container->setContentsMargins(0, 0, 0, 0);
 

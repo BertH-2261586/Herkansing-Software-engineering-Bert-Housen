@@ -33,6 +33,7 @@ private:
 
 signals:
     void displayNewSubSet(Questionset* subSet, int index);
+    void displayNewQuestion(Question* newQuestion, int index);
 
 public slots:
     void addSubSet(QString name);

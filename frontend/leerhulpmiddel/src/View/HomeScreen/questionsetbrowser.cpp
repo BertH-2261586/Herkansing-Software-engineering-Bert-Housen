@@ -8,7 +8,8 @@
 #include <QGraphicsProxyWidget>
 #include <QTimer>
 
-QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, HomeScreen* parent) : m_parent(parent), m_allQuestionsets(allQuestionsets)
+QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, QuestionManagerController* questionManagerController, HomeScreen* parent) 
+    : m_parent(parent), m_allQuestionsets(allQuestionsets), m_questionManagerController(questionManagerController)
 {
     m_container = new QHBoxLayout(this);
     m_container->setSpacing(0);
@@ -42,7 +43,7 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
 
     for (int i = 0; i < m_allQuestionsets.length(); i++)
     {
-        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], m_parent);
+        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], m_parent, m_questionManagerController);
 
 
         m_allQuestionsetWidgets.append(questionsetWidget);
@@ -149,7 +150,7 @@ void QuestionsetBrowser::CreateNewQuestionset()
                 textfield->deleteLater();
 
 
-                QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}));     //TODO er voor zorgen dat de memory veilig werdt behandelt
+                QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}), m_questionManagerController);     //TODO er voor zorgen dat de memory veilig werdt behandelt
                 if (m_parent != nullptr)
                 {
                     connect(tempVragensetWidget, &QuestionsetTreeWidget::Display, m_parent, &HomeScreen::DisplayWidget);

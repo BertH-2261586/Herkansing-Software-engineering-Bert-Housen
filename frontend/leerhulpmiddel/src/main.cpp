@@ -11,8 +11,9 @@ int main(int argc, char* argv[]) {
 
     // Create the main window
     QuestionManager qManager;
+    QuestionManagerController* questionManagerController = new QuestionManagerController(qManager);
 
-    LeerhulpmiddelMainWindow mainWindow(qManager);
+    LeerhulpmiddelMainWindow mainWindow(questionManagerController);
     mainWindow.show();
 
     return app.exec();

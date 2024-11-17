@@ -12,6 +12,7 @@
 #include "FlashcardExaminationView.h"
 #include "FillInExaminationView.h"
 #include "MultipleChoiceExaminationView.h"
+#include "../../Controller/questionmanagercontroller.h"
 
 class ExaminationController;
 

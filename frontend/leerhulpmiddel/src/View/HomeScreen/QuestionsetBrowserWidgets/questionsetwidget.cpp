@@ -2,7 +2,7 @@
 #include <QHBoxLayout>
 #include "../homescreen.h"
 
-QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QWidget* parent) :
+QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QuestionManagerController* questionManagerController, QWidget* parent) :
     m_questionset(questionset), QWidget(parent), m_homeScreenParent(homeScreenParent)
 {
     setMouseTracking(true);     //nodig om mouse enter en leave events te detecteren
@@ -32,7 +32,7 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
         "background-color: transparent;"
     );
 
-    m_underlyingTree = new QuestionsetTreeWidget(questionset);
+    m_underlyingTree = new QuestionsetTreeWidget(questionset, questionManagerController);
 
     connect(m_underlyingTree, &QuestionsetTreeWidget::Display, m_homeScreenParent, &HomeScreen::DisplayWidget);
 }
