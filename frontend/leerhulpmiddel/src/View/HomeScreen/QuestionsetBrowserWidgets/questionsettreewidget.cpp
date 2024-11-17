@@ -99,6 +99,22 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name
 
     QPushButton* addToQuestionset = GenerateMenuButton();
 
+<<<<<<< HEAD:frontend/leerhulpmiddel/src/View/HomeScreen/QuestionsetBrowserWidgets/questionsettreewidget.cpp
+=======
+    QMenu* addToQuestionsetMenu = new QMenu(this);
+    QAction* addSubsetAction = addToQuestionsetMenu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
+    QAction* addQuestionAction = addToQuestionsetMenu->addAction("Voeg vraag toe");
+    addToQuestionsetMenu->setStyleSheet("background-color: #4d4d4d;");
+
+    connect(addToQuestionset, &QPushButton::clicked, addToQuestionsetMenu, [=]{
+       addToQuestionsetMenu->popup(addToQuestionset->mapToGlobal(QPoint(0, addToQuestionset->height())));
+    });
+
+    connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
+    connect(addQuestionAction, &QAction::triggered, this, [=] {
+        //sendDisplayQuestionSignal()
+    });
+>>>>>>> b64acdeaf5ac84004a62d2b3bf42295fe512b01b:frontend/leerhulpmiddel/src/View/HomeScreen/questionsettreewidget.cpp
 
     questionsetContainer->addWidget(questionsetButton, 15);
     questionsetContainer->addWidget(addToQuestionset, 1);
