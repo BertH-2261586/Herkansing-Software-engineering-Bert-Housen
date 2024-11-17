@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QGridLayout>
 
 #include "../../model/Questions/FillInQuestion.h"
 
@@ -15,6 +16,7 @@ public:
     explicit FillInExaminationView(QWidget* parent = nullptr) {}
     void setQuestion(const FillInQuestion* question);
     void showAnswer(const FillInQuestion* question);
+    void clearPreviousQuestion();
 
 private:
     QVBoxLayout* m_mainLayout;

@@ -98,6 +98,7 @@
     <ClCompile Include="src\Controller\examinationController.cpp" />
     <QtMoc Include="src\Controller\examinationController.h" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
+    <ClCompile Include="src\Exceptions\FolderQuestionSetMovedException.h" />
     <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
     <ClCompile Include="src\main.cpp" />
     <QtMoc Include="src\model\manager\examinationManager.h" />
@@ -111,6 +112,7 @@
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Question.cpp" />
+    <ClCompile Include="src\QFlowLayout.cpp" />
     <ClCompile Include="src\view\Examination\examinationView.cpp" />
     <ClCompile Include="src\view\Examination\FillInExaminationView.cpp" />
     <ClCompile Include="src\view\Examination\FlashcardExaminationView.cpp" />
@@ -127,6 +129,8 @@
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
     <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
     <QtMoc Include="src\model\countdownTimer.h" />
+    <ClInclude Include="src\Exceptions\loadException.h" />
+    <ClInclude Include="src\Exceptions\saveException.h" />
     <ClInclude Include="src\model\examination.h" />
     <ClInclude Include="src\model\Questions\Answer.h" />
     <ClInclude Include="src\model\fileManager.h" />
@@ -139,6 +143,7 @@
     <QtMoc Include="src\view\Examination\FillInExaminationView.h" />
     <QtMoc Include="src\view\Examination\FlashcardExaminationView.h" />
     <QtMoc Include="src\view\Examination\MultipleChoiceExaminationView.h" />
+    <ClInclude Include="src\QFlowLayout.h" />
     <ClInclude Include="src\view\HomeScreen\homescreen.h" />
     <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />

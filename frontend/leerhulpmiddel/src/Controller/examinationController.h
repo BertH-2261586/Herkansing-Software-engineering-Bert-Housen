@@ -11,7 +11,9 @@ class ExaminationController : public QObject
 
 public:
     ExaminationController(ExaminationView* examinationView);
+    ~ExaminationController() { delete m_examinationManager; }
 
+    // Getters
     int getTotalAmountOfQuestions() const { return m_totalAmountOfQuestions; }
     int getCurrentQuestionNumber() const { return m_currentQuestionIndex; }
     QuestionType getCurrentQuestionType() const { return m_currentQuestion->getQuestionType(); }
@@ -28,10 +30,10 @@ private:
     ExaminationView* m_examinationView;
     ExaminationManager* m_examinationManager = new ExaminationManager();
     
+    // All the information the view needs about the current question
     shared_ptr<Question> m_currentQuestion;
     int m_currentQuestionIndex;
     int m_totalAmountOfQuestions;
-
 };
 
 #endif 

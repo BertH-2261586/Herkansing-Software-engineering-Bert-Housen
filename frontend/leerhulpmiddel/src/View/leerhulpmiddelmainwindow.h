@@ -13,6 +13,7 @@ class LeerhulpmiddelMainWindow: public QMainWindow
 {
 public:
     LeerhulpmiddelMainWindow(QuestionManager &questionManager);
+    ~LeerhulpmiddelMainWindow() { delete m_container; delete m_containedWidget; }
 
     void SetMainViewport(QWidget* newViewPort);
 

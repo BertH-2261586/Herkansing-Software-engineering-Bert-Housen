@@ -7,29 +7,17 @@
 
 #include "Questions/Question.h"
 #include "Questions/Answer.h"
+#include "../Exceptions/FolderQuestionSetMovedException.h"
+#include "../Exceptions/loadException.h"
+#include "../Exceptions/saveException.h"
 
 using namespace std;
-
-// Alle exceptions die kunnen voorkomen in de klasse
-class FolderQuestionSetMovedException : public std::runtime_error {
-public:
-    explicit FolderQuestionSetMovedException(const QString& message) : std::runtime_error(message.toStdString()) {}
-};
-
-class saveException : public std::runtime_error {
-public:
-    explicit saveException(const QString& message) : std::runtime_error(message.toStdString()) {}
-};
-
-class loadException : public std::runtime_error {
-public:
-    explicit loadException(const QString& message) : std::runtime_error(message.toStdString()) {}
-};
 
 // De klasse voor alle files en folders te managen omremt vragen en vragensets
 class FileManager {
 private:
     QMap<QString, QVariantList> loadFilesAndQuestions(const QDir& dir, int currentDepth = 0) const;
+
 public:
     QString getPath() const;
 
@@ -40,6 +28,5 @@ public:
     unique_ptr<Question> loadQuestionFromJSON(const QString questionPath, const QString questionName) const;
     QVector<shared_ptr<Question>> getAllQuestionsFromQuestionSet(const QString path) const;
 };
-
 
 #endif 

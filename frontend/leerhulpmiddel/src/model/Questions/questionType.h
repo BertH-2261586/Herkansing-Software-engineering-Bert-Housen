@@ -1,6 +1,6 @@
 #pragma once
 
-// Enum dat de verschillende vraag types representeert
+// Enum that represent the different types of questions
 enum class QuestionType {
     None,
     MultipleChoice,

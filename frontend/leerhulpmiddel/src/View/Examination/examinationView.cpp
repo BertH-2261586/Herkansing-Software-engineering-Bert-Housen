@@ -135,7 +135,9 @@ void ExaminationView::questionLoadedView() {
     int questionIndex = m_examinationController->getCurrentQuestionNumber();
     int totalQuestionAmount = m_examinationController->getTotalAmountOfQuestions();
     amountOfQuestionsAnswered->setText(QString::number(questionIndex) + "/" + QString::number(totalQuestionAmount));
-
+    if (questionIndex == 1) {
+        timePerQuestion->startCountdown();
+    }
     setCurrentQuestionView();
 }
 
@@ -156,7 +158,6 @@ void ExaminationView::nextQuestionView() {
 void ExaminationView::checkAnswer() {
     timePerQuestion->pauseCountdown();
 
-    //m_examinationController.checkAnswer();
     QuestionType questionType = m_examinationController->getCurrentQuestionType();
     if (questionType == QuestionType::Flashcard) {
         flashcardView.handleQuestionClicked();
@@ -206,12 +207,23 @@ void ExaminationView::closeEvent(QCloseEvent* event) {
 void ExaminationView::setCurrentQuestionView() {
     QuestionType questionType = m_examinationController->getCurrentQuestionType();
     if (questionType == QuestionType::Flashcard) {
+        multipleChoiceView.hide();
+        fillInView.hide();
+        flashcardView.show();
+
         flashcardView.setQuestion(dynamic_cast<const Flashcard*>(m_examinationController->getQuestion()));
     }
     else if (questionType == QuestionType::MultipleChoice) {
+        flashcardView.hide();
+        fillInView.hide();
+        multipleChoiceView.show();
         multipleChoiceView.setQuestion(dynamic_cast<const MultipleChoiceQuestion*>(m_examinationController->getQuestion()));
     }
     else if (questionType == QuestionType::FillIn) {
+        multipleChoiceView.hide();
+        flashcardView.hide();       
+        fillInView.show();
+
         fillInView.setQuestion(dynamic_cast<const FillInQuestion*>(m_examinationController->getQuestion()));
     }
 }
@@ -224,9 +236,9 @@ void ExaminationView::clearPreviousQuestionView() {
     else if (questionType == QuestionType::MultipleChoice) {
         multipleChoiceView.clearPreviousQuestion();
     }
-    //else if (questionType == QuestionType::FillIn) {
-    //    fillInView.setQuestion(dynamic_cast<FillInQuestion*>(m_questions[m_currentQuestionIndex]));
-    //}
+    else if (questionType == QuestionType::FillIn) {
+        fillInView.clearPreviousQuestion();
+    }
 }
 
 void ExaminationView::flashcardHasBeenFlipped() { 

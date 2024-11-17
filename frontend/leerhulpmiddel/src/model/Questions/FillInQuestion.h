@@ -4,12 +4,12 @@
 
 #include <QString>
 
-using namespace std;
 
 class FillInQuestion : public Question {
 public:
     FillInQuestion(QString name, QString question, Answer answer) : Question(name, QuestionType::FillIn), m_question(question), m_answer(answer) {}
 
+    // Getters
     QString getQuestion() const override { return m_question; }
     Answer getAnswer() const override { return m_answer; }
 

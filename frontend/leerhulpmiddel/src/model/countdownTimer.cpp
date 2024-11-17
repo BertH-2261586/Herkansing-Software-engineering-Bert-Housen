@@ -10,14 +10,12 @@ CountdownTimer::CountdownTimer(QWidget* parent, int minutes, int seconds)
 
     // Zet de timer goed
     connect(&timer, &QTimer::timeout, this, &CountdownTimer::updateCountdown);
-    timer.setInterval(1000); // 1-second intervals
+    timer.setInterval(1000);
 
     // Zet de layout goed
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(timerLabel);
     setLayout(layout);
-
-    startCountdown();
 }
 
 // Update de label van de timer

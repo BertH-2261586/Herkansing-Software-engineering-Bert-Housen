@@ -3,6 +3,8 @@
 
 #include "Questions/Question.h"
 
+using namespace std;
+
 class Examination
 {
 public:
