@@ -4,8 +4,7 @@
 #include "homescreen.h"
 #include "questionsetwidget.h"
 #include <QDebug>
-#include <QGraphicsView>
-#include <QGraphicsScene>
+
 #include <QGraphicsProxyWidget>
 #include <QTimer>
 
@@ -22,22 +21,27 @@ QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, Hom
     m_displayedTreeContainer->setContentsMargins(0, 0, 0, 0);
     m_displayedTreeContainer->addWidget(m_displayedTree);
 
-
-
     m_container->addLayout(m_displayedTreeContainer);
+    m_container->addWidget(GenerateQuestionsetTabs());
 
+    setLayout(m_container);
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+}
+
+//Gaat de tabladen met zijwaartse text genereren in een QgraphicsView
+QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
+{
     QGraphicsScene* scene = new QGraphicsScene();
 
     QGraphicsView* view = new QGraphicsView(scene);
     view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     view->setFrameShape(QFrame::NoFrame);
-    m_container->addWidget(view);
 
     int questionsetWidgetPosition = 0;
 
     for (int i = 0; i < m_allQuestionsets.length(); i++)
     {
-        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], parent);
+        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], m_parent);
 
 
         m_allQuestionsetWidgets.append(questionsetWidget);
@@ -68,7 +72,7 @@ QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, Hom
         //terug naar beneden als de muis weggaat
         connect(questionsetWidget, &QuestionsetWidget::hoverLeave, widgetProxy, [this, widgetProxy, i, questionsetWidget]{
             if (questionsetWidget->getPermaDisplay() == false)
-           {
+            {
                 widgetProxy->setZValue(m_allQuestionsets.length() - i);
                 widgetProxy->update();
             }
@@ -81,11 +85,11 @@ QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, Hom
         questionsetWidgetPosition += questionsetWidget->width() * 3 / 4;            //hier wordt de spacing tussen tabladen gezet
     }
 
-
-    setLayout(m_container);
-    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    return view;
 }
 
+
+//Gaat een tablad van een questionset permanent vanboven zetten en de alle rest op hun originele z-coordinaat
 void QuestionsetBrowser::setPermaDisplayTab(QGraphicsProxyWidget* proxy, QuestionsetWidget* questionsetWidget)
 {
     questionsetWidget->setPermaDisplay(true);
@@ -112,20 +116,24 @@ QPushButton* QuestionsetBrowser::GenerateCreateNewQuestionsetButton()
     return button;
 }
 
+
+
+
+//TODO dit aanpassen zodat je een vragenset kunt toevoegen en verder ook de namen moeten aanpassen van alles
 void QuestionsetBrowser::CreateNewQuestionset()
 {
-    MyLineEdit* textfield = new MyLineEdit();
+    FocusOutLineEdit* textfield = new FocusOutLineEdit();
 
     m_container->insertWidget(1, textfield, 0);
     textfield->setFocus();
 
-    connect(textfield, &MyLineEdit::lostFocus, m_container, [=]{            //zodat de invulbox er niet blijft staan als je eruit klikt en hij is leeg
+    connect(textfield, &FocusOutLineEdit::lostFocus, m_container, [=]{            //zodat de invulbox er niet blijft staan als je eruit klikt en hij is leeg
         m_container->removeWidget(textfield);
         textfield->setParent(nullptr);
         textfield->deleteLater();
     }, Qt::AutoConnection);
 
-    connect(textfield, &MyLineEdit::returnPressed, m_container, [=]{
+    connect(textfield, &FocusOutLineEdit::returnPressed, m_container, [=]{
             QString input = textfield->text();
 
             qDebug() << input;

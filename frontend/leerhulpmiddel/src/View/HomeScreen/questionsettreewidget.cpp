@@ -1,11 +1,11 @@
 #include "questionsettreewidget.h"
-#include "mylineedit.h"
+#include "focusoutlineedit.h"
 #include <QDebug>
 
 QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
     m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation)
 {
-    m_underlyingTree = MakeVragenTree(m_questionset->GetLooseQuestions(), m_questionset->GetSubSets(), indentation + 1);           //1 laag van de boom maken
+    m_underlyingTree = MakeQuestionTree(m_questionset->GetLooseQuestions(), m_questionset->GetSubSets(), indentation + 1);           //1 laag van de boom maken
 
     connect(this, &QuestionsetTreeWidget::addSubset, questionset, &Questionset::addSubSet);
     connect(questionset, &Questionset::displayNewSubSet, this, &QuestionsetTreeWidget::insertSubset);
@@ -13,7 +13,7 @@ QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int inden
 
     if (questionsetWidgetParent != nullptr)
     {
-        QVBoxLayout* container = MakeExpandableVragensetButton(m_questionset->GetName(), indentation, m_underlyingTree);
+        QVBoxLayout* container = MakeExpandableQuestionsetButton(m_questionset->GetName(), indentation, m_underlyingTree);
         setLayout(container);   //de knop om de boom te openen samen met de boom packagen en layouts goed zetten
     }
     else
@@ -32,7 +32,7 @@ QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int inden
 
 
 // gaat de boom opbouwen van de vragen die onder een vragenset horen, kan recursief werken normaal om zo subdelen te maken onder een vragenset
-QWidget* QuestionsetTreeWidget::MakeVragenTree(QList<Question*> looseQuestions, QList<Questionset *> subSets, int indentation)
+QWidget* QuestionsetTreeWidget::MakeQuestionTree(QList<Question*> looseQuestions, QList<Questionset *> subSets, int indentation)
 {
     m_underlyingTreeContainer = new QVBoxLayout();
     m_underlyingTreeContainer->setAlignment(Qt::AlignTop);
@@ -45,7 +45,7 @@ QWidget* QuestionsetTreeWidget::MakeVragenTree(QList<Question*> looseQuestions, 
 
         m_underlyingTreeContainer->addWidget(subPart);
     }
-    AddLooseVragenToTree(m_underlyingTreeContainer, looseQuestions, indentation);
+    AddLooseQuestionsToTree(m_underlyingTreeContainer, looseQuestions, indentation);
 
     QWidget* outputTree = new QWidget();
     outputTree->setLayout(m_underlyingTreeContainer);
@@ -57,7 +57,7 @@ QWidget* QuestionsetTreeWidget::MakeVragenTree(QList<Question*> looseQuestions, 
 
 //maak een "folder" button die uitklapt met alles wat er onder zit
 //TODO deze mogelijks in zijn eigen klasse zetten
-QVBoxLayout* QuestionsetTreeWidget::MakeExpandableVragensetButton(QString name, int indentation, QWidget* treeToHide)
+QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name, int indentation, QWidget* treeToHide)
 {
     QWidget* questionsetWidget = new QWidget();
     questionsetWidget->setStyleSheet(
@@ -96,30 +96,8 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableVragensetButton(QString name, 
     //TODO nog een icon toevoegen dat dit expandable is en zo een pijltje ook
 
 
-    QPushButton* addToQuestionset = new QPushButton();           //hier een plus icoon aan geven en styling doen
-    addToQuestionset->setIcon(addToQuestionset->style()->standardIcon(QStyle::SP_FileDialogNewFolder));
-    addToQuestionset->setStyleSheet(
-        "QPushButton { "
-        "   color: #000000;"
-        "   background-color: transparent;"
-        "   border: none; "
-        "   border-radius: 2px;"
-        "   padding: 0px 0px 0px 0px;"
-        "   text-align: center;"
-        "}"
-    );
-    addToQuestionset->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    QPushButton* addToQuestionset = GenerateMenuButton();
 
-    QMenu* addToQuestionsetMenu = new QMenu(this);
-    QAction* addSubsetAction = addToQuestionsetMenu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
-    QAction* addQuestionAction = addToQuestionsetMenu->addAction("Voeg vraag toe");
-    addToQuestionsetMenu->setStyleSheet("background-color: #4d4d4d;");
-
-    connect(addToQuestionset, &QPushButton::clicked, addToQuestionsetMenu, [=]{
-       addToQuestionsetMenu->popup(addToQuestionset->mapToGlobal(QPoint(0, addToQuestionset->height())));
-    });
-
-    connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
 
     questionsetContainer->addWidget(questionsetButton, 15);
     questionsetContainer->addWidget(addToQuestionset, 1);
@@ -132,7 +110,39 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableVragensetButton(QString name, 
     return outputContainer;
 }
 
-void QuestionsetTreeWidget::AddLooseVragenToTree(QVBoxLayout* container, QList<Question*> list, int indentation)
+//Gaat de knop voor het menu te tonen waar je een vraag of subset ergens aan kan toevoegen
+QPushButton* QuestionsetTreeWidget::GenerateMenuButton()
+{
+    QPushButton* outputButton = new QPushButton();           //hier een plus icoon aan geven en styling doen
+    outputButton->setIcon(outputButton->style()->standardIcon(QStyle::SP_FileDialogNewFolder));
+    outputButton->setStyleSheet(
+        "QPushButton { "
+        "   color: #000000;"
+        "   background-color: transparent;"
+        "   border: none; "
+        "   border-radius: 2px;"
+        "   padding: 0px 0px 0px 0px;"
+        "   text-align: center;"
+        "}"
+        );
+    outputButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+    QMenu* menu = new QMenu(this);
+    QAction* addSubsetAction = menu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
+    QAction* addQuestionAction = menu->addAction("Voeg vraag toe");
+    menu->setStyleSheet("background-color: #4d4d4d;");
+
+    connect(outputButton, &QPushButton::clicked, menu, [=]{
+        menu->popup(outputButton->mapToGlobal(QPoint(0, outputButton->height())));
+    });
+
+    connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
+
+
+    return outputButton;
+}
+
+void QuestionsetTreeWidget::AddLooseQuestionsToTree(QVBoxLayout* container, QList<Question*> list, int indentation)
 {
     for (int i = 0; i < list.length(); i++)
     {
@@ -184,7 +194,7 @@ void QuestionsetTreeWidget::sendDisplayQuestionSignal(QWidget* toBeDisplayed)
 
 void QuestionsetTreeWidget::CreateNewQuestionset()
 {
-    MyLineEdit* textfield = new MyLineEdit();
+    FocusOutLineEdit* textfield = new FocusOutLineEdit();
 
     if (m_underlyingTree->isHidden())
     {
@@ -194,33 +204,33 @@ void QuestionsetTreeWidget::CreateNewQuestionset()
     m_underlyingTreeContainer->insertWidget(0, textfield, 0);
     textfield->setFocus();
 
-    connect(textfield, &MyLineEdit::lostFocus, m_underlyingTreeContainer, [=]{            //zodat de invulbox er niet blijft staan als je eruit klikt en hij is leeg
-            m_underlyingTreeContainer->removeWidget(textfield);
-            textfield->setParent(nullptr);
-            textfield->deleteLater();
-        }, Qt::AutoConnection);
-
-    connect(textfield, &MyLineEdit::returnPressed, m_underlyingTreeContainer, [=]{
+    connect(textfield, &FocusOutLineEdit::lostFocus, m_underlyingTreeContainer, [=]{            //zodat de invulbox er niet blijft staan als je eruit klikt en hij is leeg
+            qDebug() << "fire";
             QString input = textfield->text();
 
             if (input != "")
             {
-                emit addSubset(input);
-
                 m_underlyingTreeContainer->removeWidget(textfield);
-                textfield->setParent(nullptr);
                 textfield->deleteLater();
 
-
+                emit addSubset(input);
             }
             else
             {
                 m_underlyingTreeContainer->removeWidget(textfield);
-                textfield->setParent(nullptr);
                 textfield->deleteLater();
             }
-
         }, Qt::AutoConnection);
+
+    connect(textfield, &FocusOutLineEdit::escPressed, m_underlyingTreeContainer, [=]{
+            m_underlyingTreeContainer->removeWidget(textfield);
+            textfield->setParent(nullptr);
+            textfield->deleteLater();
+        }, Qt::AutoConnection);
+//    connect(textfield, &FocusOutLineEdit::returnPressed, m_underlyingTreeContainer, [=]{
+
+
+//        }, Qt::AutoConnection);
 }
 
 
