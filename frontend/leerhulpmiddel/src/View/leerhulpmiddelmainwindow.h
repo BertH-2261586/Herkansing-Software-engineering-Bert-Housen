@@ -1,4 +1,3 @@
-
 #ifndef LEERHULPMIDDELMAINWINDOW_H
 #define LEERHULPMIDDELMAINWINDOW_H
 
@@ -7,13 +6,14 @@
 #include <QGridLayout>
 #include <QBoxLayout>
 #include <QLabel>
-#include "../model/questionmanager.h"
+#include "../model/manager/questionmanager.h"
 
 
 class LeerhulpmiddelMainWindow: public QMainWindow
 {
 public:
     LeerhulpmiddelMainWindow(QuestionManager &questionManager);
+    ~LeerhulpmiddelMainWindow() { delete m_container; delete m_containedWidget; }
 
     void SetMainViewport(QWidget* newViewPort);
 

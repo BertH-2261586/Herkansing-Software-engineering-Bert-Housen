@@ -99,7 +99,7 @@
     <ClCompile Include="src\model\fileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\model\questionmanager.cpp">
+    <ClCompile Include="src\model\manager\questionmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\model\questionset.cpp">
@@ -111,6 +111,7 @@
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="src\model\Questions\Answer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -133,6 +134,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp">
+=======
+    <ClCompile Include="src\model\countdownTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\examinationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\FillInExaminationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\FlashcardExaminationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\Examination\MultipleChoiceExaminationView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller\examinationController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\manager\examinationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QFlowLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Exceptions\FolderQuestionSetMovedException.h">
+>>>>>>> Ondervraging
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -164,7 +192,25 @@
     <ClInclude Include="src\Controller\questionmanagercontroller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="src\model\Questions\questionType.h">
+=======
+    <ClInclude Include="src\model\examination.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\QFlowLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Exceptions\saveException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Exceptions\loadException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\view\HomeScreen\mylineedit.h">
+>>>>>>> Ondervraging
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\model\Questions\Answer.h">
@@ -175,9 +221,37 @@
     </ClInclude>
     <ClInclude Include="src\model\Questions\Flashcard.h">
       <Filter>Header Files</Filter>
+<<<<<<< HEAD
     </ClInclude>
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+=======
+    </QtMoc>
+    <QtMoc Include="src\model\manager\questionmanager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\countdownTimer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\examinationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\FillInExaminationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\FlashcardExaminationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\view\Examination\MultipleChoiceExaminationView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Controller\examinationController.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\model\manager\examinationManager.h">
+      <Filter>Source Files</Filter>
+    </QtMoc>
+>>>>>>> Ondervraging
   </ItemGroup>
 </Project>

@@ -118,12 +118,7 @@ void CreateMultipleChoiceQuestionView::addAnswer() {
 
 		connect(removeButton, &QPushButton::clicked, [this, answerLayout]() {
 			m_layout->removeItem(answerLayout);
-			QLayoutItem* child;
-			while ((child = answerLayout->takeAt(0)) != nullptr) {
-				delete child->widget(); // delete the widget
-				delete child;   // delete the layout item
-			}
-			delete answerLayout;
+			answerLayout->deleteLater();
 			});
 
 		update();

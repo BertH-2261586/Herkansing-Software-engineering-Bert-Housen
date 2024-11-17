@@ -169,14 +169,14 @@ void FileManager::saveQuestionToJSON(const QString questionSet, const QString su
  * @throw loadException Als de vraag niet bestaat, wanneer de file niet gelezen kan worden, kan niet naar JSON formaat omgezet worden, er wordt een niet bestaande vraag gegeven
  * @return unique_ptr<Question> Geeft de gepaste vraag.
 */
-unique_ptr<Question> FileManager::loadQuestionFromJSON(const string questionSet, const string subset, const QString questionName) const {
+unique_ptr<Question> FileManager::loadQuestionFromJSON(const QString questionSet, const QString subset, const QString questionName) const {
     // Construeer de file path
 
     // Path created from the question set and subset
-    QString addedPath = QString::fromStdString("/" + questionSet);
+    QString addedPath = "/" + questionSet;
     if (subset != "")
     {
-        addedPath += "/" + QString::fromStdString(subset);
+        addedPath += "/" + subset;
     }
 
     QString path = getPath() + addedPath + "/" + questionName + ".json";
@@ -246,7 +246,7 @@ QList<Questionset*> FileManager::loadQuestionSetsObject(const QString path) cons
 		   if (file.canConvert<QString>()) {
 			   QString questionName = file.toString();
                questionName.chop(5); //remove .json
-			   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName.toStdString(), "", questionName);
+			   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName, "", questionName);
 			   questions.append(loadedQuestion.release());
 		   }
 
@@ -260,7 +260,7 @@ QList<Questionset*> FileManager::loadQuestionSetsObject(const QString path) cons
 			   for (int i = 1; i < subsetValue.length(); i++) {
 				   QString questionName = subsetValue[i].toString();
                    questionName.chop(5); //remove .json
-				   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName.toStdString(), subsetName.toStdString(), questionName);
+				   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName, subsetName, questionName);
 				   subsetQuestions.append(loadedQuestion.release());
 			   }
                subsets.append(new Questionset(subsetName, subsetQuestions, {}));
@@ -270,9 +270,6 @@ QList<Questionset*> FileManager::loadQuestionSetsObject(const QString path) cons
    }
     return questionSets;
 }
-
-
-
 
 
 Answer FileManager::convertToAnswerObject(QJsonObject answer) const {
@@ -290,3 +287,67 @@ Answer FileManager::convertToAnswerObject(QJsonObject answer) const {
     return Answer(answers, correctAnswers);
 }
 
+/*
+* Given a path to a question set return all the questions associated with it 
+* 
+* @param questionSetPath this is the path to the question set where you want all the questions from
+* @return QVector<Question*> this vector contains all the questions in the question set
+*/
+/*
+QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const QString questionSetPath) const {
+    QVector<shared_ptr<Question>> questions;  // Create the vector where you'll store the questions 
+
+    // Create a QDir object to access the question set folder
+    QDir dir(questionSetPath);
+
+    // Filter only JSON files and directories
+    dir.setFilter(QDir::Files | QDir::Dirs);  // Consider both files and directories
+
+    // Iterate over each file and directory in the main directory
+    QFileInfoList questionSetInfo = dir.entryInfoList();
+    for (const QFileInfo& fileFolderInfo : questionSetInfo) {
+        // Skip the current directory and parent directory entries
+        if (fileFolderInfo.fileName() == "." || fileFolderInfo.fileName() == "..") {
+            continue;
+        }
+
+        if (fileFolderInfo.isDir()) {
+            // Handle subdirectory: recursively look for .json files in subdirectories
+            QDir subDir(fileFolderInfo.absoluteFilePath());
+            subDir.setNameFilters(QStringList() << "*.json");
+            subDir.setFilter(QDir::Files);  // Only consider files, not directories
+
+            QFileInfoList subFiles = subDir.entryInfoList();
+            for (const QFileInfo& subFileInfo : subFiles) {
+                QString fileName = subFileInfo.baseName();
+                try {
+                    // Load question from the file in the subdirectory
+                    auto question = loadQuestionFromJSON(subDir.absolutePath(), fileName);
+                    questions.append(std::move(question));  // Add the loaded question to the vector
+                }
+                catch (const std::exception& e) {
+                    qWarning() << "Error loading question from file:" << subFileInfo.absoluteFilePath() << e.what();
+                }
+            }
+        }
+        else if (fileFolderInfo.isFile()) {
+            // Handle file in the main directory
+            QString fileName = fileFolderInfo.baseName();
+            try {
+                // Load question from the main directory
+                auto question = loadQuestionFromJSON(questionSetPath, fileName);
+                questions.append(std::move(question));  // Add the loaded question to the vector
+            }
+            catch (const std::exception& e) {
+                qWarning() << "Error loading question from file:" << fileFolderInfo.absoluteFilePath() << e.what();
+            }
+        }
+    }
+
+    for (shared_ptr<Question> question : questions) {
+        qDebug() << question->getQuestion() << question->questionTypeToString();  // Print each entry after the loop
+    }
+
+    return questions;
+}
+*/

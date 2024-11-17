@@ -3,7 +3,7 @@
 
 
 #include <QObject>
-#include "questionset.h"
+#include "../questionset.h"
 #include <QList>
 
 

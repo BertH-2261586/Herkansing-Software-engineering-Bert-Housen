@@ -1,7 +1,6 @@
 #ifndef QUESTIONSET_H
 #define QUESTIONSET_H
 
-
 #include "qvariant.h"
 #include <QString>
 #include <QHash>
@@ -17,14 +16,11 @@ public:
     Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color = {255, 0, 0});
     ~Questionset();
 
-    QString GetName(){return m_name;};
-    QList<Question*> GetLooseQuestions(){
-        return m_looseQuestions;
-    };
-    QList<Questionset*> GetSubSets(){
-        return m_subSets;
-    };
-    QColor GetColor(){return m_color;}
+    // Getters
+    QString GetName() const { return m_name; }
+    QList<Question*> GetLooseQuestions() const { return m_looseQuestions; }
+    QList<Questionset*> GetSubSets() const { return m_subSets; }
+    QColor GetColor() const { return m_color; }
 
     void addQuestion(Question* question, QString subsetName = "");
 private:
