@@ -10,19 +10,15 @@
 * @pre the question parameter is a question class that is filled with the correct and filled variables (for example: no empty answer)
 * @param question this is the question where you'll get the data for the question from
 */
-void FillInExaminationView::setQuestion(FillInQuestion* question) {
-    m_currentQuestion = question;
-
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+void FillInExaminationView::setQuestion(const FillInQuestion* question) {
+    m_mainLayout = new QVBoxLayout(this);
 
     // Create a row of text with a space for user input
-    QHBoxLayout* questionLayout = new QHBoxLayout;
+    m_questionLayout = new QHBoxLayout;
 
     QString questionString = question->getQuestion();
-
     QRegularExpression re("\\[([^\\]]+)\\]");
     QRegularExpressionMatchIterator i = re.globalMatch(questionString);
-
     int lastIndex = 0;
 
     // Iterate through the matches and build the display
@@ -37,35 +33,31 @@ void FillInExaminationView::setQuestion(FillInQuestion* question) {
         if (!textBefore.isEmpty()) {
             QLabel* textLabel = new QLabel(textBefore, this);
             textLabel->setAlignment(Qt::AlignLeft);
-            questionLayout->addWidget(textLabel);
+            m_textLabels.append(textLabel);
+            m_questionLayout->addWidget(textLabel);
         }
 
+        QVBoxLayout* fillInLayout = new QVBoxLayout;
         QString answerText = match.captured(1); // Get text inside []
         QTextEdit* answerEdit = new QTextEdit;
+        QLabel* correctAnswer = new QLabel;
+
         answerEdit->setMaximumHeight(25);
         answerEdit->setAlignment(Qt::AlignCenter);
         answerEdit->setMinimumWidth(75); // Set a minimum width
         answerEdit->setMaximumWidth(250); // Set a minimum width
-        int currentWidth = 75;
 
-        // Automatically adjust width as the text changes
-        connect(answerEdit, &QTextEdit::textChanged, [answerEdit, &currentWidth]() {
-            // Calculate the required width for the current text
-            int docWidth = answerEdit->document()->size().width();
-            int newWidth = std::max(currentWidth, docWidth + 10); // Add some padding
+        correctAnswer->setText(answerText);
+        correctAnswer->setStyleSheet("font-weight: bold; color: green;");
+        fillInLayout->addWidget(correctAnswer, 0, Qt::AlignHCenter);
+        m_correctAnswer.append(correctAnswer);
+        correctAnswer->hide();
 
-            // Ensure the new width doesn't exceed the maximum
-            if (newWidth > 250) {
-                newWidth = 250; // Cap the width at the maximum
-            }
+        fillInLayout->addWidget(answerEdit);
+        m_answerInputs.append(answerEdit);
 
-            // Only update if the width has increased
-            if (newWidth > currentWidth) {
-                currentWidth = newWidth; // Update the current width
-                answerEdit->setFixedWidth(newWidth); // Adjust the width
-            }
-            });
-        questionLayout->addWidget(answerEdit);
+        m_fillInLayouts.append(fillInLayout);
+        m_questionLayout->addLayout(fillInLayout);
     }
 
     // Add the remaining part of the string after the last match
@@ -73,10 +65,31 @@ void FillInExaminationView::setQuestion(FillInQuestion* question) {
     if (!remainingText.isEmpty()) {
         QLabel* remainingLabel = new QLabel(remainingText, this);
         remainingLabel->setAlignment(Qt::AlignLeft);
-        questionLayout->addWidget(remainingLabel);
+        m_textLabels.append(remainingLabel);
+        m_questionLayout->addWidget(remainingLabel);
     }
-    
-    mainLayout->addLayout(questionLayout);
+
+    m_mainLayout->addLayout(m_questionLayout);
     // Set the layout
-    setLayout(mainLayout);
+    setLayout(m_mainLayout);
+}
+
+void FillInExaminationView::showAnswer(const FillInQuestion* question) {
+    QList<QString> answer = question->getAnswer().getAnswers();
+    for (int i = 0; i < m_answerInputs.size(); ++i) {
+        QTextEdit* inputField = m_answerInputs[i];
+        QString userAnswer = inputField->toPlainText().trimmed().toLower(); // Get the user input
+        QString correctAnswer = answer[i].trimmed().toLower();     // Get the corresponding correct answer
+        m_answerInputs[i]->setReadOnly(true);
+
+        if (userAnswer == correctAnswer) {
+            // Correct answer, set background to green
+            inputField->setStyleSheet("background-color: green;");
+        }
+        else {
+            // Incorrect answer, set background to red
+            inputField->setStyleSheet("background-color: red;");
+            m_correctAnswer[i]->show();
+        }
+    }
 }

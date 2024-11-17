@@ -21,7 +21,7 @@ public:
 
 private:
     void setQuestionLabel(const MultipleChoiceQuestion* question);
-    void setRadioButtons();
+    void setRadioButtons(const MultipleChoiceQuestion* question);
 
     // All GUI elements
     QLabel* m_questionLabel = nullptr;

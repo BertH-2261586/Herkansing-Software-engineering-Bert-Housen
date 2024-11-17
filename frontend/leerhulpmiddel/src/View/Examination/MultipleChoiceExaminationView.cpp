@@ -14,7 +14,7 @@ void MultipleChoiceExaminationView::setQuestion(const MultipleChoiceQuestion* qu
 
     // Set the question label and radio buttons correctly
     setQuestionLabel(question);
-    setRadioButtons();
+    setRadioButtons(question);
 
     // Add them to the layout
     m_mainQuestionLayout->addWidget(m_questionLabel, Qt::AlignHCenter);
@@ -44,7 +44,7 @@ void MultipleChoiceExaminationView::setQuestionLabel(const MultipleChoiceQuestio
 }
 
 // This function sets the radio buttons for the multiple choice correctly
-void MultipleChoiceExaminationView::setRadioButtons() {
+void MultipleChoiceExaminationView::setRadioButtons(const MultipleChoiceQuestion* question) {
     // Initialize the grid layout for the radio buttons
     m_radioButtonLayout = new QGridLayout;
     m_radioButtonLayout->setHorizontalSpacing(225);
@@ -52,27 +52,27 @@ void MultipleChoiceExaminationView::setRadioButtons() {
     m_radioButtonLayout->setSizeConstraint(QLayout::SetFixedSize);
     m_buttonGroup = new QButtonGroup(this);
 
-    std::vector<string> dummy_data = { "antwoord1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "antwoord2", "antwoord3", "antwoord4", "antwoord5", "antwoord1", "antwoord2", "antwoord3", "antwoord4", "antwoord5", "antwoord1", "antwoord2", "antwoord3", "antwoord4", "antwoord5" };
     // Initialize the needed variables to be able to setup the radio buttons correctly
     int IDnum = 0;
     int row = 0;
     int column = 0;
+    QList<QString> possibilities = question->getAnswer().getAnswers();
     // Iterate over every possible solution and make a radio button for it
-    for (const auto& data : dummy_data) {
+    for (const QString possibility : possibilities) {
         // Initialize the radio button
-        QRadioButton* radio = new QRadioButton(QString::fromStdString(data));
+        QRadioButton* radio = new QRadioButton(possibility);
         m_radioButtonList.append(radio);
         m_buttonGroup->addButton(radio, IDnum);
         radio->setMaximumWidth(325);
 
         // Initialize a metric for the font 
         QFontMetrics metrics(radio->font());
-        int textWidth = metrics.horizontalAdvance(QString::fromStdString(data));
+        int textWidth = metrics.horizontalAdvance(possibility);
         // If the text width exceeds the available width of the radio button, setup a tooltip that displays the full answer that got cut short
         if (textWidth > radio->width()) {
             radio->setToolTip(
                 "<div style='color: palette(windowText); font-size: 8pt;'>"
-                + QString::fromStdString(data) +
+                + possibility +
                 "</div>"
             );
         }
@@ -161,45 +161,41 @@ void MultipleChoiceExaminationView::clearPreviousQuestion() {
 }
 
 void MultipleChoiceExaminationView::showAnswer(const MultipleChoiceQuestion* question) {
+    // Disable all the radio buttons so it cant accept more input
     for (QRadioButton* radio : m_radioButtonList) {
         radio->setEnabled(false);
     }
-    m_radioButtonList[0]->setStyleSheet(
-        "QRadioButton {"
-            "color: red; "
-        "}"
-        // The indicator of the radio button
-        "QRadioButton::indicator {"
-            "width: 10px;"
-            "height: 10px;"
-            "border-radius: 6px;"
-            "border: 1px solid palette(dark);"
-            "background-color: palette(base);"
-        "}"
-        // The indicator is checked/selected
-        "QRadioButton::indicator:checked {"
-            "background-color: palette(highlight);"
-            "border: 2px solid palette(dark);"
-            "border-radius: 6px;"
-        "}"
-    );
-    m_radioButtonList[1]->setStyleSheet(
-        "QRadioButton {"
-        "color: red; "
-        "}"
-        // The indicator of the radio button
-        "QRadioButton::indicator {"
-        "width: 10px;"
-        "height: 10px;"
-        "border-radius: 6px;"
-        "border: 1px solid palette(dark);"
-        "background-color: palette(base);"
-        "}"
-        // The indicator is checked/selected
-        "QRadioButton::indicator:checked {"
-        "background-color: palette(highlight);"
-        "border: 2px solid palette(dark);"
-        "border-radius: 6px;"
-        "}"
-    );
+
+    QList<QString> correctAnswers = question->getAnswer().getCorrectAnswers();
+    for (int i = 0; i < m_radioButtonList.size(); ++i) {
+        QRadioButton* radioButton = m_radioButtonList[i];
+        QString radioButtonText = radioButton->text();
+        bool answerIsCorrect = correctAnswers.contains(radioButtonText);
+
+        // Only change the style sheet for selected and correct answers
+        if (radioButton->isChecked() || answerIsCorrect) {
+            // Check if the selected answer is correct
+            QString color = answerIsCorrect ? "green" : "red";
+
+            // Set the stylesheet using the determined color
+            radioButton->setStyleSheet(
+                QString(
+                    "QRadioButton {"
+                        "color: %1; "
+                    "}"
+                    "QRadioButton::indicator {"
+                        "width: 10px;"
+                        "height: 10px;"
+                        "border-radius: 6px;"
+                        "border: 1px solid palette(dark);"
+                        "background-color: palette(base);"
+                    "}"
+                    "QRadioButton::indicator:checked {"
+                        "background-color: palette(highlight);"
+                        "border: 2px solid palette(dark);"
+                        "border-radius: 6px;"
+                    "}"
+                ).arg(color));
+        }
+    }
 }

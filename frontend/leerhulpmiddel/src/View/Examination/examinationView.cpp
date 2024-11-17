@@ -165,9 +165,9 @@ void ExaminationView::checkAnswer() {
     else if (questionType == QuestionType::MultipleChoice) {
         multipleChoiceView.showAnswer(dynamic_cast<const MultipleChoiceQuestion*>(m_examinationController->getQuestion()));
     }
-    //else if (questionType == QuestionType::FillIn) {
-    //    fillInView.setQuestion(dynamic_cast<FillInQuestion*>(m_questions[m_currentQuestionIndex]));
-    //}
+    else if (questionType == QuestionType::FillIn) {
+        fillInView.showAnswer(dynamic_cast<const FillInQuestion*>(m_examinationController->getQuestion()));
+    }
 
     if (m_examinationController->getCurrentQuestionNumber() == m_examinationController->getTotalAmountOfQuestions()) {       
         endExaminationButton->show();
@@ -211,9 +211,9 @@ void ExaminationView::setCurrentQuestionView() {
     else if (questionType == QuestionType::MultipleChoice) {
         multipleChoiceView.setQuestion(dynamic_cast<const MultipleChoiceQuestion*>(m_examinationController->getQuestion()));
     }
-    //else if (questionType == QuestionType::FillIn) {
-    //    fillInView.setQuestion(dynamic_cast<FillInQuestion*>(m_questions[m_currentQuestionIndex]));
-    //}
+    else if (questionType == QuestionType::FillIn) {
+        fillInView.setQuestion(dynamic_cast<const FillInQuestion*>(m_examinationController->getQuestion()));
+    }
 }
 
 void ExaminationView::clearPreviousQuestionView() {
