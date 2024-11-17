@@ -14,7 +14,7 @@ class Questionset : public QObject
     Q_OBJECT
 
 public:
-    Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color = {0, 0, 0});
+    Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color = {255, 0, 0});
     ~Questionset();
 
     QString GetName(){return m_name;};
@@ -25,6 +25,8 @@ public:
         return m_subSets;
     };
     QColor GetColor(){return m_color;}
+
+    void addQuestion(Question* question, QString subsetName = "");
 private:
     QString m_name;
 

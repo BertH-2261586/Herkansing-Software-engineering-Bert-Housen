@@ -1,4 +1,3 @@
-
 #include "questionset.h"
 
 Questionset::Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color) :
@@ -14,6 +13,21 @@ Questionset::~Questionset()
     for (int i = 0; i < m_looseQuestions.length(); i++)
     {
         delete m_looseQuestions[i];
+    }
+}
+
+void Questionset::addQuestion(Question* question, QString subsetName) {
+    if (subsetName == "") {
+        m_looseQuestions.append(question);
+    }
+    else {
+        for (Questionset* subset : m_subSets) {
+            if (subset->GetName() == subsetName) {
+                subset->addQuestion(question);
+            }
+        }
+
+        qDebug() << "Subset " << subsetName << " not found";
     }
 }
 
