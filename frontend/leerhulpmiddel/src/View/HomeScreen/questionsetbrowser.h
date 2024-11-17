@@ -4,10 +4,12 @@
 #include <QPushButton>
 #include "qwidget.h"
 #include <QHBoxLayout>
-#include "mylineedit.h"
+#include "../focusoutlineedit.h"
 #include <QList>
+#include <QGraphicsView>
+#include <QGraphicsScene>
 #include "../../model/questionset.h"
-#include "questionsetwidget.h"
+#include "QuestionsetBrowserWidgets/questionsetwidget.h"
 
 class HomeScreen;
 
@@ -17,6 +19,7 @@ public:
     QuestionsetBrowser(QList<Questionset*> allQuestionsets, HomeScreen* parent = nullptr);
 
 private:
+    QGraphicsView* GenerateQuestionsetTabs();
     QPushButton* GenerateCreateNewQuestionsetButton();
     void CreateNewQuestionset();
     bool doesQuestionsetExist(QString name);

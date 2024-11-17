@@ -8,7 +8,7 @@
 #include <QPushButton>
 #include <QStyle>
 #include <QMenu>
-#include "../../model/questionset.h"
+#include "../../../model/questionset.h"
 
 
 class QuestionsetTreeWidget: public QWidget
@@ -21,12 +21,12 @@ public:
 
 
 private:
-    QWidget* MakeVragenTree(QList<Question *> looseQuestions, QList<Questionset*> subSets, int indentation);
-    void AddLooseVragenToTree(QVBoxLayout* container, QList<Question*> list, int indentation);
-    QVBoxLayout *MakeExpandableVragensetButton(QString name, int indentation, QWidget* treeToHide);
+    QWidget* MakeQuestionTree(QList<Question *> looseQuestions, QList<Questionset*> subSets, int indentation);
+    void AddLooseQuestionsToTree(QVBoxLayout* container, QList<Question*> list, int indentation);
+    QVBoxLayout *MakeExpandableQuestionsetButton(QString name, int indentation, QWidget* treeToHide);
 
+    QPushButton* GenerateMenuButton();
     void CreateNewQuestionset();
-    bool doesQuestionsetExist(QString name);
 
     void sendDisplayQuestionSignal(QWidget* toBeDisplayed);
 

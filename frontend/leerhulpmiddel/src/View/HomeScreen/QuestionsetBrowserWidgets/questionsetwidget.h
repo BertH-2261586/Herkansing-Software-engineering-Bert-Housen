@@ -4,24 +4,26 @@
 
 
 #include <QWidget>
-#include "../../model/questionset.h"
+#include "../../../model/questionset.h"
 #include "questionsettreewidget.h"
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPushButton>
 #include <QStyleOptionButton>
+#include <QEvent>
+#include <QMouseEvent>
 
 class HomeScreen;
 
 
-class QuestionsetWidget : public QPushButton
+class QuestionsetWidget : public QWidget
 {
     Q_OBJECT
 
 
 public:
-    QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent = nullptr, QWidget* parent = nullptr);
+    QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QWidget* parent = nullptr);
 
     ~QuestionsetWidget();
 
@@ -34,16 +36,24 @@ protected:
     void enterEvent(QEnterEvent *event) override
     {
         emit hoverEnter();
-        QPushButton::enterEvent(event);
+        QWidget::enterEvent(event);
     }
 
     void leaveEvent(QEvent *event) override
     {
 
         emit hoverLeave();
-        QPushButton::leaveEvent(event);
+        QWidget::leaveEvent(event);
     }
 
+    void mousePressEvent(QMouseEvent* event) override
+    {
+        if (event->button() == Qt::LeftButton)
+        {
+            emit clicked();
+        }
+        //QWidget::mousePressEvent(event);
+    }
 
 private:
     Questionset* m_questionset;
@@ -57,6 +67,8 @@ private:
 signals:
     void hoverEnter();
     void hoverLeave();
+
+    void clicked();
 
 };
 
