@@ -1,6 +1,7 @@
 
 #include "questionbutton.h"
 #include <QVBoxLayout>
+#include <QPalette>
 
 QuestionButton::QuestionButton(Question* question, int indentation, QWidget* parent) : m_question(question), QWidget(parent)
 {
@@ -13,18 +14,16 @@ QuestionButton::QuestionButton(Question* question, int indentation, QWidget* par
 
     connect(m_label, &EditableLabel::textChanged, question, &Question::setName);
 
-    setStyleSheet(QString(                            //de styling van een subdeel, werk met padding zodat de button background er goed uitziet
-            "{ "
+    m_label->setStyleSheet(QString(                            //de styling van een subdeel, werk met padding zodat de button background er goed uitziet
             "   border: none;"
             "   border-radius: 0px;"
             "   padding: 5px 30px 5px %1px;"
             "   text-align: left;"
-            "}"
-            "QWidget:hover {"
-            "   background-color: #4d4d4d;"
-            "}"
+            ""
+//            "QWidget:hover {"
+//            "   background-color: #4d4d4d;"
+//            "}"
             ).arg((m_indentationOfset * indentation) + m_baseOfset));
-
     container->addWidget(m_label);
 }
 

@@ -37,6 +37,7 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
     view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     view->setFrameShape(QFrame::NoFrame);
 
+
     int questionsetWidgetPosition = 0;
 
     for (int i = 0; i < m_allQuestionsets.length(); i++)
@@ -47,6 +48,8 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
         m_allQuestionsetWidgets.append(questionsetWidget);
 
         QGraphicsProxyWidget* widgetProxy = scene->addWidget(questionsetWidget);
+
+        widgetProxy->setCacheMode(QGraphicsItem::DeviceCoordinateCache);            //zorgt ervoor dat er geen render problemen zijn
 
         connect(questionsetWidget, &QuestionsetWidget::clicked, m_allQuestionsets[i], [=]{
             QuestionsetTreeWidget* tree = questionsetWidget->getUnderlyingTree();
@@ -66,16 +69,16 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
             if (questionsetWidget->getPermaDisplay() == false)
             {
                 widgetProxy->setZValue(1000);
-                widgetProxy->update();
             }
+            widgetProxy->update();
         });
         //terug naar beneden als de muis weggaat
         connect(questionsetWidget, &QuestionsetWidget::hoverLeave, widgetProxy, [this, widgetProxy, i, questionsetWidget]{
             if (questionsetWidget->getPermaDisplay() == false)
             {
                 widgetProxy->setZValue(m_allQuestionsets.length() - i);
-                widgetProxy->update();
             }
+            widgetProxy->update();
         });
 
         widgetProxy->setPos(0, questionsetWidgetPosition);
@@ -103,6 +106,7 @@ void QuestionsetBrowser::setPermaDisplayTab(QGraphicsProxyWidget* proxy, Questio
             emit m_allQuestionsetWidgets[i]->hoverLeave();
         }
     }
+    proxy->update();
 }
 
 QPushButton* QuestionsetBrowser::GenerateCreateNewQuestionsetButton()

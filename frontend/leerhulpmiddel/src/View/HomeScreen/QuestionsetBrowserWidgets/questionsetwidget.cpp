@@ -4,11 +4,10 @@
 #include "../homescreen.h"
 
 QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QWidget* parent) :
-    m_questionset(questionset), QPushButton(parent), m_homeScreenParent(homeScreenParent)
+    m_questionset(questionset), QWidget(parent), m_homeScreenParent(homeScreenParent)
 {
     setMouseTracking(true);     //nodig om mouse enter en leave events te detecteren
 
-    setText(questionset->GetName());
     QHBoxLayout* container = new QHBoxLayout();
     container->setContentsMargins(0, 0, 0, 0);
     m_label = new QLabel(questionset->GetName());
@@ -36,10 +35,7 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
 
     m_underlyingTree = new QuestionsetTreeWidget(questionset);
 
-    if (m_homeScreenParent != nullptr)
-    {
-        connect(m_underlyingTree, &QuestionsetTreeWidget::Display, m_homeScreenParent, &HomeScreen::DisplayWidget);
-    }
+    connect(m_underlyingTree, &QuestionsetTreeWidget::Display, m_homeScreenParent, &HomeScreen::DisplayWidget);
 }
 
 // zal normaal niet uit zichzelf verwijderd worden

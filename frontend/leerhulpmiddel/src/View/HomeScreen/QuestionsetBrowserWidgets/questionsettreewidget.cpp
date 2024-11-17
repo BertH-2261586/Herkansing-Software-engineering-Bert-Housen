@@ -149,27 +149,6 @@ void QuestionsetTreeWidget::AddLooseQuestionsToTree(QVBoxLayout* container, QLis
     {
         QuestionButton* loosQuestionButton = new QuestionButton(list[i], indentation);
 
-//        QPushButton* looseVraagButton = new QPushButton(vraagName);
-//        looseVraagButton->setCheckable(true);
-
-//        looseVraagButton->setStyleSheet(QString(                            //de styling van een subdeel, werk met padding zodat de button background er goed uitziet
-//                                "QPushButton { "
-//                                "   color: #000000;"
-//                                "   border: none;"
-//                                "   border-radius: 0px;"
-//                                "   padding: 5px 30px 5px %1px;"
-//                                "   text-align: left;"
-//                                "}"
-//                                "QPushButton:hover {"
-//                                "   background-color: #4d4d4d;"
-//                                "}"
-////                                "QPushButton:checked {"
-////                                "    background-color: #4d4d4d;"
-////                                "    border: 1px solid #FFFFFF;"
-////                                "color: white;"
-////                                "}"
-//                                ).arg((10 * indentation) + 30));
-
         QObject::connect(loosQuestionButton, &QuestionButton::clicked, this, [this, list, i]() {
             sendDisplayQuestionSignal(new QLabel(list[i]->getName()));        //TODO nog de goede widgets versturen
         });

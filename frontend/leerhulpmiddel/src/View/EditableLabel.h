@@ -33,6 +33,17 @@ public:
             m_label->show();
             m_lineEdit->hide();
         });
+
+
+        QPalette labelPalette = m_label->palette();
+        labelPalette.setColor(QPalette::WindowText, Qt::black);
+
+        m_label->setPalette(labelPalette);
+
+        QPalette lineEditPalette = m_lineEdit->palette();
+        lineEditPalette.setColor(QPalette::Text, Qt::black);
+
+        m_lineEdit->setPalette(lineEditPalette);
     }
 
     void setText(QString newText)
