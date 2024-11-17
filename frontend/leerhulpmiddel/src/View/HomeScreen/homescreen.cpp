@@ -1,5 +1,4 @@
 #include "homescreen.h"
-#include "qlabel.h"
 #include <QDebug>
 #include "../../model/questionmanager.h"
 

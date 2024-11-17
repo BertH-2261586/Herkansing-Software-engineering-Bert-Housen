@@ -4,7 +4,7 @@
 
 
 #include <QWidget>
-#include "../../model/questionset.h"
+#include "../../../model/questionset.h"
 #include "questionsettreewidget.h"
 #include <QLabel>
 #include <QPainter>

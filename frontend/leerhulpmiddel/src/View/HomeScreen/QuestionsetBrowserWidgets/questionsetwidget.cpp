@@ -1,7 +1,7 @@
 
 #include "questionsetwidget.h"
 #include <QHBoxLayout>
-#include "homescreen.h"
+#include "../homescreen.h"
 
 QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QWidget* parent) :
     m_questionset(questionset), QPushButton(parent), m_homeScreenParent(homeScreenParent)

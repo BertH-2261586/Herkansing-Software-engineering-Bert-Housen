@@ -1,5 +1,11 @@
 #include "Question.h"
 
+void Question::setName(QString newName)
+{
+    m_name = newName;
+    emit changed();
+}
+
 
 QString Question::questionTypeToString() const {
     switch (m_questionType) {

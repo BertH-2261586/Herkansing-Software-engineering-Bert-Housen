@@ -8,7 +8,7 @@
 #include <QPushButton>
 #include <QStyle>
 #include <QMenu>
-#include "../../model/questionset.h"
+#include "../../../model/questionset.h"
 
 
 class QuestionsetTreeWidget: public QWidget

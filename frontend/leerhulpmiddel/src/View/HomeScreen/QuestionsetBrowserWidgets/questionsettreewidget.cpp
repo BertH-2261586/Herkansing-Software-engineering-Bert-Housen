@@ -1,6 +1,7 @@
 #include "questionsettreewidget.h"
-#include "focusoutlineedit.h"
+#include "../../focusoutlineedit.h"
 #include <QDebug>
+#include "questionbutton.h"
 
 QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
     m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation)
@@ -146,35 +147,34 @@ void QuestionsetTreeWidget::AddLooseQuestionsToTree(QVBoxLayout* container, QLis
 {
     for (int i = 0; i < list.length(); i++)
     {
-        QString vraagName = list[i]->getName();
+        QuestionButton* loosQuestionButton = new QuestionButton(list[i], indentation);
 
-        QPushButton* looseVraagButton = new QPushButton(vraagName);
-        looseVraagButton->setCheckable(true);
+//        QPushButton* looseVraagButton = new QPushButton(vraagName);
+//        looseVraagButton->setCheckable(true);
 
-        looseVraagButton->setStyleSheet(QString(                            //de styling van een subdeel, werk met padding zodat de button background er goed uitziet
-                                "QPushButton { "
-                                "   color: #000000;"
-                                "   border: none;"
-                                "   border-radius: 0px;"
-                                "   padding: 5px 30px 5px %1px;"
-                                "   text-align: left;"
-                                "}"
-                                "QPushButton:hover {"
-                                "   background-color: #4d4d4d;"
-                                "}"
-//                                "QPushButton:checked {"
-//                                "    background-color: #4d4d4d;"
-//                                "    border: 1px solid #FFFFFF;"
-//                                "color: white;"
+//        looseVraagButton->setStyleSheet(QString(                            //de styling van een subdeel, werk met padding zodat de button background er goed uitziet
+//                                "QPushButton { "
+//                                "   color: #000000;"
+//                                "   border: none;"
+//                                "   border-radius: 0px;"
+//                                "   padding: 5px 30px 5px %1px;"
+//                                "   text-align: left;"
 //                                "}"
-                                ).arg((10 * indentation) + 30));
+//                                "QPushButton:hover {"
+//                                "   background-color: #4d4d4d;"
+//                                "}"
+////                                "QPushButton:checked {"
+////                                "    background-color: #4d4d4d;"
+////                                "    border: 1px solid #FFFFFF;"
+////                                "color: white;"
+////                                "}"
+//                                ).arg((10 * indentation) + 30));
 
-        QObject::connect(looseVraagButton, &QPushButton::clicked, this, [this, vraagName]() {
-            sendDisplayQuestionSignal(new QLabel(vraagName));
+        QObject::connect(loosQuestionButton, &QuestionButton::clicked, this, [this, list, i]() {
+            sendDisplayQuestionSignal(new QLabel(list[i]->getName()));        //TODO nog de goede widgets versturen
+        });
 
-            });
-
-        container->addWidget(looseVraagButton);
+        container->addWidget(loosQuestionButton);
     }
 }
 

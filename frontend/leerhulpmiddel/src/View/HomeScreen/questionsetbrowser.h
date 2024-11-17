@@ -4,12 +4,12 @@
 #include <QPushButton>
 #include "qwidget.h"
 #include <QHBoxLayout>
-#include "focusoutlineedit.h"
+#include "../focusoutlineedit.h"
 #include <QList>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include "../../model/questionset.h"
-#include "questionsetwidget.h"
+#include "QuestionsetBrowserWidgets/questionsetwidget.h"
 
 class HomeScreen;
 
