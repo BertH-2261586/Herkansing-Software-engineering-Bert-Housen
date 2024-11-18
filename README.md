@@ -34,7 +34,7 @@
 
 [Link](docs/UC_genereer_proefexamen.md) naar de fully dressed use case "Genereer proefexamen"
 
-[Link](docs/UC_maak_vragenset) naar de fully dressed use case "Maak vragenset"
+[Link](docs/UC_maak_vragenset.md) naar de fully dressed use case "Maak vragenset"
 
 [Link](docs/Casual_use_cases.md) naar de pagina van alle casual use cases
 

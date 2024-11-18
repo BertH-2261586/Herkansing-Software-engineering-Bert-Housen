@@ -1,0 +1,126 @@
+#include "CreateMultipleChoiceQuestionView.h"
+#include "../ToastMessage.h"
+#include "../../Exceptions/EmptyFieldException.h"
+
+#include <QPushButton>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QIcon>
+#include <QScrollArea>
+#include <QMessageBox>
+#include <QStringList>
+#include <QCheckBox>
+
+CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* parent) : QWidget(parent), m_txtQuestion{ new QTextEdit(this)} {
+
+
+	QLabel* lblQuestion = new QLabel(this);
+	lblQuestion->setText("Question: ");
+
+	QPushButton* btnAddAnswer = new QPushButton("Add an Answer",this);
+
+	connect(btnAddAnswer, &QPushButton::clicked, this, &CreateMultipleChoiceQuestionView::addAnswer);
+
+
+	m_layout = new QVBoxLayout(this);
+	
+
+
+	QWidget* contentWidget = new QWidget(this);
+	contentWidget->setLayout(m_layout);
+
+
+	QScrollArea* scrollArea = new QScrollArea(this);
+	scrollArea->setWidget(contentWidget);  // Set the scrollable content widget
+	scrollArea->setWidgetResizable(true);
+	scrollArea->setFrameShape(QFrame::NoFrame);  // No frame around the scroll area
+	scrollArea->setFrameShadow(QFrame::Plain);
+
+	QVBoxLayout* outerLayout = new QVBoxLayout(this);
+	outerLayout->addWidget(lblQuestion);
+	outerLayout->addWidget(m_txtQuestion);
+	outerLayout->addWidget(btnAddAnswer);
+	outerLayout->addWidget(scrollArea);
+	setLayout(outerLayout);
+}
+
+QString CreateMultipleChoiceQuestionView::getQuestion() const {
+	if (m_txtQuestion->toPlainText().isEmpty())
+	{
+		throw EmptyFieldException("Please fill in the question");
+	}
+	return m_txtQuestion->toPlainText();
+}
+
+Answer CreateMultipleChoiceQuestionView::getAnswer(){
+
+	QList<QString> answers;
+	QList<int> correctAnswers;
+
+	int count = 0;
+
+	for (QObject* answer : m_layout->children())
+	{
+		QHBoxLayout* answerLayout = qobject_cast<QHBoxLayout*>(answer);
+		QString input = qobject_cast<QTextEdit*>(answerLayout->itemAt(0)->widget())->toPlainText();
+
+		if (input.isEmpty())
+		{
+			throw EmptyFieldException("Please fill in all the answer options");
+		}
+
+		answers.append(input);
+
+		if (qobject_cast<QCheckBox*>(answerLayout->itemAt(2)->widget())->isChecked())
+		{
+			correctAnswers.append(count);
+		}
+		count++;
+
+
+	}
+	return Answer(answers,correctAnswers);
+}
+
+
+
+void CreateMultipleChoiceQuestionView::addAnswer() {
+
+	if (m_layout->count() > 15)
+	{
+		ToastMessage* toast = new ToastMessage("You can only add 15 answers", this);
+		toast->setFixedWidth(200);  // Adjust width as needed
+		toast->move((width() - toast->width()) / 2, height() - 50);  // Position near the bottom center
+		toast->show();
+	}
+	else
+	{
+
+		QHBoxLayout* answerLayout = new QHBoxLayout;
+
+		QTextEdit* txtAnswer = new QTextEdit(this);
+		txtAnswer->setPlaceholderText("Enter an answer");
+		txtAnswer->setFixedHeight(50);
+
+
+		QPushButton* removeButton = new QPushButton(this);
+
+		removeButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
+
+		QCheckBox* correctCheckBox = new QCheckBox(this);
+
+
+		answerLayout->addWidget(txtAnswer);
+		answerLayout->addWidget(removeButton);
+		answerLayout->addWidget(correctCheckBox);
+
+		m_layout->addLayout(answerLayout);
+
+		connect(removeButton, &QPushButton::clicked, [this, answerLayout]() {
+			m_layout->removeItem(answerLayout);
+			answerLayout->deleteLater();
+			});
+
+		update();
+	}
+}

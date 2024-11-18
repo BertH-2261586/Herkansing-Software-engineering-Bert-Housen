@@ -1,10 +1,6 @@
 #include "Answer.h"
 #include <QJsonArray>
 
-
-
-
-
 /**
  * Returns the list of answers that are correct
  * @return QList<QString> list of correct answers
