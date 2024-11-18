@@ -1,4 +1,5 @@
 #include "questionset.h"
+#include "fileManager.h"
 
 Questionset::Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color) :
     m_name(name), m_looseQuestions(looseQuestions), m_subSets(subSets), m_color(color)
@@ -16,19 +17,28 @@ Questionset::~Questionset()
     }
 }
 
-void Questionset::addQuestion(Question* question, QString subsetName) {
-    if (subsetName == "") {
-        m_looseQuestions.append(question);
-    }
-    else {
-        for (Questionset* subset : m_subSets) {
-            if (subset->GetName() == subsetName) {
-                subset->addQuestion(question);
-            }
-        }
+void Questionset::addQuestion(Question* question) {
 
-        qDebug() << "Subset " << subsetName << " not found";
-    }
+    //dit is retarded VVV
+//    if (subsetName == "") {
+//        m_looseQuestions.append(question);
+//    }
+//    else {
+//        for (Questionset* subset : m_subSets) {
+//            if (subset->GetName() == subsetName) {
+//                subset->addQuestion(question);
+//            }
+//        }
+
+//        qDebug() << "Subset " << subsetName << " not found";
+//    }
+
+    //TODO nog controle dat er geen dubbele worden toegevoegd
+
+    FileManager fManager = FileManager();
+    fManager.saveQuestionToJSON(m_name, "", *question);     //TODO kijken wat te doen met die subsection
+
+    m_looseQuestions.append(question);
 
     emit displayNewQuestion(question, 0);
 }
@@ -41,11 +51,6 @@ void Questionset::addSubSet(QString name)
     m_subSets.append(newSubSet);
 
     emit displayNewSubSet(newSubSet, 0);
-}
-
-void Questionset::addComponent(Question* question)
-{
-
 }
 
 

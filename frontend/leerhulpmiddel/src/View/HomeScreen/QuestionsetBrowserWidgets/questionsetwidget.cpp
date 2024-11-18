@@ -32,7 +32,7 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
         "background-color: transparent;"
     );
 
-    m_underlyingTree = new QuestionsetTreeWidget(questionset, questionManagerController);
+    m_underlyingTree = new QuestionsetTreeWidget(questionset);
 
     connect(m_underlyingTree, &QuestionsetTreeWidget::Display, m_homeScreenParent, &HomeScreen::DisplayWidget);
 }

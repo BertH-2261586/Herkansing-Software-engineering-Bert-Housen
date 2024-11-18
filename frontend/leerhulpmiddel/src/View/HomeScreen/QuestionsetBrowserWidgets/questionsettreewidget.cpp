@@ -5,10 +5,9 @@
 #include "questionbutton.h"
 #include "../../focusoutlineedit.h"
 #include "../../create questions/CreateQuestionView.h"
-#include "../../../Controller/questionmanagercontroller.h"
 
-QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, QuestionManagerController* questionManagerController, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
-    m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation), m_questionManagerController(questionManagerController)
+QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
+    m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation), m_controller(questionset)
 {
     m_underlyingTree = MakeQuestionTree(m_questionset->GetLooseQuestions(), m_questionset->GetSubSets(), indentation + 1);           //1 laag van de boom maken
 
@@ -46,7 +45,7 @@ QWidget* QuestionsetTreeWidget::MakeQuestionTree(QList<Question*> looseQuestions
 
     for (int i = 0; i < subSets.length(); i++)
     {
-        QWidget* subPart = new QuestionsetTreeWidget(subSets[i], m_questionManagerController, indentation, this);
+        QWidget* subPart = new QuestionsetTreeWidget(subSets[i], indentation, this);
 
         m_underlyingTreeContainer->addWidget(subPart);
     }
@@ -103,19 +102,19 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name
 
     QPushButton* addToQuestionset = GenerateMenuButton();
 
-    QMenu* addToQuestionsetMenu = new QMenu(this);
-    QAction* addSubsetAction = addToQuestionsetMenu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
-    QAction* addQuestionAction = addToQuestionsetMenu->addAction("Voeg vraag toe");
-    addToQuestionsetMenu->setStyleSheet("background-color: #4d4d4d;");
+//    QMenu* addToQuestionsetMenu = new QMenu(this);
+//    QAction* addSubsetAction = addToQuestionsetMenu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
+//    QAction* addQuestionAction = addToQuestionsetMenu->addAction("Voeg vraag toe");
+//    addToQuestionsetMenu->setStyleSheet("background-color: #4d4d4d;");
 
-    connect(addToQuestionset, &QPushButton::clicked, addToQuestionsetMenu, [=]{
-       addToQuestionsetMenu->popup(addToQuestionset->mapToGlobal(QPoint(0, addToQuestionset->height())));
-    });
+//    connect(addToQuestionset, &QPushButton::clicked, addToQuestionsetMenu, [=]{
+//       addToQuestionsetMenu->popup(addToQuestionset->mapToGlobal(QPoint(0, addToQuestionset->height())));
+//    });
 
-    connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
-    connect(addQuestionAction, &QAction::triggered, this, [=] {
-        sendDisplayQuestionSignal(new CreateQuestionView(m_questionManagerController, this));
-    });
+//    connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
+//    connect(addQuestionAction, &QAction::triggered, this, [=] {
+//        sendDisplayQuestionSignal(new CreateQuestionView(m_questionManagerController, this));
+//    });
 
     questionsetContainer->addWidget(questionsetButton, 15);
     questionsetContainer->addWidget(addToQuestionset, 1);
@@ -155,7 +154,9 @@ QPushButton* QuestionsetTreeWidget::GenerateMenuButton()
     });
 
     connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
-
+    connect(addQuestionAction, &QAction::triggered, this, [=] {
+        sendDisplayQuestionSignal(new CreateQuestionView(QuestionsetController(m_questionset), this));
+    });
 
     return outputButton;
 }
@@ -209,7 +210,7 @@ void QuestionsetTreeWidget::CreateNewQuestionset()
                 m_underlyingTreeContainer->removeWidget(textfield);
                 textfield->deleteLater();
 
-                emit addSubset(input);
+                m_controller.addSubset(input);
             }
             else
             {
@@ -232,7 +233,7 @@ void QuestionsetTreeWidget::CreateNewQuestionset()
 
 void QuestionsetTreeWidget::insertSubset(Questionset* newSubSet, int index)
 {
-    m_underlyingTreeContainer->insertWidget(index, new QuestionsetTreeWidget(newSubSet, m_questionManagerController, m_indentation + 1, this), 0);
+    m_underlyingTreeContainer->insertWidget(index, new QuestionsetTreeWidget(newSubSet, m_indentation + 1, this), 0);
 }
 void QuestionsetTreeWidget::insertQuestion(Question* newQuestion, int index)
 {

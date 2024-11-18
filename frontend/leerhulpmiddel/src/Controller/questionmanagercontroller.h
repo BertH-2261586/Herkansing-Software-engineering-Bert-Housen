@@ -10,7 +10,7 @@ class QuestionManagerController
 public:
     QuestionManagerController(QuestionManager& questionManager);
 
-    inline void addQuestion(QString questionSetName, QString subsection, Question* question) { m_questionManager.addQuestion(questionSetName, subsection, question); }
+    //inline void addQuestion(QString questionSetName, QString subsection, Question* question) { m_questionManager.addQuestion(questionSetName, subsection, question); }
     inline void openQuestionSet(QString questionSetName) {}
     inline QList<Questionset*> getAllQuestionsets() const { return m_questionManager.GetAllQuestionsets(); }
 private:

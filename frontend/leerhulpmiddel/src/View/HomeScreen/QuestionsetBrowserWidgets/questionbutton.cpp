@@ -3,7 +3,8 @@
 #include <QVBoxLayout>
 #include <QPalette>
 
-QuestionButton::QuestionButton(Question* question, int indentation, QWidget* parent) : m_question(question), QWidget(parent)
+QuestionButton::QuestionButton(Question* question, int indentation, QWidget* parent) :
+    m_question(question), QWidget(parent), m_controller(question)
 {
     QVBoxLayout* container = new QVBoxLayout(this);
     container->setContentsMargins(0, 0, 0, 0);
@@ -12,7 +13,9 @@ QuestionButton::QuestionButton(Question* question, int indentation, QWidget* par
 
     connect(m_question, &Question::changed, this, &QuestionButton::update);
 
-    connect(m_label, &EditableLabel::textChanged, question, &Question::setName);
+    connect(m_label, &EditableLabel::textChanged, this, [=](QString text){
+        m_controller.changeName(text);
+    });
 
     m_label->setStyleSheet(QString(                            //de styling van een subdeel, werk met padding zodat de button background er goed uitziet
             "   border: none;"

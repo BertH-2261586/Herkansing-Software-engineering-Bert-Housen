@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include "../../../model/Questions/Question.h"
 #include "../../EditableLabel.h"
+#include "../../../Controller/questioncontroller.h"
 #include <QPainter>
 #include <QStyleOption>
 
@@ -54,6 +55,8 @@ signals:
 private:
     Question* m_question;
     EditableLabel* m_label;
+
+    QuestionController m_controller;
 
     const int m_baseOfset = 30;
     const int m_indentationOfset = 10;

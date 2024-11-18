@@ -20,7 +20,9 @@ file(GLOB_RECURSE PROJECT_SOURCES
     "${CMAKE_SOURCE_DIR}/**/**/*.h"
     "${CMAKE_SOURCE_DIR}/**/**/**/*.cpp"
     "${CMAKE_SOURCE_DIR}/**/**/**/*.h"
+    "${CMAKE_SOURCE_DIR}/questionSets"
 )
+
 
 
 

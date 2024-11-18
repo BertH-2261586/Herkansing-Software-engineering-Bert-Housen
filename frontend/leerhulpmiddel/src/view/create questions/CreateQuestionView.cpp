@@ -11,8 +11,8 @@
 #include "../../Exceptions/EmptyFieldException.h"
 #include "../ToastMessage.h"
 
-CreateQuestionView::CreateQuestionView(QuestionManagerController* questionController, QWidget* parent) 
-	: m_questionController(questionController), QWidget(parent) {
+CreateQuestionView::CreateQuestionView(QuestionsetController questionsetController, QWidget* parent)
+    : m_questionsetController(questionsetController), QWidget(parent) {
 	setWindowFlags(Qt::Popup);
 	setAttribute(Qt::WA_DeleteOnClose);
 
@@ -71,7 +71,7 @@ void CreateQuestionView::confirm() {
 			//Create flashcard object
 			Flashcard* question = new Flashcard(m_txtQuestionName->text(), m_createFlashcardView->getQuestion(), m_createFlashcardView->getAnswer());
 
-			m_questionController->addQuestion("questionset", "", question);
+            m_questionsetController.addQuestion(question);
 			break;
 		}
 		case 1: {
@@ -79,7 +79,7 @@ void CreateQuestionView::confirm() {
 			//Create multipleChoiceQuestion object
 			MultipleChoiceQuestion* question = new MultipleChoiceQuestion(m_txtQuestionName->text(), m_createMultipleChoiceQuestionView->getQuestion(), m_createMultipleChoiceQuestionView->getAnswer());
 
-			m_questionController->addQuestion("questionset", "", question);
+            m_questionsetController.addQuestion(question);
 			break;
 		}
 		case 2: {
@@ -87,7 +87,7 @@ void CreateQuestionView::confirm() {
 			//Create FillInQuestion object
 			FillInQuestion* question = new FillInQuestion(m_txtQuestionName->text(), m_createFillInQuestionView->getQuestion(), m_createFillInQuestionView->getAnswer());
 
-			m_questionController->addQuestion("questionset", "", question);
+            m_questionsetController.addQuestion(question);
 			break;
 		}
 		default: {

@@ -150,7 +150,7 @@ void QuestionsetBrowser::CreateNewQuestionset()
                 textfield->deleteLater();
 
 
-                QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}), m_questionManagerController);     //TODO er voor zorgen dat de memory veilig werdt behandelt
+                QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}));     //TODO er voor zorgen dat de memory veilig werdt behandelt
                 if (m_parent != nullptr)
                 {
                     connect(tempVragensetWidget, &QuestionsetTreeWidget::Display, m_parent, &HomeScreen::DisplayWidget);

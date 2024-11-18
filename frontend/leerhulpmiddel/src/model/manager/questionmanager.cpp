@@ -21,23 +21,23 @@ QuestionManager::~QuestionManager()
     }
 }
 
-void QuestionManager::addQuestion(QString questionSetName, QString subsection, Question* question) {
-    FileManager fManager = FileManager();
+//void QuestionManager::addQuestion(QString questionSetName, QString subsection, Question* question) {
+//    FileManager fManager = FileManager();
 
-    fManager.saveQuestionToJSON(questionSetName, subsection, *question);
+//    fManager.saveQuestionToJSON(questionSetName, subsection, *question);
 
-    Questionset* questionSet = getQuestionSet(questionSetName);
-    questionSet->addQuestion(question, subsection);
-}
+//    Questionset* questionSet = getQuestionSet(questionSetName);
+//    questionSet->addQuestion(question, subsection);
+//}
 
-Questionset* QuestionManager::getQuestionSet(QString questionSetName)
-{
-    for (Questionset* questionset : m_questionsets) {
-        if (questionset->GetName() == questionSetName) {
-            return questionset;
-        }
-    }
+//Questionset* QuestionManager::getQuestionSet(QString questionSetName)
+//{
+//    for (Questionset* questionset : m_questionsets) {
+//        if (questionset->GetName() == questionSetName) {
+//            return questionset;
+//        }
+//    }
 
-    qDebug() << "Questionset " << questionSetName << " not found";
-}
+//    qDebug() << "Questionset " << questionSetName << " not found";
+//}
 
