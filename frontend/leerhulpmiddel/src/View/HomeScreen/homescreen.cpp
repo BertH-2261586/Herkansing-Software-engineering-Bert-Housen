@@ -1,15 +1,15 @@
 #include "homescreen.h"
-#include <QDebug>
-#include "../../model/questionmanager.h"
 
-HomeScreen::HomeScreen(QuestionManager& manager)
+#include <QDebug>
+
+HomeScreen::HomeScreen(QuestionManagerController* questionManagerController)
 {
     //temp data
 
     m_container = new QHBoxLayout(this);
     m_container->setContentsMargins(0, 0, 0, 0);
 
-    m_vragensetBrowser = new QuestionsetBrowser(manager.GetAllQuestionsets(), this);
+    m_vragensetBrowser = new QuestionsetBrowser(questionManagerController->getAllQuestionsets(), questionManagerController, this);
     m_container->addWidget(m_vragensetBrowser, 1);
 
     m_rightSideScreen = new QWidget();

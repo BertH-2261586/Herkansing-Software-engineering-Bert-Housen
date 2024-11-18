@@ -1,16 +1,20 @@
 #include "questionsettreewidget.h"
-#include "../../focusoutlineedit.h"
-#include <QDebug>
-#include "questionbutton.h"
 
-QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
-    m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation)
+#include <QDebug>
+
+#include "questionbutton.h"
+#include "../../focusoutlineedit.h"
+#include "../../create questions/CreateQuestionView.h"
+#include "../../../Controller/questionmanagercontroller.h"
+
+QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, QuestionManagerController* questionManagerController, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
+    m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation), m_questionManagerController(questionManagerController)
 {
     m_underlyingTree = MakeQuestionTree(m_questionset->GetLooseQuestions(), m_questionset->GetSubSets(), indentation + 1);           //1 laag van de boom maken
 
     connect(this, &QuestionsetTreeWidget::addSubset, questionset, &Questionset::addSubSet);
     connect(questionset, &Questionset::displayNewSubSet, this, &QuestionsetTreeWidget::insertSubset);
-
+    connect(questionset, &Questionset::displayNewQuestion, this, &QuestionsetTreeWidget::insertQuestion);
 
     if (questionsetWidgetParent != nullptr)
     {
@@ -42,7 +46,7 @@ QWidget* QuestionsetTreeWidget::MakeQuestionTree(QList<Question*> looseQuestions
 
     for (int i = 0; i < subSets.length(); i++)
     {
-        QWidget* subPart = new QuestionsetTreeWidget(subSets[i], indentation, this);
+        QWidget* subPart = new QuestionsetTreeWidget(subSets[i], m_questionManagerController, indentation, this);
 
         m_underlyingTreeContainer->addWidget(subPart);
     }
@@ -110,7 +114,7 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name
 
     connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
     connect(addQuestionAction, &QAction::triggered, this, [=] {
-        //sendDisplayQuestionSignal()
+        sendDisplayQuestionSignal(new CreateQuestionView(m_questionManagerController, this));
     });
 
     questionsetContainer->addWidget(questionsetButton, 15);
@@ -228,11 +232,12 @@ void QuestionsetTreeWidget::CreateNewQuestionset()
 
 void QuestionsetTreeWidget::insertSubset(Questionset* newSubSet, int index)
 {
-    m_underlyingTreeContainer->insertWidget(index, new QuestionsetTreeWidget(newSubSet, m_indentation + 1, this), 0);
+    m_underlyingTreeContainer->insertWidget(index, new QuestionsetTreeWidget(newSubSet, m_questionManagerController, m_indentation + 1, this), 0);
 }
-void QuestionsetTreeWidget::insertQuestion(Question* newQuestion)
+void QuestionsetTreeWidget::insertQuestion(Question* newQuestion, int index)
 {
-
+    qDebug() << "Added Question";
+    emit Display(new QWidget());
 }
 
 

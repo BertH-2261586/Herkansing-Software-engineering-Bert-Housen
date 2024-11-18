@@ -6,7 +6,7 @@ void Question::setName(QString newName)
     emit changed();
 }
 
-
+//Convert a questionType to a string that represents that type
 QString Question::questionTypeToString() const {
     switch (m_questionType) {
         case QuestionType::MultipleChoice: 
@@ -14,19 +14,24 @@ QString Question::questionTypeToString() const {
         case QuestionType::FillIn: 
             return "FillIn";
         case QuestionType::Flashcard:
-            return "TrueFalse";
+            return "Flashcard";
         default: 
             return "None";
     }
 }
 
+/*
+* Convert a string that represents a questionType to a questionType
+* @pre this assumes the string follows the same conversion as questionTypeToString
+* @return QuestionType this is the question type converted from the string
+*/
 QuestionType Question::stringToQuestionType(const QString questionTypeStr) {
     if (questionTypeStr == "FillIn") 
         return QuestionType::FillIn;
-    if (questionTypeStr == "MultipleChoice") 
+    else if (questionTypeStr == "MultipleChoice") 
         return QuestionType::MultipleChoice;
-    if (questionTypeStr == "FlashCard") 
+    else if (questionTypeStr == "Flashcard") 
         return QuestionType::Flashcard;
-    if (questionTypeStr == "None")
+    else if (questionTypeStr == "None")
         return QuestionType::None;
 }

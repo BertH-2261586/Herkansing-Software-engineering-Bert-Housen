@@ -10,13 +10,14 @@
 #include <QGraphicsScene>
 #include "../../model/questionset.h"
 #include "QuestionsetBrowserWidgets/questionsetwidget.h"
+#include "../../Controller/questionmanagercontroller.h"
 
 class HomeScreen;
 
 class QuestionsetBrowser: public QWidget
 {
 public:
-    QuestionsetBrowser(QList<Questionset*> allQuestionsets, HomeScreen* parent = nullptr);
+    QuestionsetBrowser(QList<Questionset*> allQuestionsets, QuestionManagerController* questionManagerController, HomeScreen* parent = nullptr);
 
 private:
     QGraphicsView* GenerateQuestionsetTabs();
@@ -33,6 +34,7 @@ private:
     QWidget* m_displayedTree;
     QLayout* m_displayedTreeContainer;
     QList<QuestionsetWidget*> m_allQuestionsetWidgets;
+    QuestionManagerController* m_questionManagerController;
 };
 
 #endif // QUESTIONSETBROWSER_H

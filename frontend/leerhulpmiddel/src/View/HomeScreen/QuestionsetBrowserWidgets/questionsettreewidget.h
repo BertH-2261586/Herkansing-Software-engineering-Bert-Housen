@@ -9,7 +9,7 @@
 #include <QStyle>
 #include <QMenu>
 #include "../../../model/questionset.h"
-
+#include "../../../Controller/questionmanagercontroller.h"
 
 class QuestionsetTreeWidget: public QWidget
 {
@@ -17,7 +17,7 @@ class QuestionsetTreeWidget: public QWidget
 
 
 public:
-    QuestionsetTreeWidget(Questionset *questionset, int indentation = 0, QuestionsetTreeWidget* questionsetWidgetParent = nullptr);
+    QuestionsetTreeWidget(Questionset *questionset, QuestionManagerController* questionManagerController, int indentation = 0, QuestionsetTreeWidget* questionsetWidgetParent = nullptr);
 
 
 private:
@@ -35,7 +35,7 @@ private:
     QuestionsetTreeWidget* m_questionsetWidgetParent;
     Questionset* m_questionset;
     int m_indentation;
-
+    QuestionManagerController* m_questionManagerController;
 
 signals:
     void Display(QWidget* displayWidget);
@@ -44,7 +44,7 @@ signals:
 
 public slots:
     void insertSubset(Questionset* newSubset, int index);
-    void insertQuestion(Question* newQuestion);
+    void insertQuestion(Question* newQuestion, int index);
 };
 
 #endif // VRAGENSETWIDGET_H
