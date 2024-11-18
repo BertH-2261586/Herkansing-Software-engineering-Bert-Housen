@@ -7,6 +7,8 @@
 #include <QPushButton>
 #include "../../../model/Questions/Question.h"
 #include "../../EditableLabel.h"
+#include <QPainter>
+#include <QStyleOption>
 
 
 class QuestionButton : public QWidget
@@ -16,11 +18,35 @@ public:
     QuestionButton(Question* question, int indentation, QWidget* parent = nullptr);
 
 protected:
-    void mousePressEvent(QMouseEvent* event)
+    void mousePressEvent(QMouseEvent* event) override
     {
         QWidget::mousePressEvent(event);
         emit clicked();
     };
+
+//    void paintEvent(QPaintEvent *) override
+//    {
+//        QStyleOption opt;
+//        opt.initFrom(this);
+//        QPainter p(this);
+//        style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+//    }
+
+
+    //wordt gedaan met hover events omdat deze ook permanent geselcteerd kunnen worden en dan moet de stylesheet niet veranderd worden
+    void enterEvent(QEnterEvent* event) override
+    {
+        setStyleSheet("background-color: #AFAFAF;");
+
+        QWidget::enterEvent(event);
+    }
+
+    void leaveEvent(QEvent* event) override
+    {
+        setStyleSheet("background-color: transparent;");
+
+        QWidget::leaveEvent(event);
+    }
 
 signals:
     void clicked();
