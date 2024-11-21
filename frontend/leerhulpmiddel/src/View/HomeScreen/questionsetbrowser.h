@@ -23,7 +23,6 @@ private:
     QGraphicsView* GenerateQuestionsetTabs();
     QPushButton* GenerateCreateNewQuestionsetButton();
     void CreateNewQuestionset();
-    bool doesQuestionsetExist(QString name);
 
     void setPermaDisplayTab(QGraphicsProxyWidget* proxy, QuestionsetWidget* questionsetWidget);
 

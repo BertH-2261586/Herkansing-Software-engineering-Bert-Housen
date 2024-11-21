@@ -143,7 +143,7 @@ void QuestionsetBrowser::CreateNewQuestionset()
 
             qDebug() << input;
 
-            if (input != "" && doesQuestionsetExist(input) == false)
+            if (input != "")
             {
                 m_container->removeWidget(textfield);
                 textfield->setParent(nullptr);
@@ -157,30 +157,13 @@ void QuestionsetBrowser::CreateNewQuestionset()
                 }
                 m_container->insertWidget(1, tempVragensetWidget, 0);
             }
-            else if (input == "")
+            else
             {
                 m_container->removeWidget(textfield);
                 textfield->setParent(nullptr);
                 textfield->deleteLater();
             }
-            else
-            {
-                //TODO wat doen als questionset al bestaat
-            }
 
     }, Qt::AutoConnection);
-}
-
-
-bool QuestionsetBrowser::doesQuestionsetExist(QString name)
-{
-    for (int i = 0; i < m_allQuestionsets.length(); i++)
-    {
-        if (name == m_allQuestionsets[i]->GetName())
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
