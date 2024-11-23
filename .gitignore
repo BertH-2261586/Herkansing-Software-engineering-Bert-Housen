@@ -710,6 +710,9 @@ FodyWeavers.xsd
 # Questions jsons
 frontend/leerhulpmiddel/questionSets/
 
+#db
+backend/mysql_data/
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 

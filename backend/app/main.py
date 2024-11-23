@@ -1,12 +1,22 @@
-from typing import Union
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from .database import engine
+from .models import SQLModel
+from .routers import users
 
-app = FastAPI()
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()              #init db before server startup
+    yield
+
+app = FastAPI(lifespan=lifespan)
+
+#Add router
+app.include_router(users.router, prefix="/user", tags=["user"])
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
