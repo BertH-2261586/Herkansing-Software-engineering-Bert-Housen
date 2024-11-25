@@ -13,6 +13,7 @@
 #include "../questions/FillInView.h"
 #include "../questions/MultipleChoiceView.h"
 #include "../../Controller/questionmanagercontroller.h"
+#include "scoreCardExaminationView.h"
 
 class ExaminationController;
 
@@ -26,32 +27,50 @@ public:
 signals:
     void examinationStarted(const QString questionSetPath);
     void nextQuestion();
+    void getExaminationData();
 
 public slots:
     void flashcardHasBeenFlipped();
     void questionLoadedView();
+    void receiveExaminationData(QMap<QString, QString> data);
+    void closeWindow() { this->close(); }
 
 private slots:
     void nextQuestionView();
-    void showAnswer();
-    void closeWindow() { this->close(); }
+    void showAnswer(bool timeout = false);
     void closeEvent(QCloseEvent* event) override; // Override close event
 
 private:
     void setCurrentQuestionView();
     void clearPreviousQuestionView();
 
+    // GUI Setup
+    void setupAmountQuestionsAnswered();
+    void setupTimer(const int timeLimitMinutes);
+    void setupSubmitButton();
+    void setupCloseButton();
+    void setupNextQuestionButton();
+    void setupEndExaminationButton();
+    void initializeLayouts();
+
+    void hideAllWidgets(QLayout* layout);
+
+    QVBoxLayout* m_mainLayout;
+    QHBoxLayout* m_questionInfoLayout;
     QLabel* m_amountOfQuestionsAnswered;
     QPushButton* m_submitButton;
     QPushButton* m_closeButton;
     QPushButton* m_nextQuestionButton;
     QPushButton* m_endExaminationButton;
 
+    // Sub views
     CountdownTimer* m_timePerQuestion;
     MultipleChoiceExaminationView m_multipleChoiceView = MultipleChoiceExaminationView();
     FlashcardExaminationView m_flashcardView = FlashcardExaminationView();
     FillInExaminationView m_fillInView = FillInExaminationView();
+    scoreCardExaminationView* m_scoreCard;
 
+    // Controller
     ExaminationController* m_examinationController;
 
     bool m_closeFromExaminationEnd = false;         // Deze bool houd bij als er op de "end examination" knop is geklikt, zodat je de close event kunt bypassen

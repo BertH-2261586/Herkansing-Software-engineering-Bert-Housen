@@ -19,12 +19,12 @@ public:
     QuestionType getCurrentQuestionType() const { return m_currentQuestion->getQuestionType(); }
     const Question* getQuestion() const { return m_currentQuestion.get(); }
     bool finishedExamination() const { return m_examinationManager->finishedExamination(); }
-    int checkMultipleChoiceAnswer(QString checkedAnswers);
-    QVector<int> checkFillInAnswer(QVector<QString> answerText);
+    int checkMultipleChoiceAnswer(QString checkedAnswers, bool timeout);
+    QVector<int> checkFillInAnswer(QVector<QString> answerText, bool timeout);
 
 signals:
     void questionLoadedView();
-    void answeredWrong();
+    void answeredWrong(bool timeout);
     void wrongQuestionsLoadedView();
 
 public slots:

@@ -1,35 +1,102 @@
 #include "scoreCardExaminationView.h"
+#include "examinationView.h"
 
-scoreCardExaminationView::scoreCardExaminationView(int correctAnswers, int wrongAnswers, QWidget* parent) : QWidget(parent) {
-	m_mainLayout = new QVBoxLayout;
+scoreCardExaminationView::scoreCardExaminationView(QWidget* parent) : QWidget(parent) {
+    // Create a border 
+    initializeBorderWidget();
 
-	m_scoreCardBoxLayout = new QVBoxLayout;
-	m_correctAnswers = new QLabel(QString::number(correctAnswers));
-	m_wrongAnswers = new QLabel(QString::number(wrongAnswers));
-    //m_endExaminationButton = new QPushButton("End the examination", this);
-    //m_endExaminationButton->setStyleSheet(
-    //    "QPushButton {"
-    //    "   color: palette(ButtonText); "
-    //    "   background-color: palette(button);"             // Background color (green)
-    //    "   border: 2px solid palette(mid);"             // Border with a darker green
-    //    "   border-radius: 5px;"                    // Rounded corners
-    //    "   padding: 8px 16px;"                     // Padding for a better button shape
-    //    "   margin-bottom: 25px;"
-    //    "   font-size: 16px;"                       // Font size
-    //    "   max-width: 175px;"                      // Limit the width of the button
-    //    "}"
-    //    "QPushButton:hover {"
-    //    "   background-color: palette(mid);"             // Darker green on hover
-    //    "}"
-    //);
-    //m_endExaminationButton->setCursor(Qt::PointingHandCursor);
-    //connect(m_endExaminationButton, &QPushButton::clicked, this, [this]() {
-    //    closeWindow();  
-    //});
+    // Initialize the labels (QLabels)
+    initializeLabels();
 
-	m_scoreCardBoxLayout->addWidget(m_correctAnswers);
-	m_scoreCardBoxLayout->addWidget(m_wrongAnswers);
-    m_scoreCardBoxLayout->addWidget(m_closeButton);
+    // Initialize the button (QPushButton)
+    initializeCloseButton(parent);
 
-	m_mainLayout->addLayout(m_scoreCardBoxLayout);
+    // Initialize the layouts
+    initializeLayouts();
+   
+    setLayout(m_mainLayout);
+}
+
+void scoreCardExaminationView::initializeBorderWidget() {
+    m_borderWidget = new QWidget(this);
+    m_borderWidget->setObjectName("borderWidget");
+    m_borderWidget->setStyleSheet(
+        "#borderWidget {"
+        "   border: 2px solid palette(mid);"
+        "   border-radius: 10px;"
+        "   padding: 10px;" // Padding affects layout but not children styles
+        "   background-color: palette(base);"
+        "}"
+    );
+}
+
+void scoreCardExaminationView::initializeLabels() {
+    m_totalAnswers = createLabel();
+    m_correctAnswers = createLabel();
+    m_wrongAnswers = createLabel();
+    m_percentage = createLabel();
+    m_mostRetries = createLabel();
+    m_totalTimeouts = createLabel();
+}
+
+QLabel* scoreCardExaminationView::createLabel() {
+    QLabel* label = new QLabel;
+    label->setStyleSheet("color: palette(windowText); font-size: 25px;");
+    return label;
+}
+
+void scoreCardExaminationView::initializeCloseButton(QWidget* parent) {
+    m_closeButton = new QPushButton("Close score card", this);
+    m_closeButton->setStyleSheet(
+        "QPushButton {"
+        "   color: palette(ButtonText);"
+        "   background-color: palette(button);"
+        "   border: 2px solid palette(mid);"
+        "   border-radius: 5px;"
+        "   padding: 8px 16px;"
+        "   font-size: 16px;"
+        "   max-width: 175px;"
+        "   margin-top: 15px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: palette(mid);"
+        "}"
+    );
+    m_closeButton->setCursor(Qt::PointingHandCursor);
+    connect(m_closeButton, &QPushButton::clicked, static_cast<ExaminationView*>(parent), &ExaminationView::closeWindow);
+}
+
+void scoreCardExaminationView::initializeLayouts() {
+    // Initialize main layout
+    m_mainLayout = new QVBoxLayout;
+
+    // Initialize the border layout
+    m_borderLayout = new QVBoxLayout(m_borderWidget);
+    m_borderLayout->setContentsMargins(35, 35, 35, 35);
+
+    // Initialize answered question layout (horizontal)
+    m_answeredQuestionLayout = new QHBoxLayout;
+    m_answeredQuestionLayout->setSpacing(50);
+    m_answeredQuestionLayout->addWidget(m_correctAnswers);
+    m_answeredQuestionLayout->addWidget(m_wrongAnswers);
+    m_answeredQuestionLayout->addWidget(m_percentage);
+
+    // Add widgets and layouts to the border layout
+    m_borderLayout->addWidget(m_totalAnswers);
+    m_borderLayout->addLayout(m_answeredQuestionLayout);
+    m_borderLayout->addWidget(m_mostRetries);
+    m_borderLayout->addWidget(m_totalTimeouts);
+    m_borderLayout->addWidget(m_closeButton, 0, Qt::AlignHCenter);
+
+    // Set the main layout
+    m_mainLayout->addWidget(m_borderWidget);
+}
+
+void scoreCardExaminationView::showExaminationData(QMap<QString, QString> examinationData) {
+    m_totalAnswers->setText("Total questions answered: " + examinationData.value("total_answers"));
+    m_correctAnswers->setText("Correct answers: " + examinationData.value("right_answers"));
+    m_wrongAnswers->setText("Wrong answers: " + examinationData.value("total_wrong_answers"));
+    m_percentage->setText("Accuracy: " + examinationData.value("percentage") + "%");
+    m_mostRetries->setText("Highest repeated question amount: " + examinationData.value("most_retries"));
+    m_totalTimeouts->setText("Amount of questions timed out: " + examinationData.value("total_timeouts"));
 }

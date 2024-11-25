@@ -24,3 +24,9 @@ void ExaminationManager::nextQuestion() {
 		emit wrongQuestionsLoadedModel(m_examination.getCurrentQuestion(), m_examination.getTotalSize());
 	}
 }
+
+void ExaminationManager::getExaminationData() {
+	qDebug() << "Get data";
+	QMap<QString, QString> data = m_examination.getExaminationData();
+	emit sendExaminationData(data);
+}

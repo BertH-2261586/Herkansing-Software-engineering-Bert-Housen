@@ -20,6 +20,10 @@ ExaminationController::ExaminationController(ExaminationView* examinationView) :
 	// Notify the view that all questions have been answered and that wrongly answered questions get loaded. 
 	// You can use questionLoadedView slot because it has the same execution
 	connect(this, &ExaminationController::wrongQuestionsLoadedView, m_examinationView, &ExaminationView::questionLoadedView);
+	// Notify the manager that the view wants the data of the examination to show the user how they did
+	connect(m_examinationView, &ExaminationView::getExaminationData, m_examinationManager, &ExaminationManager::getExaminationData);
+	// Send the data of the examination to the view 
+	connect(m_examinationManager, &ExaminationManager::sendExaminationData, m_examinationView, &ExaminationView::receiveExaminationData);
 }
 
 // The manager notified the controller that the first question has loaded
@@ -48,12 +52,12 @@ void ExaminationController::wrongQuestionsLoadedModel(shared_ptr<Question> quest
 }
 
 // Check if the user answered the multiple choice correctly and return the correct one if not
-int ExaminationController::checkMultipleChoiceAnswer(QString checkedAnswers) {
+int ExaminationController::checkMultipleChoiceAnswer(QString checkedAnswers, bool timeout) {
 	// Get the correct answer for the question
 	QList<QString> correctAnswers = m_currentQuestion->getAnswer().getCorrectAnswers();
 	// The question was answered wrong				There was no answer selected
 	if (!correctAnswers.contains(checkedAnswers) || checkedAnswers == "") {
-		emit answeredWrong();
+		emit answeredWrong(timeout);
 		QList<int> correctAnswersIndices = m_currentQuestion->getAnswer().getIndicesCorrectAnswers();
 		return correctAnswersIndices[0];		// Only return the first one since multiple choice can only have one correct answer
 	}
@@ -63,7 +67,7 @@ int ExaminationController::checkMultipleChoiceAnswer(QString checkedAnswers) {
 }
 
 // Check if the user answered the fill in correctly
-QVector<int> ExaminationController::checkFillInAnswer(QVector<QString> answerText) {
+QVector<int> ExaminationController::checkFillInAnswer(QVector<QString> answerText, bool timeout) {
 	QVector<int> wrongAnswers;
 	bool alreadySignalled = false;
 	QList<QString> correctAnswers = m_currentQuestion->getAnswer().getAnswers();
@@ -75,7 +79,7 @@ QVector<int> ExaminationController::checkFillInAnswer(QVector<QString> answerTex
 		if (userAnswer != correctAnswer) {
 			// Dont send the same signal multiple times
 			if (!alreadySignalled) {
-				emit answeredWrong();
+				emit answeredWrong(timeout);
 			}
 
 			wrongAnswers.append(i);
