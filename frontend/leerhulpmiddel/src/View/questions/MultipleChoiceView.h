@@ -17,7 +17,8 @@ public:
     MultipleChoiceExaminationView(QWidget* parent = nullptr) {}
     void setQuestion(const MultipleChoiceQuestion* question);
     void clearPreviousQuestion();
-    void showAnswer(const MultipleChoiceQuestion* question);
+    void showAnswer(int correctAnswer);
+    QString getCheckedAnswers();
 
 private:
     void setQuestionLabel(const MultipleChoiceQuestion* question);

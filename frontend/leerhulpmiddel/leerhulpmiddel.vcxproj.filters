@@ -1,257 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
-    <Filter Include="Translation Files">
-      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
-      <Extensions>ts</Extensions>
-    </Filter>
+    <ClCompile Include="src\Controller\examinationController.cpp" />
+    <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
+    <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model\countdownTimer.cpp" />
+    <ClCompile Include="src\model\fileManager.cpp" />
+    <ClCompile Include="src\model\manager\examinationManager.cpp" />
+    <ClCompile Include="src\model\manager\questionmanager.cpp" />
+    <ClCompile Include="src\model\questionset.cpp" />
+    <ClCompile Include="src\model\Questions\Answer.cpp" />
+    <ClCompile Include="src\model\Questions\FillInQuestion.cpp" />
+    <ClCompile Include="src\model\Questions\Flashcard.cpp" />
+    <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
+    <ClCompile Include="src\model\Questions\Question.cpp" />
+    <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp" />
+    <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp" />
+    <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp" />
+    <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
+    <ClCompile Include="src\view\Examination\examinationView.cpp" />
+    <ClCompile Include="src\View\questions\FillInView.cpp" />
+    <ClCompile Include="src\View\questions\FlashcardView.cpp" />
+    <ClCompile Include="src\View\questions\MultipleChoiceView.cpp" />
+    <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
+    <ClCompile Include="src\view\HomeScreen\questionsetbrowser.cpp" />
+    <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.cpp" />
+    <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.cpp" />
+    <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp" />
+    <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
+    <ClCompile Include="src\View\Examination\scoreCardExaminationView.cpp" />
+    <ClCompile Include="src\model\examination.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="leerhulpmiddel.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtUic Include="leerhulpmiddel.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
+    <ClInclude Include="src\Controller\questionmanagercontroller.h" />
+    <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
+    <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />
+    <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
+    <ClInclude Include="src\Exceptions\loadException.h" />
+    <ClInclude Include="src\Exceptions\saveException.h" />
+    <ClInclude Include="src\model\examination.h" />
+    <ClInclude Include="src\model\fileManager.h" />
+    <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
+    <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
+    <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
+    <ClInclude Include="src\view\HomeScreen\homescreen.h" />
+    <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h" />
+    <ClInclude Include="src\model\Questions\Answer.h" />
+    <ClInclude Include="src\model\Questions\FillInQuestion.h" />
+    <ClInclude Include="src\model\Questions\Flashcard.h" />
+    <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
+    <ClInclude Include="src\model\Questions\questionType.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="src\view\HomeScreen\mylineedit.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\EditableLabel.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\focusoutlineedit.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\ToastMessage.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\create questions\CreateQuestionView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\create questions\BracketHighlighter.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\model\questionset.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\model\questionmanager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\model\Questions\Question.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <QtMoc Include="src\Controller\examinationController.h" />
+    <QtMoc Include="src\view\ToastMessage.h" />
+    <QtMoc Include="src\view\focusoutlineedit.h" />
+    <QtMoc Include="src\view\EditableLabel.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.h" />
+    <QtMoc Include="src\View\questions\MultipleChoiceView.h" />
+    <QtMoc Include="src\View\questions\FlashcardView.h" />
+    <QtMoc Include="src\View\questions\FillInView.h" />
+    <QtMoc Include="src\view\Examination\examinationView.h" />
+    <QtMoc Include="src\view\create questions\CreateQuestionView.h" />
+    <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h" />
+    <QtMoc Include="src\view\create questions\BracketHighlighter.h" />
+    <QtMoc Include="src\model\questionset.h" />
+    <QtMoc Include="src\model\countdownTimer.h" />
+    <QtMoc Include="src\model\Questions\Question.h" />
+    <QtMoc Include="src\model\manager\questionmanager.h" />
+    <QtMoc Include="src\model\manager\examinationManager.h" />
+    <QtMoc Include="src\View\Examination\scoreCardExaminationView.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\HomeScreen\homescreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\HomeScreen\questionsetbrowser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\create questions\CreateQuestionView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\fileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\manager\questionmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\questionset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Exceptions\invalidtypeerror.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Controller\questionmanagercontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="src\model\Questions\Answer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\Questions\FillInQuestion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\Questions\Flashcard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\Questions\Question.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp">
-=======
-    <ClCompile Include="src\model\countdownTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\Examination\examinationView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\Examination\FillInExaminationView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\Examination\FlashcardExaminationView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\Examination\MultipleChoiceExaminationView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Controller\examinationController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\model\manager\examinationManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\QFlowLayout.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Exceptions\FolderQuestionSetMovedException.h">
->>>>>>> Ondervraging
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <QtRcc Include="leerhulpmiddel.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\view\HomeScreen\homescreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\view\leerhulpmiddelmainwindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\view\create questions\CreateFlashcardView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\model\fileManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Exceptions\invalidtypeerror.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Exceptions\EmptyFieldException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Controller\questionmanagercontroller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="src\model\Questions\questionType.h">
-=======
-    <ClInclude Include="src\model\examination.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\QFlowLayout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Exceptions\saveException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Exceptions\loadException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="src\view\HomeScreen\mylineedit.h">
->>>>>>> Ondervraging
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\model\Questions\Answer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\model\Questions\FillInQuestion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\model\Questions\Flashcard.h">
-      <Filter>Header Files</Filter>
-<<<<<<< HEAD
-    </ClInclude>
-    <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-=======
-    </QtMoc>
-    <QtMoc Include="src\model\manager\questionmanager.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\model\countdownTimer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\Examination\examinationView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\Examination\FillInExaminationView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\Examination\FlashcardExaminationView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\view\Examination\MultipleChoiceExaminationView.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\Controller\examinationController.h">
-      <Filter>Source Files</Filter>
-    </QtMoc>
-    <QtMoc Include="src\model\manager\examinationManager.h">
-      <Filter>Source Files</Filter>
-    </QtMoc>
->>>>>>> Ondervraging
+    <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-#include "FlashcardExaminationView.h"
+#include "FlashcardView.h"
 
 /*
 * This function sets up the flashcard examination view properly

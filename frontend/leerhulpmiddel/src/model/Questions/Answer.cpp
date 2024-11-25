@@ -21,6 +21,21 @@ QList<QString> Answer::getCorrectAnswers() const
 }
 
 /**
+ * Returns the index of the correct answer
+ * @return QList<int> list of indices of the correct answers
+ */
+QList<int> Answer::getIndicesCorrectAnswers() const
+{
+	QList<int> correctAnswers;
+	for (int index : m_correctAnswers) {
+		if (index >= 0 && index < m_answer.size()) {  // Check if index is in range
+			correctAnswers.append(index);
+		}
+	}
+	return correctAnswers;
+}
+
+/**
  * Overloads the == operator to compare two Answer objects
  * @param other Answer object to compare with
  * @return bool true if the two objects are equal, false otherwise

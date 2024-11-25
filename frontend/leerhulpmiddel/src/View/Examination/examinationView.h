@@ -9,9 +9,9 @@
 #include <QMessageBox>
 
 #include "../../model/countdownTimer.h"
-#include "FlashcardExaminationView.h"
-#include "FillInExaminationView.h"
-#include "MultipleChoiceExaminationView.h"
+#include "../questions/FlashcardView.h"
+#include "../questions/FillInView.h"
+#include "../questions/MultipleChoiceView.h"
 #include "../../Controller/questionmanagercontroller.h"
 
 class ExaminationController;
@@ -33,7 +33,7 @@ public slots:
 
 private slots:
     void nextQuestionView();
-    void checkAnswer();
+    void showAnswer();
     void closeWindow() { this->close(); }
     void closeEvent(QCloseEvent* event) override; // Override close event
 
@@ -41,16 +41,16 @@ private:
     void setCurrentQuestionView();
     void clearPreviousQuestionView();
 
-    QLabel* amountOfQuestionsAnswered;
-    QPushButton* submitButton;
-    QPushButton* closeButton;
-    QPushButton* nextQuestionButton;
-    QPushButton* endExaminationButton;
+    QLabel* m_amountOfQuestionsAnswered;
+    QPushButton* m_submitButton;
+    QPushButton* m_closeButton;
+    QPushButton* m_nextQuestionButton;
+    QPushButton* m_endExaminationButton;
 
-    CountdownTimer* timePerQuestion;
-    MultipleChoiceExaminationView multipleChoiceView = MultipleChoiceExaminationView();
-    FlashcardExaminationView flashcardView = FlashcardExaminationView();
-    FillInExaminationView fillInView = FillInExaminationView();
+    CountdownTimer* m_timePerQuestion;
+    MultipleChoiceExaminationView m_multipleChoiceView = MultipleChoiceExaminationView();
+    FlashcardExaminationView m_flashcardView = FlashcardExaminationView();
+    FillInExaminationView m_fillInView = FillInExaminationView();
 
     ExaminationController* m_examinationController;
 

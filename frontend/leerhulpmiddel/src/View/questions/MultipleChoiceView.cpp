@@ -1,4 +1,4 @@
-#include "MultipleChoiceExaminationView.h"
+#include "MultipleChoiceView.h"
 
 /*
 * This function sets up the MultipleChoice examination view properly
@@ -160,25 +160,20 @@ void MultipleChoiceExaminationView::clearPreviousQuestion() {
     m_radioButtonList.clear();
 }
 
-void MultipleChoiceExaminationView::showAnswer(const MultipleChoiceQuestion* question) {
+void MultipleChoiceExaminationView::showAnswer(int correctAnswer) {
     // Disable all the radio buttons so it cant accept more input
     for (QRadioButton* radio : m_radioButtonList) {
         radio->setEnabled(false);
     }
 
-    QList<QString> correctAnswers = question->getAnswer().getCorrectAnswers();
-    for (int i = 0; i < m_radioButtonList.size(); ++i) {
-        QRadioButton* radioButton = m_radioButtonList[i];
-        QString radioButtonText = radioButton->text();
-        bool answerIsCorrect = correctAnswers.contains(radioButtonText);
-
+    for (int i = 0; i < m_radioButtonList.size(); ++i) {      
         // Only change the style sheet for selected and correct answers
-        if (radioButton->isChecked() || answerIsCorrect) {
-            // Check if the selected answer is correct
-            QString color = answerIsCorrect ? "green" : "red";
+        if (m_radioButtonList[i]->isChecked() || i == correctAnswer) {
+            // Check if the selected answer is correct 
+            QString color = (i == correctAnswer || correctAnswer == -1) ? "green" : "red";
 
             // Set the stylesheet using the determined color
-            radioButton->setStyleSheet(
+            m_radioButtonList[i]->setStyleSheet(
                 QString(
                     "QRadioButton {"
                         "color: %1; "
@@ -198,4 +193,19 @@ void MultipleChoiceExaminationView::showAnswer(const MultipleChoiceQuestion* que
                 ).arg(color));
         }
     }
+}
+
+QString MultipleChoiceExaminationView::getCheckedAnswers() {
+    // Iterate through all radio buttons with their index
+    for (int i = 0; i < m_radioButtonList.size(); ++i) {
+        QRadioButton* button = m_radioButtonList[i];
+
+        if (button && button->isChecked()) {
+            // Since you can only select one radio button return the selected one 
+            return button->text();
+        }
+    }
+
+    // There is no answer selected
+    return "";
 }

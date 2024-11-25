@@ -15,7 +15,8 @@ class FillInExaminationView : public QWidget {
 public:
     explicit FillInExaminationView(QWidget* parent = nullptr) {}
     void setQuestion(const FillInQuestion* question);
-    void showAnswer(const FillInQuestion* question);
+    void showAnswer(QVector<int> wrongAnswers);
+    QVector<QString> getAllAnswerText();  
     void clearPreviousQuestion();
 
 private:

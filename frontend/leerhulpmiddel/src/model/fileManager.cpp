@@ -347,9 +347,5 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
         }
     }
 
-    for (shared_ptr<Question> question : questions) {
-        qDebug() << question->getQuestion() << question->questionTypeToString();  // Print each entry after the loop
-    }
-
     return questions;
 }

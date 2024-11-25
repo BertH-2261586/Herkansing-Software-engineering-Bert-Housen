@@ -10,12 +10,17 @@ void ExaminationManager::examinationStarted(const QString questionSetPath) {
 	m_examination.setQuestions(questions);
 
 	// Notify the view that the questions have been loaded
-	emit firstQuestion(questions[0], questions.size());
+	emit firstQuestion(m_examination.getCurrentQuestion(), m_examination.getTotalSize());
 }
 
 // The manager has been notified that the user wants to go the next question
 void ExaminationManager::nextQuestion() {
 	// Go to the next question and notify the view that the next question has been loaded
-	m_examination.nextQuestion();
-	emit questionLoadedModel(m_examination.getCurrentQuestion());
+	bool retryWrongAnswers = m_examination.nextQuestion();
+	if (!retryWrongAnswers) {
+		emit questionLoadedModel(m_examination.getCurrentQuestion());
+	}
+	else {
+		emit wrongQuestionsLoadedModel(m_examination.getCurrentQuestion(), m_examination.getTotalSize());
+	}
 }

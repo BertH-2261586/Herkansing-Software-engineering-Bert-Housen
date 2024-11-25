@@ -1,4 +1,4 @@
-#include "FillInExaminationView.h"
+#include "FillInView.h"
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatchIterator>
@@ -76,25 +76,31 @@ void FillInExaminationView::setQuestion(const FillInQuestion* question) {
     setLayout(m_mainLayout);
 }
 
-void FillInExaminationView::showAnswer(const FillInQuestion* question) {
-    QList<QString> answer = question->getAnswer().getAnswers();
+void FillInExaminationView::showAnswer(QVector<int> wrongAnswers) {
     for (int i = 0; i < m_answerInputs.size(); ++i) {
-        QTextEdit* inputField = m_answerInputs[i];
-        QString userAnswer = inputField->toPlainText().trimmed().toLower(); // Get the user input
-        QString correctAnswer = answer[i].trimmed().toLower();     // Get the corresponding correct answer
         m_answerInputs[i]->setReadOnly(true);
         m_correctAnswer[i]->show();
 
-        if (userAnswer == correctAnswer) {
+        if (!wrongAnswers.contains(i)) {
             // Correct answer, set background to green
-            inputField->setStyleSheet("background-color: green;");
+            m_answerInputs[i]->setStyleSheet("background-color: green;");
             m_correctAnswer[i]->setText("");      // Set the correct answer to empty so that it still pushes the textedit upwards but not displaying the text
         }
         else {
             // Incorrect answer, set background to red
-            inputField->setStyleSheet("background-color: red;");
+            m_answerInputs[i]->setStyleSheet("background-color: red;");
         }
     }
+}
+
+QVector<QString> FillInExaminationView::getAllAnswerText() {
+    QVector<QString> answerText;
+
+    for (QTextEdit* input : m_answerInputs) {
+        answerText.append(input->toPlainText().trimmed());  // Get the plain text entered            
+    }
+
+    return answerText;
 }
 
 void FillInExaminationView::clearPreviousQuestion() {
