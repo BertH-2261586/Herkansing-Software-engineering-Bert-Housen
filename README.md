@@ -36,6 +36,8 @@
 
 [Link](docs/UC_maak_vragenset.md) naar de fully dressed use case "Maak vragenset"
 
+[Link](docs/UC_login.md) naar de fully dressed use case "Login"
+
 [Link](docs/Casual_use_cases.md) naar de pagina van alle casual use cases
 
 </details>
