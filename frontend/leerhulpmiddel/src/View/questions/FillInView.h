@@ -1,5 +1,5 @@
-#ifndef FILLINEXAMINATIONWINDOW_H
-#define FILLINEXAMINATIONWINDOW_H
+#ifndef FILLINWINDOW_H
+#define FILLINWINDOW_H
 
 #include <QWidget>
 #include <QLabel>
@@ -9,11 +9,11 @@
 
 #include "../../model/Questions/FillInQuestion.h"
 
-class FillInExaminationView : public QWidget {
+class FillInView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit FillInExaminationView(QWidget* parent = nullptr) {}
+    explicit FillInView(QWidget* parent = nullptr) {}
     void setQuestion(const FillInQuestion* question);
     void showAnswer(QVector<int> wrongAnswers);
     QVector<QString> getAllAnswerText();  

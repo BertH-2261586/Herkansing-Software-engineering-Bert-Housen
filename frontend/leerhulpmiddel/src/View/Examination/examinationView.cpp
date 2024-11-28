@@ -7,7 +7,7 @@
 ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_examinationController(new ExaminationController(this)) {
     // Create the widgets directly for the page
     setupAmountQuestionsAnswered();
-    setupTimer(1);      // Hard coded 1 min timer
+    setupTimer();    
     setupSubmitButton();
     setupCloseButton();
     setupNextQuestionButton();
@@ -18,8 +18,6 @@ ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_examinati
 
     // Set the layout for the window
     setLayout(m_mainLayout);
-
-    startExamination("C:/Users/calvi/Documents/3de Bach/Software Engineering/project-software-engineering-groep_7/frontend/leerhulpmiddel/questionSets/test");
 }
 
 // Display the amount of question the user answered
@@ -35,8 +33,8 @@ void ExaminationView::setupAmountQuestionsAnswered() {
 }
 
 // Display the time the user has remaining to answer the question
-void ExaminationView::setupTimer(const int timeLimitMinutes) {
-    m_timePerQuestion = new CountdownTimer(this, timeLimitMinutes);
+void ExaminationView::setupTimer() {
+    m_timePerQuestion = new CountdownTimer(this);
     m_timePerQuestion->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_timePerQuestion->setStyleSheet(
         "color: palette(windowText); "
@@ -46,6 +44,8 @@ void ExaminationView::setupTimer(const int timeLimitMinutes) {
     connect(m_timePerQuestion, &CountdownTimer::countdownFinished, this, [this]() {
         showAnswer(true);
     });
+
+    m_timePerQuestion->hide();
 }
 
 // Display the button that the user can click to show the answer
@@ -153,7 +153,9 @@ void ExaminationView::initializeLayouts() {
     m_mainLayout->addLayout(m_questionInfoLayout);
 
     // Add all the types of question widgets to the layout 
-    connect(&m_flashcardView, &FlashcardExaminationView::flashcardHasBeenFlipped, this, &ExaminationView::flashcardHasBeenFlipped);
+    connect(&m_flashcardView, &FlashcardView::flashcardHasBeenFlipped, this, [this]() {
+        showAnswer();
+    });
     m_mainLayout->addWidget(&m_flashcardView, 0, Qt::AlignHCenter);
     m_mainLayout->addWidget(&m_multipleChoiceView, 0, Qt::AlignHCenter);
     m_mainLayout->addWidget(&m_fillInView, 0, Qt::AlignHCenter);
@@ -169,11 +171,21 @@ void ExaminationView::initializeLayouts() {
     m_mainLayout->addWidget(m_scoreCard, 0, Qt::AlignCenter);
 }
 
+void ExaminationView::startExamination(QString path, QTime timeLimit) {
+    if (timeLimit != QTime(-1, -1, -1)) {
+        m_timePerQuestion->setupTimer(timeLimit);
+        m_timePerQuestion->show();
+        m_examinationController->setShowTimer(true);
+    }
+
+    emit examinationStarted(path);
+}
+
 void ExaminationView::questionLoadedView() {
     int questionIndex = m_examinationController->getCurrentQuestionNumber();
     int totalQuestionAmount = m_examinationController->getTotalAmountOfQuestions();
     m_amountOfQuestionsAnswered->setText(QString::number(questionIndex) + "/" + QString::number(totalQuestionAmount));
-    if (questionIndex == 1) {
+    if (questionIndex == 1 && m_examinationController->showTimer()) {
         m_timePerQuestion->startCountdown();
     }
     if (m_examinationController->getCurrentQuestionType() == QuestionType::Flashcard) {
@@ -193,16 +205,21 @@ void ExaminationView::nextQuestionView() {
     }
     m_nextQuestionButton->hide();
 
-    m_timePerQuestion->resetTimer();
-    m_timePerQuestion->startCountdown();
+    if (m_examinationController->showTimer()) {
+       m_timePerQuestion->resetTimer();
+       m_timePerQuestion->startCountdown();
+    }
 }
 
 void ExaminationView::showAnswer(bool timeout) {
-    m_timePerQuestion->pauseCountdown();
+    if (m_examinationController->showTimer()) {
+        m_timePerQuestion->pauseCountdown();
+    }
 
     QuestionType questionType = m_examinationController->getCurrentQuestionType();
     if (questionType == QuestionType::Flashcard) {
-        m_flashcardView.handleQuestionClicked();
+        bool repeat = m_flashcardView.getToggleStatus();
+        m_examinationController->checkFlashCardAnswer(repeat, timeout);
     }
     else if (questionType == QuestionType::MultipleChoice) {
         QString checkedAnswers = m_multipleChoiceView.getCheckedAnswers();
@@ -258,20 +275,6 @@ void ExaminationView::clearPreviousQuestionView() {
     }
     else if (questionType == QuestionType::FillIn) {
         m_fillInView.clearPreviousQuestion();
-    }
-}
-
-void ExaminationView::flashcardHasBeenFlipped() { 
-    m_timePerQuestion->pauseCountdown();
-
-    // Check if the flashcard is the last card in the examination
-    if (m_examinationController->getCurrentQuestionNumber() == m_examinationController->getTotalAmountOfQuestions()
-        && m_examinationController->finishedExamination())
-    {
-        m_endExaminationButton->show();
-    }
-    else {
-        m_nextQuestionButton->show();
     }
 }
 

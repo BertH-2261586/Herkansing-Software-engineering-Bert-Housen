@@ -19,8 +19,14 @@ public:
     QuestionType getCurrentQuestionType() const { return m_currentQuestion->getQuestionType(); }
     const Question* getQuestion() const { return m_currentQuestion.get(); }
     bool finishedExamination() const { return m_examinationManager->finishedExamination(); }
+    bool showTimer() const { return m_showTimer; }
+
+    void setShowTimer(bool showTimer) { m_showTimer = showTimer; }
+
+    // Answer checker
     int checkMultipleChoiceAnswer(QString checkedAnswers, bool timeout);
     QVector<int> checkFillInAnswer(QVector<QString> answerText, bool timeout);
+    void checkFlashCardAnswer(bool repeat, bool timeout);
 
 signals:
     void questionLoadedView();
@@ -36,6 +42,8 @@ private:
     ExaminationView* m_examinationView;
     ExaminationManager* m_examinationManager = new ExaminationManager();
     
+    bool m_showTimer;
+
     // All the information the view needs about the current question
     shared_ptr<Question> m_currentQuestion;
     int m_currentQuestionIndex;

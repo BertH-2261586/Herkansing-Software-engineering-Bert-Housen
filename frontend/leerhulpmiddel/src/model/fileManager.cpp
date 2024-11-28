@@ -297,7 +297,7 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
     QVector<shared_ptr<Question>> questions;  // Create the vector where you'll store the questions 
 
     // Create a QDir object to access the question set folder
-    QDir dir = getPath() + "/test";
+    QDir dir = getPath() + "/" + questionSetPath;
 
     // Filter only JSON files and directories
     dir.setFilter(QDir::Files | QDir::Dirs);  // Consider both files and directories
@@ -319,11 +319,11 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
             QFileInfoList subFiles = subDir.entryInfoList();
             for (const QFileInfo& subFileInfo : subFiles) {
                 QString fileName = subFileInfo.baseName();
+                QString subfolderName = fileFolderInfo.fileName(); // This is the current subdirectory name
+
                 try {
                     // Load question from the file in the subdirectory
-
-                    //HARDCODED FOR DEMO, NEEDS TO CHANGE
-                    auto question = loadQuestionFromJSON("test", "testingfolder", fileName);
+                    auto question = loadQuestionFromJSON(questionSetPath, subfolderName, fileName);
                     questions.append(std::move(question));  // Add the loaded question to the vector
                 }
                 catch (const std::exception& e) {
@@ -338,7 +338,7 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
                 // Load question from the main directory
 
                 //HARDCODED FOR DEMO, NEEDS TO CHANGE
-                auto question = loadQuestionFromJSON("test", "", fileName);
+                auto question = loadQuestionFromJSON(questionSetPath, "", fileName);
                 questions.append(std::move(question));  // Add the loaded question to the vector
             }
             catch (const std::exception& e) {

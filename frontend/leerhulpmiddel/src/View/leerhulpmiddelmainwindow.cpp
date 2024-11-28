@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QPushButton>
 
-#include "Examination/examinationView.h"
+#include "Examination/createExaminationView.h"
 
 LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManagerController* questionManagerController)
 {
@@ -15,7 +15,7 @@ LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManagerController* qu
     QPushButton* btnStartExamination = new QPushButton("Start Examination");
 
     connect(btnStartExamination, &QPushButton::pressed, this, [=] {
-        SetMainViewport(new ExaminationView());
+        SetMainViewport(new CreateExaminationView());
     });
 
     //TODO nog een default widget zetten

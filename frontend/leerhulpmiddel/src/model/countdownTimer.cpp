@@ -1,34 +1,38 @@
 #include "CountdownTimer.h"
 
-CountdownTimer::CountdownTimer(QWidget* parent, int minutes, int seconds)
-    : QWidget(parent), countdownTime(0, minutes, seconds), totalTime(0, minutes, seconds + 1)       // Buffer 1 seconde voor als je de timer reset dat het systeem tijd heeft om te resetten (bv. 1 min gaat anders 59 seconde weergeven)
+CountdownTimer::CountdownTimer(QWidget* parent) : QWidget(parent)
 {
     // Zet de label van de timer goed
-    timerLabel = new QLabel(this);
-    timerLabel->setAlignment(Qt::AlignCenter);
-    timerLabel->setText(countdownTime.toString("mm:ss"));
+    m_timerLabel = new QLabel(this);
+    m_timerLabel->setAlignment(Qt::AlignCenter);
+    m_timerLabel->setText(m_countdownTime.toString("mm:ss"));
 
     // Zet de timer goed
-    connect(&timer, &QTimer::timeout, this, &CountdownTimer::updateCountdown);
-    timer.setInterval(1000);
+    connect(&m_timer, &QTimer::timeout, this, &CountdownTimer::updateCountdown);
+    m_timer.setInterval(1000);
 
     // Zet de layout goed
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->addWidget(timerLabel);
-    setLayout(layout);
+    m_mainLayout = new QVBoxLayout(this);
+    m_mainLayout->addWidget(m_timerLabel);
+    setLayout(m_mainLayout);
 }
 
 // Update de label van de timer
 void CountdownTimer::updateCountdown()
 {
     // De tijd is afgelopen, dus de timer is op 0 uur 0 minuten 0 seconde
-    if (countdownTime == QTime(0, 0, 0)) {
-        timer.stop();
-        timerLabel->setText("Time's up!");
+    if (m_countdownTime == QTime(0, 0, 0)) {
+        m_timer.stop();
+        m_timerLabel->setText("Time's up!");
         emit countdownFinished();
     }
     else {
-        countdownTime = countdownTime.addSecs(-1);              // Er is 1 sec verlopen
-        timerLabel->setText(countdownTime.toString("mm:ss"));
+        m_countdownTime = m_countdownTime.addSecs(-1);              // Er is 1 sec verlopen
+        m_timerLabel->setText(m_countdownTime.toString("mm:ss"));
     }
+}
+
+void CountdownTimer::setupTimer(QTime time) {
+    m_countdownTime = time;
+    m_totalTime = time;
 }

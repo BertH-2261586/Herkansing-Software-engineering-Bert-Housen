@@ -22,6 +22,8 @@ public:
     QList<Questionset*> GetSubSets() const { return m_subSets; }
     QColor GetColor() const { return m_color; }
 
+    bool hasQuestion() const;
+
     void addQuestion(Question* question, QString subsetName = "");
 private:
     QString m_name;

@@ -31,6 +31,9 @@
     <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
     <ClCompile Include="src\View\Examination\scoreCardExaminationView.cpp" />
     <ClCompile Include="src\model\examination.cpp" />
+    <ClCompile Include="src\View\chooseQuestionView.cpp" />
+    <ClCompile Include="src\View\Examination\createExaminationView.cpp" />
+    <ClCompile Include="src\View\toggleSwitch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
@@ -51,6 +54,7 @@
     <ClInclude Include="src\model\Questions\Flashcard.h" />
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\questionType.h" />
+    <ClInclude Include="src\View\style.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\examinationController.h" />
@@ -73,6 +77,9 @@
     <QtMoc Include="src\model\manager\questionmanager.h" />
     <QtMoc Include="src\model\manager\examinationManager.h" />
     <QtMoc Include="src\View\Examination\scoreCardExaminationView.h" />
+    <QtMoc Include="src\View\Examination\createExaminationView.h" />
+    <QtMoc Include="src\View\chooseQuestionView.h" />
+    <QtMoc Include="src\View\toggleSwitch.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />

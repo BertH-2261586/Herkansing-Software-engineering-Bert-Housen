@@ -48,5 +48,21 @@ void Questionset::addComponent(Question* question)
 
 }
 
+// Check if the question set has a question
+bool Questionset::hasQuestion() const {
+    // Question set has a loose question
+    if (m_looseQuestions.size() > 0) {
+        return true;
+    }
 
+    // Check the subfolders for questions
+    for (Questionset* subset : m_subSets) {
+        if (subset->hasQuestion()) {
+            return true; 
+        }
+    }
+
+    // No questions found
+    return false;
+}
 

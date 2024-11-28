@@ -10,7 +10,7 @@
 * @pre the question parameter is a question class that is filled with the correct and filled variables (for example: no empty answer)
 * @param question this is the question where you'll get the data for the question from
 */
-void FillInExaminationView::setQuestion(const FillInQuestion* question) {
+void FillInView::setQuestion(const FillInQuestion* question) {
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setStretch(0, 0);  // No stretching for this layout item
     m_mainLayout->setContentsMargins(0, 0, 0, 0);  // Optional: Remove unnecessary margins
@@ -76,7 +76,7 @@ void FillInExaminationView::setQuestion(const FillInQuestion* question) {
     setLayout(m_mainLayout);
 }
 
-void FillInExaminationView::showAnswer(QVector<int> wrongAnswers) {
+void FillInView::showAnswer(QVector<int> wrongAnswers) {
     for (int i = 0; i < m_answerInputs.size(); ++i) {
         m_answerInputs[i]->setReadOnly(true);
         m_correctAnswer[i]->show();
@@ -93,7 +93,7 @@ void FillInExaminationView::showAnswer(QVector<int> wrongAnswers) {
     }
 }
 
-QVector<QString> FillInExaminationView::getAllAnswerText() {
+QVector<QString> FillInView::getAllAnswerText() {
     QVector<QString> answerText;
 
     for (QTextEdit* input : m_answerInputs) {
@@ -103,7 +103,7 @@ QVector<QString> FillInExaminationView::getAllAnswerText() {
     return answerText;
 }
 
-void FillInExaminationView::clearPreviousQuestion() {
+void FillInView::clearPreviousQuestion() {
     // Clear all layouts in m_fillInLayouts
     qDeleteAll(m_fillInLayouts);
     m_fillInLayouts.clear();

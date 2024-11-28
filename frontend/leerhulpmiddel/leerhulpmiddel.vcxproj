@@ -110,10 +110,12 @@
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Question.cpp" />
+    <ClCompile Include="src\View\chooseQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp" />
     <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
+    <ClCompile Include="src\View\Examination\createExaminationView.cpp" />
     <ClCompile Include="src\view\Examination\examinationView.cpp" />
     <ClCompile Include="src\View\questions\FillInView.cpp" />
     <ClCompile Include="src\View\questions\FlashcardView.cpp" />
@@ -125,6 +127,7 @@
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp" />
     <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
+    <ClCompile Include="src\View\toggleSwitch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\examinationController.h" />
@@ -138,9 +141,13 @@
     <ClInclude Include="src\Exceptions\saveException.h" />
     <ClInclude Include="src\model\examination.h" />
     <ClInclude Include="src\model\fileManager.h" />
+    <ClInclude Include="src\View\style.h" />
+    <QtMoc Include="src\View\toggleSwitch.h" />
+    <QtMoc Include="src\View\chooseQuestionView.h" />
     <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
     <QtMoc Include="src\View\Examination\scoreCardExaminationView.h" />
+    <QtMoc Include="src\View\Examination\createExaminationView.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
     <QtMoc Include="src\view\ToastMessage.h" />
     <QtMoc Include="src\view\focusoutlineedit.h" />

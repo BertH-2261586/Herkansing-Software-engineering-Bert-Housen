@@ -1,5 +1,5 @@
-#ifndef FLASHCARDEXAMINATIONWINDOW_H
-#define FLASHCARDEXAMINATIONWINDOW_H
+#ifndef FLASHCARDWINDOW_H
+#define FLASHCARDWINDOW_H
 
 #include <QWidget>
 #include <QLabel>
@@ -11,27 +11,36 @@
 #include <QTextEdit>
 
 #include "../../model/Questions/Flashcard.h"
+#include "../toggleSwitch.h"
 
-class FlashcardExaminationView : public QWidget {
+class FlashcardView : public QWidget {
     Q_OBJECT
 
 signals:
     void flashcardHasBeenFlipped();
 
 public:
-    FlashcardExaminationView(QWidget* parent = nullptr) {}
+    FlashcardView(QWidget* parent = nullptr) {}
     void setQuestion(const Flashcard* question);
     void clearPreviousQuestion();
     void handleQuestionClicked();
+    bool getToggleStatus() { return m_toggleSwitch->isChecked(); }
 
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
     void setQuestionLabel();
     void setScrollArea();
+    void setupToggleSwitch();
+    
+    void initializeLayouts();
 
-    QLabel* m_questionLabel = nullptr;
-    QScrollArea* m_scrollArea = nullptr;
-    QVBoxLayout* m_mainQuestionLayout = nullptr;
+    QVBoxLayout* m_mainQuestionLayout;
+    QVBoxLayout* m_toggleLayout;
+
+    QLabel* m_questionLabel;
+    QScrollArea* m_scrollArea;
+    QLabel* m_toggleLabel;
+    Switch* m_toggleSwitch;
 
     const Flashcard* m_currentQuestion;
     bool m_showingQuestion = true;

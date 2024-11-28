@@ -2,7 +2,9 @@
 #include "../view/Examination/examinationView.h"
 
 // Connect all the signals and slots between the manager, controller and the view
-ExaminationController::ExaminationController(ExaminationView* examinationView) : m_examinationView(examinationView), m_currentQuestionIndex(1), m_examinationStatus(false) {
+ExaminationController::ExaminationController(ExaminationView* examinationView) 
+	: m_examinationView(examinationView), m_currentQuestionIndex(1), m_examinationStatus(false), m_showTimer(false)
+{
 	// Notify the manager that the user started an examination
 	connect(m_examinationView, &ExaminationView::examinationStarted, m_examinationManager, &ExaminationManager::examinationStarted);
 	// Notify the controller that the first question has been loaded
@@ -88,4 +90,10 @@ QVector<int> ExaminationController::checkFillInAnswer(QVector<QString> answerTex
 	}
 
 	return wrongAnswers;
+}
+
+void ExaminationController::checkFlashCardAnswer(bool repeat, bool timeout) {
+	if (repeat || timeout) {
+		emit answeredWrong(timeout);
+	}
 }

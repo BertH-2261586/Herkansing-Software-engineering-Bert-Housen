@@ -6,7 +6,7 @@
 * @pre the question parameter is a question class that is filled with the correct and filled variables (for example: no empty answer)
 * @param question this is the question where you'll get the data for the question from
 */
-void MultipleChoiceExaminationView::setQuestion(const MultipleChoiceQuestion* question) {
+void MultipleChoiceView::setQuestion(const MultipleChoiceQuestion* question) {
     // Clear previous question widgets and layout (to avoid memory leaks)
     clearPreviousQuestion();    
 
@@ -24,7 +24,7 @@ void MultipleChoiceExaminationView::setQuestion(const MultipleChoiceQuestion* qu
 }
 
 // This function sets the question label correctly
-void MultipleChoiceExaminationView::setQuestionLabel(const MultipleChoiceQuestion* question) {
+void MultipleChoiceView::setQuestionLabel(const MultipleChoiceQuestion* question) {
     // Initialize the label 
     m_questionLabel = new QLabel(question->getQuestion(), this);
     m_questionLabel->setStyleSheet(
@@ -44,7 +44,7 @@ void MultipleChoiceExaminationView::setQuestionLabel(const MultipleChoiceQuestio
 }
 
 // This function sets the radio buttons for the multiple choice correctly
-void MultipleChoiceExaminationView::setRadioButtons(const MultipleChoiceQuestion* question) {
+void MultipleChoiceView::setRadioButtons(const MultipleChoiceQuestion* question) {
     // Initialize the grid layout for the radio buttons
     m_radioButtonLayout = new QGridLayout;
     m_radioButtonLayout->setHorizontalSpacing(225);
@@ -126,41 +126,7 @@ void MultipleChoiceExaminationView::setRadioButtons(const MultipleChoiceQuestion
     }
 }
 
-// Delete all the data from a previous question so that you can display a new one 
-void MultipleChoiceExaminationView::clearPreviousQuestion() {
-    // Remove and delete widgets in the main layout if it exists
-    if (m_mainQuestionLayout) {
-        // Delete all widgets in the layout
-        QLayoutItem* item;
-        while ((item = m_mainQuestionLayout->takeAt(0)) != nullptr) {
-            if (item->widget()) {
-                item->widget()->deleteLater(); // Schedule the widgets for deletion
-            }
-            delete item;
-        }
-        // Delete and reset the layout
-        delete m_mainQuestionLayout; 
-        m_mainQuestionLayout = nullptr; 
-    }
-
-    for (QRadioButton* button : m_radioButtonList) {
-        if (button) {
-            button->deleteLater();
-        }
-    }
-
-    // Delete and reset the button group if it exists
-    if (m_buttonGroup) {
-        delete m_buttonGroup; 
-        m_buttonGroup = nullptr; 
-    }
-
-    // Reset the remaining member variables associated with the previous question
-    m_questionLabel = nullptr; 
-    m_radioButtonList.clear();
-}
-
-void MultipleChoiceExaminationView::showAnswer(int correctAnswer) {
+void MultipleChoiceView::showAnswer(int correctAnswer) {
     // Disable all the radio buttons so it cant accept more input
     for (QRadioButton* radio : m_radioButtonList) {
         radio->setEnabled(false);
@@ -195,7 +161,7 @@ void MultipleChoiceExaminationView::showAnswer(int correctAnswer) {
     }
 }
 
-QString MultipleChoiceExaminationView::getCheckedAnswers() {
+QString MultipleChoiceView::getCheckedAnswers() {
     // Iterate through all radio buttons with their index
     for (int i = 0; i < m_radioButtonList.size(); ++i) {
         QRadioButton* button = m_radioButtonList[i];
@@ -208,4 +174,38 @@ QString MultipleChoiceExaminationView::getCheckedAnswers() {
 
     // There is no answer selected
     return "";
+}
+
+// Delete all the data from a previous question so that you can display a new one 
+void MultipleChoiceView::clearPreviousQuestion() {
+    // Remove and delete widgets in the main layout if it exists
+    if (m_mainQuestionLayout) {
+        // Delete all widgets in the layout
+        QLayoutItem* item;
+        while ((item = m_mainQuestionLayout->takeAt(0)) != nullptr) {
+            if (item->widget()) {
+                item->widget()->deleteLater(); // Schedule the widgets for deletion
+            }
+            delete item;
+        }
+        // Delete and reset the layout
+        delete m_mainQuestionLayout;
+        m_mainQuestionLayout = nullptr;
+    }
+
+    for (QRadioButton* button : m_radioButtonList) {
+        if (button) {
+            button->deleteLater();
+        }
+    }
+
+    // Delete and reset the button group if it exists
+    if (m_buttonGroup) {
+        delete m_buttonGroup;
+        m_buttonGroup = nullptr;
+    }
+
+    // Reset the remaining member variables associated with the previous question
+    m_questionLabel = nullptr;
+    m_radioButtonList.clear();
 }

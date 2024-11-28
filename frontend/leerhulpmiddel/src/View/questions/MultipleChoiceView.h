@@ -1,5 +1,5 @@
-#ifndef MULTIPLECHOICEEXAMINATIONWINDOW_H
-#define MULTIPLECHOICEEXAMINATIONWINDOW_H
+#ifndef MULTIPLECHOICEWINDOW_H
+#define MULTIPLECHOICEWINDOW_H
 
 #include <QWidget>
 #include <QLabel>
@@ -10,11 +10,11 @@
 
 #include "../../model/Questions/MultipleChoiceQuestion.h"
 
-class MultipleChoiceExaminationView : public QWidget {
+class MultipleChoiceView : public QWidget {
     Q_OBJECT
 
 public:
-    MultipleChoiceExaminationView(QWidget* parent = nullptr) {}
+    MultipleChoiceView(QWidget* parent = nullptr) {}
     void setQuestion(const MultipleChoiceQuestion* question);
     void clearPreviousQuestion();
     void showAnswer(int correctAnswer);

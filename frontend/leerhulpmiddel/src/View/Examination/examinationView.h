@@ -22,7 +22,7 @@ class ExaminationView : public QWidget {
 
 public:
     explicit ExaminationView(QWidget* parent = nullptr);
-    void startExamination(QString path) { emit examinationStarted(path); }
+    void startExamination(QString path, QTime timeLimit = QTime(-1, -1, -1));
 
 signals:
     void examinationStarted(const QString questionSetPath);
@@ -30,7 +30,6 @@ signals:
     void getExaminationData();
 
 public slots:
-    void flashcardHasBeenFlipped();
     void questionLoadedView();
     void receiveExaminationData(QMap<QString, QString> data);
     void closeWindow() { this->close(); }
@@ -46,7 +45,7 @@ private:
 
     // GUI Setup
     void setupAmountQuestionsAnswered();
-    void setupTimer(const int timeLimitMinutes);
+    void setupTimer();
     void setupSubmitButton();
     void setupCloseButton();
     void setupNextQuestionButton();
@@ -65,9 +64,9 @@ private:
 
     // Sub views
     CountdownTimer* m_timePerQuestion;
-    MultipleChoiceExaminationView m_multipleChoiceView = MultipleChoiceExaminationView();
-    FlashcardExaminationView m_flashcardView = FlashcardExaminationView();
-    FillInExaminationView m_fillInView = FillInExaminationView();
+    MultipleChoiceView m_multipleChoiceView = MultipleChoiceView();
+    FlashcardView m_flashcardView = FlashcardView();
+    FillInView m_fillInView = FillInView();
     scoreCardExaminationView* m_scoreCard;
 
     // Controller
