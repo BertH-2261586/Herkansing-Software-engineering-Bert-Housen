@@ -1,0 +1,18 @@
+{
+    "Answer": {
+      "answers": [
+        "5",
+        "120",
+        "6",
+        "24",
+        "1",
+        "0"
+      ],
+      "correctAnswers": [
+        1
+      ]
+    },
+    "Question": "What is 5!",
+    "QuestionType": "MultipleChoice"
+  }
+  

@@ -65,7 +65,7 @@ void FlashcardView::setScrollArea() {
 }
 
 void FlashcardView::setupToggleSwitch() {
-    m_toggleLabel = new QLabel("Repeat the question");
+    m_toggleLabel = new QLabel("Repeat the question later");
     m_toggleSwitch = new Switch(this);
 }
 
@@ -104,7 +104,8 @@ void FlashcardView::handleQuestionClicked() {
     }
 
     m_showingQuestion = !m_showingQuestion;
-    m_toggleSwitch->setEnabled(false);
+    m_toggleSwitch->hide();
+    m_toggleLabel->hide();
 }
 
 // Delete all the data from a previous question so that you can display a new one 

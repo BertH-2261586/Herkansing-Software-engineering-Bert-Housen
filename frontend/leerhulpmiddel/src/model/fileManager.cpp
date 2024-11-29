@@ -93,7 +93,6 @@ QMap<QString, QVariantList> FileManager::loadFilesAndQuestions(const QDir& dir, 
         QVariantList contents;
 
         // Ga recursief over de submap heen om dieper te kijken in de structuur
-
         QMap<QString, QVariantList> subfolderContents = loadFilesAndQuestions(subDir, ++currentDepth);
 
 
@@ -112,8 +111,8 @@ QMap<QString, QVariantList> FileManager::loadFilesAndQuestions(const QDir& dir, 
 
         // Sla de inhoud op in de map, met de mapnaam als sleutel
         folderFiles[dirName] = contents;
+        currentDepth = 0;
     }
-
 
     return folderFiles;
 }
@@ -239,9 +238,7 @@ QList<Questionset*> FileManager::loadQuestionSetsObject(const QString path) cons
 	   QList<Question*> questions = QList<Question*>();
 	   QList<Questionset*> subsets = QList<Questionset*>();
 
-
 	   for (const QVariant& file : folder) {
-
            //if a json File is found
 		   if (file.canConvert<QString>()) {
 			   QString questionName = file.toString();

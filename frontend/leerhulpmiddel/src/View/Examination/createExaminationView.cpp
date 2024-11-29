@@ -82,12 +82,12 @@ void CreateExaminationView::setupGoBack() {
 
 void CreateExaminationView::setupLayouts(){
     m_switchLayout = new QVBoxLayout;
-    m_switchLayout->addWidget(m_toggleLabel);
-    m_switchLayout->addWidget(m_toggle);
+    m_switchLayout->addWidget(m_toggleLabel, 0, Qt::AlignHCenter);
+    m_switchLayout->addWidget(m_toggle, 0, Qt::AlignHCenter);
 
     m_timerLayout = new QVBoxLayout;
-    m_timerLayout->addWidget(m_timerLabel);
-    m_timerLayout->addWidget(m_timer);
+    m_timerLayout->addWidget(m_timerLabel, 0, Qt::AlignHCenter);
+    m_timerLayout->addWidget(m_timer, 0, Qt::AlignHCenter);
     m_timer->hide();                    // The toggle starts unchecked so hide it   
     m_timerLabel->hide();
 

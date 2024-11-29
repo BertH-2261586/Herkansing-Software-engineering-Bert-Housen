@@ -7,7 +7,7 @@
 
 LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManagerController* questionManagerController)
 {
-    setWindowTitle("Qt 6.8 Boilerplate Window");
+    setWindowTitle("Learning aid");
     setWindowState(Qt::WindowMaximized);
 
     m_container = new QVBoxLayout();
