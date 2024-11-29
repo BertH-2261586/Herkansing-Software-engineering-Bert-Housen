@@ -3,7 +3,7 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatchIterator>
 #include <QTextEdit>
-
+#include <QScrollArea>
 /*
 * This function sets up the fill in examination view properly
 *
@@ -12,11 +12,10 @@
 */
 void FillInView::setQuestion(const FillInQuestion* question) {
     m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout->setStretch(0, 0);  // No stretching for this layout item
-    m_mainLayout->setContentsMargins(0, 0, 0, 0);  // Optional: Remove unnecessary margins
     m_mainLayout->setSpacing(10);
+
     // Create a row of text with a space for user input
-    m_questionLayout = new QHBoxLayout;
+    m_questionLayout = new QFlowLayout;
 
     QString questionString = question->getQuestion();
     QRegularExpression re("\\[([^\\]]+)\\]");
@@ -40,25 +39,24 @@ void FillInView::setQuestion(const FillInQuestion* question) {
             m_questionLayout->addWidget(textLabel);
         }
 
-        QVBoxLayout* fillInLayout = new QVBoxLayout;
+        QWidget* answerBlockWidget = new QWidget(this);
+        QVBoxLayout* fillInLayout = new QVBoxLayout(answerBlockWidget);
         QString answerText = match.captured(1); // Get text inside []
         QTextEdit* answerEdit = new QTextEdit;
         QLabel* correctAnswer = new QLabel;
 
-        answerEdit->setMaximumHeight(30);
-        answerEdit->setMaximumSize(75, 30);
+        answerEdit->setMaximumSize(85, 30);
         fillInLayout->addWidget(answerEdit);
         m_answerInputs.append(answerEdit);
 
         correctAnswer->setText(answerText);
         correctAnswer->setStyleSheet("font-weight: bold; color: green; font-size: 18px;");
         fillInLayout->addWidget(correctAnswer, 0, Qt::AlignHCenter);
-        correctAnswer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);  // Prevent the widget from expanding
         m_correctAnswer.append(correctAnswer);
         correctAnswer->hide();
 
         m_fillInLayouts.append(fillInLayout);
-        m_questionLayout->addLayout(fillInLayout);
+        m_questionLayout->addWidget(answerBlockWidget);
     }
 
     // Add the remaining part of the string after the last match
@@ -71,7 +69,20 @@ void FillInView::setQuestion(const FillInQuestion* question) {
         m_questionLayout->addWidget(remainingLabel);
     }
 
-    m_mainLayout->addLayout(m_questionLayout);
+    QWidget* contentWidget = new QWidget(this);
+    contentWidget->setLayout(m_questionLayout);
+
+    // Create a QScrollArea and set the content widget inside it
+    QScrollArea* scrollArea = new QScrollArea(this);
+    scrollArea->setWidget(contentWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(150);  // Set a minimum width for the scroll area
+    scrollArea->setMinimumWidth(200);  // Set a minimum width for the scroll area
+    scrollArea->setMaximumHeight(800);
+    scrollArea->setMaximumWidth(1250);
+    scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    m_mainLayout->addWidget(scrollArea);
     // Set the layout
     setLayout(m_mainLayout);
 }

@@ -117,6 +117,7 @@
     <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
     <ClCompile Include="src\View\Examination\createExaminationView.cpp" />
     <ClCompile Include="src\view\Examination\examinationView.cpp" />
+    <ClCompile Include="src\View\QFlowLayout.cpp" />
     <ClCompile Include="src\View\questions\FillInView.cpp" />
     <ClCompile Include="src\View\questions\FlashcardView.cpp" />
     <ClCompile Include="src\View\questions\MultipleChoiceView.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="src\Exceptions\saveException.h" />
     <ClInclude Include="src\model\examination.h" />
     <ClInclude Include="src\model\fileManager.h" />
+    <ClInclude Include="src\View\QFlowLayout.h" />
     <ClInclude Include="src\View\style.h" />
     <QtMoc Include="src\View\toggleSwitch.h" />
     <QtMoc Include="src\View\chooseQuestionView.h" />

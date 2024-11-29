@@ -34,6 +34,7 @@
     <ClCompile Include="src\View\chooseQuestionView.cpp" />
     <ClCompile Include="src\View\Examination\createExaminationView.cpp" />
     <ClCompile Include="src\View\toggleSwitch.cpp" />
+    <ClCompile Include="src\View\QFlowLayout.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
@@ -55,6 +56,7 @@
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\questionType.h" />
     <ClInclude Include="src\View\style.h" />
+    <ClInclude Include="src\View\QFlowLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\examinationController.h" />
