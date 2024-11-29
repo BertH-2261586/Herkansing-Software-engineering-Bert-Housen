@@ -19,14 +19,7 @@ public:
     void showAnswer(QVector<int> wrongAnswers);
     QVector<QString> getAllAnswerText();  
     void clearPreviousQuestion();
-protected:
-    void resizeEvent(QResizeEvent* event) override {
-        // Ensure layout recalculates on resize
-        QWidget::resizeEvent(event);
 
-        // Force layout update by calling updateGeometry on the widget
-        updateGeometry();  // This requests the layout to be recalculated and updated
-    }
 private:
     QVBoxLayout* m_mainLayout;
     QFlowLayout* m_questionLayout;
