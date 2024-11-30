@@ -36,7 +36,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;network</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -131,7 +131,7 @@
     <QtMoc Include="src\Controller\examinationController.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\model\manager\NetworkManager.h" />
+    <QtMoc Include="src\model\manager\NetworkManager.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
     <QtMoc Include="src\View\Login\LoginView.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
