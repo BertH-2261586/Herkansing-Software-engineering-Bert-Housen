@@ -4,18 +4,26 @@
 #include "Controller/questionmanagercontroller.h"
 #include "model/manager/questionmanager.h"
 #include "view/leerhulpmiddelmainwindow.h"
+#include "view/Login/LoginView.h"
 
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     // Create the main window
-    QuestionManager qManager;
+    /*QuestionManager qManager;
     QuestionManagerController* questionManagerController = new QuestionManagerController(qManager);
 
     LeerhulpmiddelMainWindow mainWindow(questionManagerController);
+    */
+    QMainWindow mainWindow;
+
+    LoginView loginView(new LoginController, &mainWindow);
+    mainWindow.setCentralWidget(&loginView);
+
     mainWindow.show();
 
+    
     return app.exec();
 }
 
