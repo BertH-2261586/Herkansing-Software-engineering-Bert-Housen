@@ -94,10 +94,8 @@
 * **Association formed:** Database wordt gecheckt voor correctheid input<br/>
 
 ## UML Diagrammen ontwerp
-Open vragenset toont de system flow wanneer er een vragenset wordt geopend door de gebruiker.
-![Open Vragenset sequentie diagram](./Images/Open_Vragenset.png)
-Sla vraag op toont de system flow wanneer er een vraag wordt opgeslagen.
-![Sla Vraag Op sequentie diagram](./Images/Sla_Vraag_Op.png)
+Bevestig input toont de system flow wanneer er een login/register poging van de user wordt bevestigd, de applicatie zal hiervoor een request sturen naar onze webserver.
+![Bevestig Input sequentie diagram](./Images/Bevestig_Input.png)
 
 ## Klassen diagram
 ![Klassediagram](./Images/Klasse_Diagram_login.png)
