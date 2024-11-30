@@ -100,4 +100,4 @@ Sla vraag op toont de system flow wanneer er een vraag wordt opgeslagen.
 ![Sla Vraag Op sequentie diagram](./Images/Sla_Vraag_Op.png)
 
 ## Klassen diagram
-![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)
+![Klassediagram](./Images/Klasse_Diagram_login.png)
