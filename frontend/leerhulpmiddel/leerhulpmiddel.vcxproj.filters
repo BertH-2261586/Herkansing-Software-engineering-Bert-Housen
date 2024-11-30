@@ -31,6 +31,7 @@
     <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
     <ClCompile Include="src\View\Login\LoginView.cpp" />
     <ClCompile Include="src\Controller\LoginController.cpp" />
+    <ClCompile Include="src\model\manager\NetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\questionType.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
+    <ClInclude Include="src\model\manager\NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\examinationController.h" />
