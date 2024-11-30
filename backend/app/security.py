@@ -20,4 +20,17 @@ class UserSessionManager:
         self.algo = "HS256"
         self.expiration = 60        #expiration time in minutes
     
-
+    def create_session_token(self, data: dict):
+        """Create JWT"""
+        token_data = data.copy()
+        token = jwt.encode(token_data, self.secret_key, self.algo)
+        
+        return token
+    
+    def verify_session_token(self, token):
+        """Verify JWT"""
+        try:
+            token_data = jwt.decode(token, self.secret_key, self.algo)
+            return token_data
+        except jwt.PyJWTError:
+            None
