@@ -45,7 +45,7 @@
 
 **Technology and Data Variations List:** Geen
 
-**Frequency of Occurences:** Dit wordt redelijk frequent uitgevoerd door studenten en docenten die vragen willen maken om te willen leren/delen.
+**Frequency of Occurences:** Het gebruik van deze functie is niet zo frequent want users dienen voor langere periode ingelogd te blijven.
 
 ## Systeemsequentiediagram
 ![Systeem Sequentie Diagram](./Images/SSD_Login.png)
