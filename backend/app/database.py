@@ -1,5 +1,5 @@
-from sqlmodel import create_engine, Session
-from .models import User
+from sqlmodel import create_engine, Session, select
+from .models import User, UserBase
 
 DATABASE_URL = "mysql+pymysql://user:password@mysql-db:3306/dbname"
 
@@ -11,8 +11,19 @@ def get_session():
     with Session(engine) as session:
         yield session
 
-def create_user(session: Session, user: User) -> User:
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
+class UserManager:
+    def __init__(self, session : Session):
+        self.session = session
+
+    def create_user(self, user: User) -> User:
+        """Creates a user in the Database"""
+        self.session.add(user)
+        self.session.commit()
+        self.session.refresh(user)
+        return user
+    
+    def get_user(self, user: UserBase) -> User:
+        """Gets user from database based on username"""
+        return self.session.exec(select(User).filter_by(username=user.username)).first()
+    
+
