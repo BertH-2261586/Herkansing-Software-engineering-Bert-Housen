@@ -95,6 +95,9 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\model\manager\NetworkManager.cpp" />
+    <ClCompile Include="src\Controller\LoginController.cpp" />
+    <ClCompile Include="src\View\Login\LoginView.cpp" />
     <ClCompile Include="src\Controller\examinationController.cpp" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
@@ -128,6 +131,9 @@
     <QtMoc Include="src\Controller\examinationController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\model\manager\NetworkManager.h" />
+    <ClInclude Include="src\Controller\LoginController.h" />
+    <QtMoc Include="src\View\Login\LoginView.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
     <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
     <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />

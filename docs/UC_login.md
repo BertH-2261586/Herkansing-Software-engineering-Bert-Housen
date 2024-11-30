@@ -45,7 +45,7 @@
 
 **Technology and Data Variations List:** Geen
 
-**Frequency of Occurences:** Dit wordt redelijk frequent uitgevoerd door studenten en docenten die vragen willen maken om te willen leren/delen.
+**Frequency of Occurences:** Het gebruik van deze functie is niet zo frequent want users dienen voor langere periode ingelogd te blijven.
 
 ## Systeemsequentiediagram
 ![Systeem Sequentie Diagram](./Images/SSD_Login.png)
@@ -94,10 +94,8 @@
 * **Association formed:** Database wordt gecheckt voor correctheid input<br/>
 
 ## UML Diagrammen ontwerp
-Open vragenset toont de system flow wanneer er een vragenset wordt geopend door de gebruiker.
-![Open Vragenset sequentie diagram](./Images/Open_Vragenset.png)
-Sla vraag op toont de system flow wanneer er een vraag wordt opgeslagen.
-![Sla Vraag Op sequentie diagram](./Images/Sla_Vraag_Op.png)
+Bevestig input toont de system flow wanneer er een login/register poging van de user wordt bevestigd, de applicatie zal hiervoor een request sturen naar onze webserver.
+![Bevestig Input sequentie diagram](./Images/Bevestig_Input.png)
 
 ## Klassen diagram
-![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel.png)
+![Klassediagram](./Images/Klasse_Diagram_login.png)
