@@ -32,7 +32,7 @@ async def register_user(user: UserBase, db: UserManager = Depends(get_database))
     new_user = db.create_user(new_user)
     user_token = session_manager.create_session_token({"id": new_user.id, "username": new_user.username})
 
-    return {"message": "User registered", "id": new_user.id, "token": user_token}
+    return {"message": "User registered", "username": new_user.username,"token": user_token}
 
 
 @router.post("/login/", response_model=dict)
@@ -44,4 +44,4 @@ async def check_user_login(user: UserBase, db: UserManager = Depends(get_databas
     
     user_token = session_manager.create_session_token({"id": db_user.id, "username": db_user.username})
 
-    return {"message": "User logged in", "id": db_user.id, "token": user_token}
+    return {"message": "User logged in", "username":db_user.username, "id": db_user.id, "token": user_token}

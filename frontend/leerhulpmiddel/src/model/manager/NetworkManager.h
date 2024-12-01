@@ -13,5 +13,8 @@ public:
 	void registerUser(QString username, QString password);
 private:
 	QNetworkAccessManager* networkManager;
+
+	void saveSessionCookie(QString sessionCookie);
+	QString getSessionCookie();
 };
 

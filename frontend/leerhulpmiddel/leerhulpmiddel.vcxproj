@@ -139,6 +139,7 @@
     <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />
     <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
     <ClInclude Include="src\Exceptions\loadException.h" />
+    <ClInclude Include="src\Exceptions\NoSavedSessionException.h" />
     <ClInclude Include="src\Exceptions\saveException.h" />
     <ClInclude Include="src\model\examination.h" />
     <ClInclude Include="src\model\fileManager.h" />

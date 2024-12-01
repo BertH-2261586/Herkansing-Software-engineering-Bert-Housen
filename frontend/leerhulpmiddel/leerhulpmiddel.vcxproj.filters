@@ -53,7 +53,7 @@
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\questionType.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
-    <ClInclude Include="src\model\manager\NetworkManager.h" />
+    <ClInclude Include="src\Exceptions\NoSavedSessionException.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\examinationController.h" />
@@ -76,6 +76,7 @@
     <QtMoc Include="src\model\manager\questionmanager.h" />
     <QtMoc Include="src\model\manager\examinationManager.h" />
     <QtMoc Include="src\View\Login\LoginView.h" />
+    <QtMoc Include="src\model\manager\NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />
