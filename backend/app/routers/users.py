@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from ..database import *
-from ..models import User, UserBase
+from ..models import User, UserBase, UserLogin
 from ..security import PasswordHasher, UserSessionManager
 
 router = APIRouter()
@@ -36,10 +36,10 @@ async def register_user(user: UserBase, db: UserManager = Depends(get_database))
 
 
 @router.post("/login/", response_model=dict)
-async def check_user_login(user: UserBase, db: UserManager = Depends(get_database)):
+async def check_user_login(user: UserLogin, db: UserManager = Depends(get_database)):
     db_user = db.get_user(user)
 
-    if not user or not pw_hasher.verify_password(user.password, db_user.password):
+    if not db_user or not pw_hasher.verify_password(user.password, db_user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     user_token = session_manager.create_session_token({"id": db_user.id, "username": db_user.username})

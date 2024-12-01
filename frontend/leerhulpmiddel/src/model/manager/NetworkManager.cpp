@@ -29,8 +29,11 @@ void NetworkManager::login(QString username, QString password)
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
 			qDebug() << "Network error:" << reply->errorString();
+			QByteArray responseData = reply->readAll();
+			qDebug() << "Response data:" << responseData;
 			reply->deleteLater();
 			return;
+			//TODO: login failed feedback
 		}
 
 		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object();
@@ -63,6 +66,7 @@ void NetworkManager::registerUser(QString username, QString password)
 			qDebug() << "Response data:" << responseData;
 			reply->deleteLater();
 			return;
+			//TODO: username already token
 		}
 
 		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object();
