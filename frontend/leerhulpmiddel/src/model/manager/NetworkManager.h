@@ -15,6 +15,10 @@ private:
 	QNetworkAccessManager* networkManager;
 
 	void saveSessionCookie(QString sessionCookie);
-	QString getSessionCookie();
+	QString getSessionCookie() const;
+signals:
+	void loginFailed();
+	void registerFailed();
+	void loginSuccess();
 };
 

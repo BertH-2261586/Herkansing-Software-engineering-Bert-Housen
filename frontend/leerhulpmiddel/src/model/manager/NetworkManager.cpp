@@ -32,8 +32,8 @@ void NetworkManager::login(QString username, QString password)
 			QByteArray responseData = reply->readAll();
 			qDebug() << "Response data:" << responseData;
 			reply->deleteLater();
+			emit loginFailed();
 			return;
-			//TODO: login failed feedback
 		}
 
 		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object();
@@ -42,6 +42,7 @@ void NetworkManager::login(QString username, QString password)
 		}
 
 		reply->deleteLater();
+		emit loginSuccess();
 	});
 
 }
@@ -65,6 +66,7 @@ void NetworkManager::registerUser(QString username, QString password)
 			QByteArray responseData = reply->readAll();
 			qDebug() << "Response data:" << responseData;
 			reply->deleteLater();
+			emit registerFailed();
 			return;
 			//TODO: username already token
 		}
@@ -75,7 +77,8 @@ void NetworkManager::registerUser(QString username, QString password)
 		}		
 		
 		reply->deleteLater();
-		});
+		emit loginSuccess();
+	});
 }
 
 /*
@@ -95,7 +98,7 @@ void NetworkManager::saveSessionCookie(QString sessionCookie) {
 * @return session cookie
 * @exception: throws NoSavedSessionException when there is no session saved
 */
-QString NetworkManager::getSessionCookie() {
+QString NetworkManager::getSessionCookie() const {
 	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
 	QString sessionCookie = settings.value("sessionCookie").toString();
 

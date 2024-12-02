@@ -48,6 +48,9 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : loginCo
     passwordConfirmErrorLabel->setStyleSheet("color: red;");
     passwordConfirmErrorLabel->hide();
 
+    serverFeedback = new QLabel(this);
+    serverFeedback->setStyleSheet("color: red;");
+    serverFeedback->hide();
 
     loginBtn = new QPushButton("Login", this);
 	registerBtn = new QPushButton("Register", this);
@@ -57,6 +60,7 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : loginCo
     // Create layout
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(titleLabel);
+    layout->addWidget(serverFeedback);
     layout->addWidget(usernameEdit);
     layout->addWidget(usernameErrorLabel);
     layout->addWidget(passwordEdit);
@@ -100,6 +104,7 @@ void LoginView::hideErrorLabels()
     passwordErrorLabel->hide();
     usernameErrorLabel->hide();
     passwordConfirmErrorLabel->hide();
+    serverFeedback->hide();
 }
 
 
@@ -193,4 +198,14 @@ void LoginView::onLoginClicked() {
             loginController->login(username, password);
         }
     }
+}
+
+void LoginView::failedLoginFeedback() {
+    serverFeedback->setText("Failed To Log in!");
+    serverFeedback->show();
+}
+
+void LoginView::failedRegisterFeedback() {
+    serverFeedback->setText("Username already taken!");
+    serverFeedback->show();
 }

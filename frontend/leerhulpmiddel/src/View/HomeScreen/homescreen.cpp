@@ -2,6 +2,7 @@
 #include "../Examination/createExaminationView.h"
 #include "../Login/LoginView.h"
 #include "../../Controller/LoginController.h"
+#include "../../model/manager/NetworkManager.h"
 #include "../leerhulpmiddelmainwindow.h"
 #include <QDebug>
 
@@ -36,14 +37,35 @@ QWidget* HomeScreen::GenerateTopButtonBar()
 
     QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
 
+    QPushButton* logoutButton = new QPushButton("Logout");
+    logoutButton->hide();
+    //TODO: connect logout
+
     QPushButton* loginButton = new QPushButton("Login/Register");
     connect(loginButton, &QPushButton::pressed, this, [=] {
-        m_mainWindow->PushMainViewport(new LoginView(new LoginController()));
+        NetworkManager* networkManager = new NetworkManager();
+        LoginView* loginView = new LoginView(new LoginController(networkManager));
+
+        connect(networkManager, &NetworkManager::loginFailed,
+            loginView, &LoginView::failedLoginFeedback);
+        connect(networkManager, &NetworkManager::registerFailed,
+            loginView, &LoginView::failedRegisterFeedback);
+        connect(networkManager, &NetworkManager::loginSuccess,
+            this, [=] {
+                loginButton->hide();
+                logoutButton->show();
+
+                m_mainWindow->PopMainViewport();
+            });
+
+        m_mainWindow->PushMainViewport(loginView);
     });
+
 
     QHBoxLayout* container = new QHBoxLayout();
     container->addWidget(startExamButton);
     container->addWidget(makeNewQsetButton);
+    container->addWidget(logoutButton);
     container->addWidget(loginButton);
 
     QWidget* outputWidget = new QWidget();

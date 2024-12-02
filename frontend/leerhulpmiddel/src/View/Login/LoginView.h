@@ -21,6 +21,7 @@ private:
 	QLabel* passwordErrorLabel;
 	QLabel* passwordConfirmErrorLabel;
 	QLabel* titleLabel;
+	QLabel* serverFeedback;
 	QPushButton* loginBtn;
 	QPushButton* registerBtn;
 	QPushButton* goBackToLoginBtn;
@@ -28,5 +29,8 @@ private slots:
 	void changeToLogin();
 	void changeToRegister();
 	void onLoginClicked();
+public slots:
+	void failedLoginFeedback();
+	void failedRegisterFeedback();
 };
 
