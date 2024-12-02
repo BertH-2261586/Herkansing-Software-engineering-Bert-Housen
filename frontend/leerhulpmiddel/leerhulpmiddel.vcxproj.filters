@@ -38,6 +38,9 @@
     <ClCompile Include="src\view\QFlowLayout.cpp" />
     <ClCompile Include="src\view\toggleSwitch.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model\manager\NetworkManager.cpp" />
+    <ClCompile Include="src\view\Login\LoginView.cpp" />
+    <ClCompile Include="src\Controller\LoginController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />
@@ -70,6 +73,8 @@
     <QtMoc Include="src\view\focusoutlineedit.h" />
     <QtMoc Include="src\view\ToastMessage.h" />
     <QtMoc Include="src\view\toggleSwitch.h" />
+    <QtMoc Include="src\model\manager\NetworkManager.h" />
+    <QtMoc Include="src\view\Login\LoginView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questioncontroller.h" />
@@ -94,5 +99,6 @@
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />
     <ClInclude Include="src\view\style.h" />
+    <ClInclude Include="src\Controller\LoginController.h" />
   </ItemGroup>
 </Project>

@@ -36,12 +36,12 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;network</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>Qt MSVC</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;network</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Controller\examinationController.cpp" />
+    <ClCompile Include="src\Controller\LoginController.cpp" />
     <ClCompile Include="src\Controller\questioncontroller.cpp" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Controller\questionsetcontroller.cpp" />
@@ -105,6 +106,7 @@
     <ClCompile Include="src\model\examination.cpp" />
     <ClCompile Include="src\model\fileManager.cpp" />
     <ClCompile Include="src\model\manager\examinationManager.cpp" />
+    <ClCompile Include="src\model\manager\NetworkManager.cpp" />
     <ClCompile Include="src\model\manager\questionmanager.cpp" />
     <ClCompile Include="src\model\questionset.cpp" />
     <ClCompile Include="src\model\Questions\Answer.cpp" />
@@ -127,6 +129,7 @@
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp" />
     <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
+    <ClCompile Include="src\view\Login\LoginView.cpp" />
     <ClCompile Include="src\view\QFlowLayout.cpp" />
     <ClCompile Include="src\view\questions\FillInView.cpp" />
     <ClCompile Include="src\view\questions\FlashcardView.cpp" />
@@ -137,6 +140,7 @@
     <QtMoc Include="src\Controller\examinationController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Controller\LoginController.h" />
     <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
     <ClInclude Include="src\Controller\questionsetcontroller.h" />
@@ -147,7 +151,9 @@
     <ClInclude Include="src\Exceptions\saveException.h" />
     <ClInclude Include="src\model\examination.h" />
     <ClInclude Include="src\model\fileManager.h" />
+    <QtMoc Include="src\model\manager\NetworkManager.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
+    <QtMoc Include="src\view\Login\LoginView.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />
     <ClInclude Include="src\view\style.h" />
     <QtMoc Include="src\view\toggleSwitch.h" />

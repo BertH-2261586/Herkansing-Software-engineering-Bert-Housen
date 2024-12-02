@@ -1,5 +1,7 @@
 #include "homescreen.h"
 #include "../Examination/createExaminationView.h"
+#include "../Login/LoginView.h"
+#include "../../Controller/LoginController.h"
 #include "../leerhulpmiddelmainwindow.h"
 #include <QDebug>
 
@@ -34,9 +36,15 @@ QWidget* HomeScreen::GenerateTopButtonBar()
 
     QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
 
+    QPushButton* loginButton = new QPushButton("Login/Register");
+    connect(loginButton, &QPushButton::pressed, this, [=] {
+        m_mainWindow->PushMainViewport(new LoginView(new LoginController()));
+    });
+
     QHBoxLayout* container = new QHBoxLayout();
     container->addWidget(startExamButton);
     container->addWidget(makeNewQsetButton);
+    container->addWidget(loginButton);
 
     QWidget* outputWidget = new QWidget();
     outputWidget->setStyleSheet(""""

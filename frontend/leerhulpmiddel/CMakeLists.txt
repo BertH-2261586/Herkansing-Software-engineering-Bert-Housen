@@ -33,7 +33,7 @@ qt_add_executable(leerhulpmiddel
     ${PROJECT_HEADERS}
 )
 
-target_link_libraries(leerhulpmiddel PUBLIC  Qt6::Widgets Qt6::Gui Qt6::Core)
+target_link_libraries(leerhulpmiddel PUBLIC  Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Network)
 
 
 set_target_properties(leerhulpmiddel PROPERTIES

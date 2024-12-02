@@ -4,6 +4,7 @@
 #include "Controller/questionmanagercontroller.h"
 #include "model/manager/questionmanager.h"
 #include "view/leerhulpmiddelmainwindow.h"
+#include "view/Login/LoginView.h"
 
 
 int main(int argc, char* argv[]) {
@@ -14,8 +15,9 @@ int main(int argc, char* argv[]) {
     QuestionManagerController* questionManagerController = new QuestionManagerController(qManager);
 
     LeerhulpmiddelMainWindow mainWindow(questionManagerController);
+    
     mainWindow.show();
-
+    
     return app.exec();
 }
 
