@@ -19,16 +19,15 @@ class QuestionsetTreeWidget: public QWidget
 public:
     QuestionsetTreeWidget(Questionset *questionset, int indentation = 0, QuestionsetTreeWidget* questionsetWidgetParent = nullptr);
 
+    void CreateNewQuestionset();
+    void sendDisplayQuestionSignal(QWidget* toBeDisplayed);
 
 private:
     QWidget* MakeQuestionTree(QList<Question *> looseQuestions, QList<Questionset*> subSets, int indentation);
     void AddLooseQuestionsToTree(QVBoxLayout* container, QList<Question*> list, int indentation);
     QVBoxLayout *MakeExpandableQuestionsetButton(QString name, int indentation, QWidget* treeToHide);
 
-    QPushButton* GenerateMenuButton();
-    void CreateNewQuestionset();
 
-    void sendDisplayQuestionSignal(QWidget* toBeDisplayed);
 
     QWidget* m_underlyingTree;
     QVBoxLayout* m_underlyingTreeContainer;

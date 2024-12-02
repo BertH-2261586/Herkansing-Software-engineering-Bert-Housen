@@ -14,6 +14,8 @@ public:
 
     void addSubset(QString name);
 
+    void changeName(QString newName);
+
 private:
     Questionset* m_questionset;
 

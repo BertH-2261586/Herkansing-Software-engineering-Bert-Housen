@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include "questionbutton.h"
+#include "questionsetbutton.h"
 #include "../../focusoutlineedit.h"
 #include "../../create questions/CreateQuestionView.h"
 
@@ -64,14 +65,14 @@ QWidget* QuestionsetTreeWidget::MakeQuestionTree(QList<Question*> looseQuestions
 QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name, int indentation, QWidget* treeToHide)
 {
     QWidget* questionsetWidget = new QWidget();
-    questionsetWidget->setStyleSheet(
-        "QWidget:hover {"
-        "   background-color: #4d4d4d;"
-        "}"
-//        "QWidget:!hover {"
-//        "    background-color: transparent;"
+//    questionsetWidget->setStyleSheet(
+//        "QWidget:hover {"
+//        "   background-color: #4d4d4d;"
 //        "}"
-    );
+////        "QWidget:!hover {"
+////        "    background-color: transparent;"
+////        "}"
+//    );
 
 
     QHBoxLayout* questionsetContainer = new QHBoxLayout();
@@ -82,25 +83,30 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name
     outputContainer->setContentsMargins(0, 0, 0, 0);
     outputContainer->setSpacing(0);
 
-    QPushButton* questionsetButton = new QPushButton(name, questionsetWidget);
-    questionsetButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    QObject::connect(questionsetButton, &QPushButton::clicked, treeToHide, [=]() {
-            treeToHide->setVisible(!treeToHide->isVisible());
+
+    QuestionsetButton* questionsetButton = new QuestionsetButton(m_questionset, m_indentation, this);
+    connect(questionsetButton, &QuestionsetButton::clicked, treeToHide, [=](){
+        treeToHide->setVisible(!treeToHide->isVisible());
         }, Qt::AutoConnection);
-    questionsetButton->setStyleSheet(QString(           //TODO Button flickert, fix zoeken
-        "QPushButton { "
-        "   color: #000000;"
-        "   background-color: transparent;"
-        "   border: none; "
-        "   border-radius: 0px;"
-        "   padding: 5px 30px 5px %1px;"
-        "   text-align: left;"
-        "}"
-        ).arg((10 * indentation) + 30));
-    //TODO nog een icon toevoegen dat dit expandable is en zo een pijltje ook
+//    QPushButton* questionsetButton = new QPushButton(name, questionsetWidget);
+//    questionsetButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+//    QObject::connect(questionsetButton, &QPushButton::clicked, treeToHide, [=]() {
+//            treeToHide->setVisible(!treeToHide->isVisible());
+//        }, Qt::AutoConnection);
+//    questionsetButton->setStyleSheet(QString(           //TODO Button flickert, fix zoeken
+//        "QPushButton { "
+//        "   color: #000000;"
+//        "   background-color: transparent;"
+//        "   border: none; "
+//        "   border-radius: 0px;"
+//        "   padding: 5px 30px 5px %1px;"
+//        "   text-align: left;"
+//        "}"
+//        ).arg((10 * indentation) + 30));
+//    //TODO nog een icon toevoegen dat dit expandable is en zo een pijltje ook
 
 
-    QPushButton* addToQuestionset = GenerateMenuButton();
+    //QPushButton* addToQuestionset = GenerateMenuButton();
 
 //    QMenu* addToQuestionsetMenu = new QMenu(this);
 //    QAction* addSubsetAction = addToQuestionsetMenu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
@@ -117,7 +123,7 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name
 //    });
 
     questionsetContainer->addWidget(questionsetButton, 15);
-    questionsetContainer->addWidget(addToQuestionset, 1);
+    //questionsetContainer->addWidget(addToQuestionset, 1);
 
     questionsetWidget->setLayout(questionsetContainer);
 
@@ -125,40 +131,6 @@ QVBoxLayout* QuestionsetTreeWidget::MakeExpandableQuestionsetButton(QString name
     outputContainer->addWidget(treeToHide);
 
     return outputContainer;
-}
-
-//Gaat de knop voor het menu te tonen waar je een vraag of subset ergens aan kan toevoegen
-QPushButton* QuestionsetTreeWidget::GenerateMenuButton()
-{
-    QPushButton* outputButton = new QPushButton();           //hier een plus icoon aan geven en styling doen
-    outputButton->setIcon(outputButton->style()->standardIcon(QStyle::SP_FileDialogNewFolder));
-    outputButton->setStyleSheet(
-        "QPushButton { "
-        "   color: #000000;"
-        "   background-color: transparent;"
-        "   border: none; "
-        "   border-radius: 2px;"
-        "   padding: 0px 0px 0px 0px;"
-        "   text-align: center;"
-        "}"
-        );
-    outputButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
-    QMenu* menu = new QMenu(this);
-    QAction* addSubsetAction = menu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
-    QAction* addQuestionAction = menu->addAction("Voeg vraag toe");
-    menu->setStyleSheet("background-color: #4d4d4d;");
-
-    connect(outputButton, &QPushButton::clicked, menu, [=]{
-        menu->popup(outputButton->mapToGlobal(QPoint(0, outputButton->height())));
-    });
-
-    connect(addSubsetAction, &QAction::triggered, this, &QuestionsetTreeWidget::CreateNewQuestionset);
-    connect(addQuestionAction, &QAction::triggered, this, [=] {
-        sendDisplayQuestionSignal(new CreateQuestionView(QuestionsetController(m_questionset), this));
-    });
-
-    return outputButton;
 }
 
 void QuestionsetTreeWidget::AddLooseQuestionsToTree(QVBoxLayout* container, QList<Question*> list, int indentation)

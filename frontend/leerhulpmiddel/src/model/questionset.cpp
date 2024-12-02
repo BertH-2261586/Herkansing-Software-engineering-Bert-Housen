@@ -54,4 +54,10 @@ void Questionset::addSubSet(QString name)
 }
 
 
+void Questionset::SetName(QString newName)
+{
+    m_name = newName;
+    emit changed();
+}
+
 

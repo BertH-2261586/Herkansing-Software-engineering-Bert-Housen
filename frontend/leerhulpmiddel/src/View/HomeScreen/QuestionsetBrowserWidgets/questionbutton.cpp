@@ -11,7 +11,7 @@ QuestionButton::QuestionButton(Question* question, int indentation, QWidget* par
 
     m_label = new EditableLabel(question->getName());
 
-    connect(m_question, &Question::changed, this, &QuestionButton::update);
+    connect(m_question, &Question::changed, this, &QuestionButton::update);     //hier wordt update() gebruikt in case dat er gedacht werdt dat update() redundant was
 
     connect(m_label, &EditableLabel::textChanged, this, [=](QString text){
         m_controller.changeName(text);

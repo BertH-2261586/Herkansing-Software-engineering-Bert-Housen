@@ -15,6 +15,8 @@ ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_examinati
     amountOfQuestionsAnswered->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     amountOfQuestionsAnswered->adjustSize();
 
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
+
     int timeLimitMinutes = 1;
     timePerQuestion = new CountdownTimer(this, timeLimitMinutes); 
     timePerQuestion->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);

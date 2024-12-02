@@ -43,7 +43,7 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
 
     for (int i = 0; i < m_allQuestionsets.length(); i++)
     {
-        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], m_parent, m_questionManagerController);
+        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], m_parent, m_questionManagerController, i != 0);
 
 
         m_allQuestionsetWidgets.append(questionsetWidget);
@@ -54,7 +54,7 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
 
         connect(questionsetWidget, &QuestionsetWidget::clicked, m_allQuestionsets[i], [=]{
             QuestionsetTreeWidget* tree = questionsetWidget->getUnderlyingTree();
-            tree->setStyleSheet(QString("background-color: %1; border-top: 1px solid #000000;").arg(m_allQuestionsets[i]->GetColor().name()));
+            tree->setStyleSheet(QString("background-color: %1;").arg(m_allQuestionsets[i]->GetColor().name()));
 
             setPermaDisplayTab(widgetProxy, questionsetWidget);
 

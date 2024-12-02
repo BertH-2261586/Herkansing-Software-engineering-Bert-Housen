@@ -15,3 +15,8 @@ void QuestionsetController::addSubset(QString name)
 {
     m_questionset->addSubSet(name);
 }
+
+void QuestionsetController::changeName(QString newName)
+{
+    m_questionset->SetName(newName);
+}
