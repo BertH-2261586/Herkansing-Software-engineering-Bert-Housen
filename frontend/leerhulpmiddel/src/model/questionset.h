@@ -22,7 +22,11 @@ public:
     QList<Questionset*> GetSubSets() const { return m_subSets; }
     QColor GetColor() const { return m_color; }
 
-    void addQuestion(Question* question, QString subsetName = "");
+    void SetName(QString newName);
+
+    void addQuestion(Question* question);
+    void addSubSet(QString name);
+
 private:
     QString m_name;
 
@@ -35,9 +39,7 @@ signals:
     void displayNewSubSet(Questionset* subSet, int index);
     void displayNewQuestion(Question* newQuestion, int index);
 
-public slots:
-    void addSubSet(QString name);
-    void addComponent(Question* question);
+    void changed();
 };
 
 #endif // QUESTIONSET_H

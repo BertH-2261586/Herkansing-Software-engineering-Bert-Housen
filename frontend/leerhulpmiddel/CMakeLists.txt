@@ -24,6 +24,8 @@ file(GLOB_RECURSE PROJECT_SOURCES
 
 
 
+
+
 message(STATUS "Project sources: ${PROJECT_SOURCES}")
 
 qt_add_executable(leerhulpmiddel

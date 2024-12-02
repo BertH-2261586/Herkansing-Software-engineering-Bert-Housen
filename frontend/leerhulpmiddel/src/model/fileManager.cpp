@@ -22,7 +22,10 @@ QString FileManager::getPath() const {
     QStringList segments = projectDirPath.split('/');
     // Verwijder de laatste 2 segmenten om van het pad naar de .exe file om naar de project folder te gaan
     segments.removeLast(); // Verwijder 'Debug'
-    segments.removeLast(); // Verwijder 'x64'
+    if (segments.last() != "frontend")
+    {
+        segments.removeLast(); // Verwijder 'x64'
+    }
 
     // Voeg de segmenten weer samen tot één pad
     QString newPath = segments.join('/');
@@ -41,11 +44,12 @@ QMap<QString, QVariantList> FileManager::loadQuestionSets(QString path) const {
         // Gebruik het standaardpad als er geen pad is opgegeven
         path = getPath();
     }
+
     QDir dir(path);
 
     // Controleer of de map bestaat
     if (!dir.exists()) {
-        throw FolderQuestionSetMovedException("The question set folder is not found on the given path: " + dir.absolutePath());
+        throw FolderQuestionSetMovedException("The question set folder is not found on the given path: " + dir.path());
     }
 
     // Laad bestanden en vragen vanuit de map

@@ -2,7 +2,7 @@
 #include <QHBoxLayout>
 #include "../homescreen.h"
 
-QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QuestionManagerController* questionManagerController, QWidget* parent) :
+QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QuestionManagerController* questionManagerController, bool topBorder, QWidget* parent) :
     m_questionset(questionset), QWidget(parent), m_homeScreenParent(homeScreenParent)
 {
     setMouseTracking(true);     //nodig om mouse enter en leave events te detecteren
@@ -10,20 +10,26 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
     QHBoxLayout* container = new QHBoxLayout();
     container->setContentsMargins(0, 0, 0, 0);
     m_label = new QLabel(questionset->GetName());
-    m_label->setStyleSheet(QString(""
-                         "   background-color: %1;"
-                         "   color: #000000;"
-                         "   border-top: 1px solid #000000;"
-                         "   border-left: 1px solid #000000;"
-                         "   border-right: 1px solid #000000;"
-                         "   border-top-left-radius: 15px;"
-                         "   border-top-right-radius: 15px;"
-                         "   padding-top: 10px;"
-                         "   padding-left: 20px;"
-                         "   padding-bottom: 10px;"
-                         "   padding-right: 20px;"
-                                   "").arg(questionset->GetColor().name()));
+    QString styleSheet(
+        "   background-color: %1;"
+        "   color: #000000;"
+        );
+    if (topBorder)
+    {
+        styleSheet += "border-left: 1px solid #000000;";
+    }
+    styleSheet += "   border-top: 1px solid #000000;"
+                  "   border-right: 1px solid #000000;"
+                  "   border-top-left-radius: 15px;"
+                  "   border-top-right-radius: 15px;"
+                  "   padding-top: 10px;"
+                  "   padding-left: 20px;"
+                  "   padding-bottom: 10px;"
+                  "   padding-right: 20px;";
 
+
+
+    m_label->setStyleSheet(styleSheet.arg(questionset->GetColor().name()));
 
     container->addWidget(m_label);
 
@@ -32,7 +38,7 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
         "background-color: transparent;"
     );
 
-    m_underlyingTree = new QuestionsetTreeWidget(questionset, questionManagerController);
+    m_underlyingTree = new QuestionsetTreeWidget(questionset);
 
     connect(m_underlyingTree, &QuestionsetTreeWidget::Display, m_homeScreenParent, &HomeScreen::DisplayWidget);
 }

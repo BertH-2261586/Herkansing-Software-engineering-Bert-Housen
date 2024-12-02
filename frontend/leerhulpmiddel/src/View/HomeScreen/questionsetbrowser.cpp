@@ -43,7 +43,7 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
 
     for (int i = 0; i < m_allQuestionsets.length(); i++)
     {
-        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], m_parent, m_questionManagerController);
+        QuestionsetWidget* questionsetWidget = new QuestionsetWidget(m_allQuestionsets[i], m_parent, m_questionManagerController, i != 0);
 
 
         m_allQuestionsetWidgets.append(questionsetWidget);
@@ -54,7 +54,7 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
 
         connect(questionsetWidget, &QuestionsetWidget::clicked, m_allQuestionsets[i], [=]{
             QuestionsetTreeWidget* tree = questionsetWidget->getUnderlyingTree();
-            tree->setStyleSheet(QString("background-color: %1; border-top: 1px solid #000000;").arg(m_allQuestionsets[i]->GetColor().name()));
+            tree->setStyleSheet(QString("background-color: %1;").arg(m_allQuestionsets[i]->GetColor().name()));
 
             setPermaDisplayTab(widgetProxy, questionsetWidget);
 
@@ -143,44 +143,27 @@ void QuestionsetBrowser::CreateNewQuestionset()
 
             qDebug() << input;
 
-            if (input != "" && doesQuestionsetExist(input) == false)
+            if (input != "")
             {
                 m_container->removeWidget(textfield);
                 textfield->setParent(nullptr);
                 textfield->deleteLater();
 
 
-                QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}), m_questionManagerController);     //TODO er voor zorgen dat de memory veilig werdt behandelt
+                QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}));     //TODO er voor zorgen dat de memory veilig werdt behandelt
                 if (m_parent != nullptr)
                 {
                     connect(tempVragensetWidget, &QuestionsetTreeWidget::Display, m_parent, &HomeScreen::DisplayWidget);
                 }
                 m_container->insertWidget(1, tempVragensetWidget, 0);
             }
-            else if (input == "")
+            else
             {
                 m_container->removeWidget(textfield);
                 textfield->setParent(nullptr);
                 textfield->deleteLater();
             }
-            else
-            {
-                //TODO wat doen als questionset al bestaat
-            }
 
     }, Qt::AutoConnection);
-}
-
-
-bool QuestionsetBrowser::doesQuestionsetExist(QString name)
-{
-    for (int i = 0; i < m_allQuestionsets.length(); i++)
-    {
-        if (name == m_allQuestionsets[i]->GetName())
-        {
-            return true;
-        }
-    }
-    return false;
 }
 

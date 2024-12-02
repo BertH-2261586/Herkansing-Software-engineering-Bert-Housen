@@ -23,7 +23,7 @@ class QuestionsetWidget : public QWidget
 
 
 public:
-    QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QuestionManagerController* questionManagerController, QWidget* parent = nullptr);
+    QuestionsetWidget(Questionset* questionset, HomeScreen* homeScreenParent, QuestionManagerController* questionManagerController, bool topBorder = true, QWidget* parent = nullptr);
 
     ~QuestionsetWidget();
 
