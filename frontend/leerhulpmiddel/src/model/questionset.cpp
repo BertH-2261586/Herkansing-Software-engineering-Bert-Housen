@@ -1,8 +1,8 @@
 #include "questionset.h"
 #include "fileManager.h"
 
-Questionset::Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color) :
-    m_name(name), m_looseQuestions(looseQuestions), m_subSets(subSets), m_color(color)
+Questionset::Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color, Questionset* parent) :
+    m_name(name), m_looseQuestions(looseQuestions), m_subSets(subSets), m_color(color), m_parent(parent)
 {
 
 };
@@ -36,7 +36,12 @@ void Questionset::addQuestion(Question* question) {
     //TODO nog controle dat er geen dubbele worden toegevoegd
 
     FileManager fManager = FileManager();
-    fManager.saveQuestionToJSON(m_name, "", *question);     //TODO kijken wat te doen met die subsection
+    if (m_parent == nullptr) {
+        fManager.saveQuestionToJSON(m_name, "", *question);
+    }
+    else {
+        fManager.saveQuestionToJSON(m_parent->GetName(), m_name, *question);
+    }
 
     m_looseQuestions.append(question);
 

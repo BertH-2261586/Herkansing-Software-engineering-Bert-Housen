@@ -106,7 +106,7 @@ void CreateQuestionView::confirm() {
 	}
 	catch (const std::exception &e) {
 		ToastMessage* toast = new ToastMessage(e.what(), this);
-		toast->setFixedWidth(200);
+		toast->setFixedWidth(400);
 		toast->move((width() - toast->width()) / 2, height() - 50);
 		toast->show();
 	}

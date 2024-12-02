@@ -96,7 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Controller\examinationController.cpp" />
+    <ClCompile Include="src\Controller\questioncontroller.cpp" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
+    <ClCompile Include="src\Controller\questionsetcontroller.cpp" />
     <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\countdownTimer.cpp" />
@@ -120,6 +122,7 @@
     <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
     <ClCompile Include="src\view\HomeScreen\questionsetbrowser.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.cpp" />
+    <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetbutton.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp" />
     <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
@@ -128,7 +131,9 @@
     <QtMoc Include="src\Controller\examinationController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
+    <ClInclude Include="src\Controller\questionsetcontroller.h" />
     <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
     <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />
     <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
@@ -138,6 +143,7 @@
     <ClInclude Include="src\model\fileManager.h" />
     <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetbutton.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
     <QtMoc Include="src\view\ToastMessage.h" />
     <QtMoc Include="src\view\focusoutlineedit.h" />

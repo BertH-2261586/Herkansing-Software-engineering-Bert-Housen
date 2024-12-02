@@ -13,7 +13,7 @@ class Questionset : public QObject
     Q_OBJECT
 
 public:
-    Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color = {255, 0, 0});
+    Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color = {255, 0, 0}, Questionset* parent=nullptr);
     ~Questionset();
 
     // Getters
@@ -34,6 +34,8 @@ private:
     QList<Questionset*> m_subSets;
 
     QColor m_color;
+
+    Questionset* m_parent;
 
 signals:
     void displayNewSubSet(Questionset* subSet, int index);
