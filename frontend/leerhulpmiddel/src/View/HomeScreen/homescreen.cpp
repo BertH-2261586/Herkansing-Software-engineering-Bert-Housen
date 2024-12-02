@@ -1,5 +1,5 @@
 #include "homescreen.h"
-#include "../Examination/examinationView.h"
+#include "../Examination/createExaminationView.h"
 #include "../leerhulpmiddelmainwindow.h"
 #include <QDebug>
 
@@ -27,12 +27,12 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
 
 QWidget* HomeScreen::GenerateTopButtonBar()
 {
-    QPushButton* startExamButton = new QPushButton("Start examnination");
+    QPushButton* startExamButton = new QPushButton("Start examination");
     connect(startExamButton, &QPushButton::pressed, this, [=] {
-        m_mainWindow->PushMainViewport(new ExaminationView());
+        m_mainWindow->PushMainViewport(new CreateExaminationView());
     });
 
-    QPushButton* makeNewQsetButton = new QPushButton("Make new Quesiton set");
+    QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
 
     QHBoxLayout* container = new QHBoxLayout();
     container->addWidget(startExamButton);

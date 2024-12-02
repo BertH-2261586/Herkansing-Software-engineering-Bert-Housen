@@ -22,10 +22,12 @@ public:
     QList<Questionset*> GetSubSets() const { return m_subSets; }
     QColor GetColor() const { return m_color; }
 
+
     void SetName(QString newName);
 
     void addQuestion(Question* question);
     void addSubSet(QString name);
+    bool hasQuestion() const;
 
 private:
     QString m_name;
@@ -36,6 +38,8 @@ private:
     QColor m_color;
 
     Questionset* m_parent;
+
+    inline void addParent(Questionset* parent) { m_parent = parent; }
 
 signals:
     void displayNewSubSet(Questionset* subSet, int index);

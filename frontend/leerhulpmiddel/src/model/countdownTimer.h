@@ -13,25 +13,28 @@ class CountdownTimer : public QWidget
     Q_OBJECT
 
 public:
-    explicit CountdownTimer(QWidget* parent, int minutes, int seconds = 0);
-    ~CountdownTimer() { delete timerLabel; }
+    explicit CountdownTimer(QWidget* parent);
+    ~CountdownTimer() { delete m_timerLabel; }
 
     // Timer functionality
-    void startCountdown() { timer.start(); }
-    void resetTimer() { countdownTime = totalTime; }
-    void pauseCountdown() { timer.stop(); }
-  
+    void startCountdown() { m_timer.start(); }
+    void resetTimer() { m_countdownTime = m_totalTime; }
+    void pauseCountdown() { m_timer.stop(); }
+    void setupTimer(QTime time);
+
 signals:
     void countdownFinished();
-
+    
 private slots:
     void updateCountdown(); 
 
 private:
-    QTime countdownTime;   
-    QTimer timer;          
-    QLabel* timerLabel;
-    const QTime totalTime;          // This time is used to reset the timer don't change it
+    QVBoxLayout* m_mainLayout;
+
+    QTime m_countdownTime;   
+    QTimer m_timer;          
+    QLabel* m_timerLabel;
+    QTime m_totalTime;          // This time is used to reset the timer don't change it
 };
 
 #endif 

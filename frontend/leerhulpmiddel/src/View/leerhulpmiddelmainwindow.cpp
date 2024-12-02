@@ -3,11 +3,11 @@
 #include <QDebug>
 #include <QPushButton>
 
-#include "Examination/examinationView.h"
+#include "Examination/createExaminationView.h"
 
 LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManagerController* questionManagerController)
 {
-    setWindowTitle("Qt 6.8 Boilerplate Window");
+    setWindowTitle("Learning aid");
     setWindowState(Qt::WindowMaximized);
 
     m_container = new QVBoxLayout();
@@ -15,6 +15,10 @@ LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManagerController* qu
     QPushButton* btnStartExamination = new QPushButton("Start Examination");
     btnStartExamination->hide();
 
+
+    connect(btnStartExamination, &QPushButton::pressed, this, [=] {
+        PushMainViewport(new CreateExaminationView());
+    });
 
 
     m_homeScreenWidget = new HomeScreen(questionManagerController, this);

@@ -1,4 +1,4 @@
-#include "FlashcardExaminationView.h"
+#include "FlashcardView.h"
 
 /*
 * This function sets up the flashcard examination view properly
@@ -6,27 +6,24 @@
 * @pre the question parameter is a question class that is filled with the correct and filled variables (for example: no empty answer)
 * @param question this is the question where you'll get the data for the question from
 */
-void FlashcardExaminationView::setQuestion(const Flashcard* question) {
+void FlashcardView::setQuestion(const Flashcard* question) {
     // Clear previous question widgets and layout (to avoid memory leaks)
     clearPreviousQuestion();
 
     // Initialize the members
     m_currentQuestion = question;
     m_showingQuestion = true;
-    m_mainQuestionLayout = new QVBoxLayout(this);
 
     // Initialze the question label and scroll area of the flashcard
     setQuestionLabel();
     setScrollArea();
+    setupToggleSwitch();
 
-    // Add the scroll area to the layout
-    m_mainQuestionLayout->addWidget(m_scrollArea);
-
-    setLayout(m_mainQuestionLayout);
+    initializeLayouts();
 }
 
 // This function sets the question label correctly
-void FlashcardExaminationView::setQuestionLabel() {
+void FlashcardView::setQuestionLabel() {
     m_questionLabel = new QLabel(this);
     m_questionLabel->setText(m_currentQuestion->getQuestion());
     m_questionLabel->setStyleSheet(
@@ -51,7 +48,7 @@ void FlashcardExaminationView::setQuestionLabel() {
     m_questionLabel->setWordWrap(true);
 }
 
-void FlashcardExaminationView::setScrollArea() {
+void FlashcardView::setScrollArea() {
     // Create a QScrollArea to make the text scrollable when it exceeds the visible area
     m_scrollArea = new QScrollArea(this);
     m_scrollArea->setWidget(m_questionLabel); // Set the QLabel as the widget inside the scroll area
@@ -67,7 +64,24 @@ void FlashcardExaminationView::setScrollArea() {
 
 }
 
-bool FlashcardExaminationView::eventFilter(QObject* watched, QEvent* event) {
+void FlashcardView::setupToggleSwitch() {
+    m_toggleLabel = new QLabel("Repeat the question later");
+    m_toggleSwitch = new Switch(this);
+}
+
+void FlashcardView::initializeLayouts() {
+    m_toggleLayout = new QVBoxLayout;
+    m_toggleLayout->addWidget(m_toggleLabel);
+    m_toggleLayout->addWidget(m_toggleSwitch);
+
+    m_mainQuestionLayout = new QVBoxLayout(this);
+    m_mainQuestionLayout->addWidget(m_scrollArea);
+    m_mainQuestionLayout->addLayout(m_toggleLayout);
+
+    setLayout(m_mainQuestionLayout);
+}
+
+bool FlashcardView::eventFilter(QObject* watched, QEvent* event) {
     if (watched == m_questionLabel && event->type() == QEvent::MouseButtonPress) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
@@ -79,30 +93,7 @@ bool FlashcardExaminationView::eventFilter(QObject* watched, QEvent* event) {
     return QWidget::eventFilter(watched, event);
 }
 
-// Delete all the data from a previous question so that you can display a new one 
-void FlashcardExaminationView::clearPreviousQuestion() {
-    // Remove the existing layout if it exists
-    if (m_mainQuestionLayout) {
-        // Delete all the widgets that were added to the layout
-        QLayoutItem* item;
-        while ((item = m_mainQuestionLayout->takeAt(0)) != nullptr) {
-            if (item->widget()) {
-                item->widget()->deleteLater(); // Schedule widget for deletion
-            }
-            delete item; 
-        }
-        // Delete and reset the layout
-        delete m_mainQuestionLayout;
-        m_mainQuestionLayout = nullptr;
-    }
-
-    // Clean up member variables associated with the previous question
-    m_questionLabel = nullptr; // Reset QLabel pointer
-    m_scrollArea = nullptr;    // Reset QScrollArea pointer
-    m_currentQuestion = nullptr; // Reset the Flashcard pointer
-}
-
-void FlashcardExaminationView::handleQuestionClicked() {
+void FlashcardView::handleQuestionClicked() {
     if (m_showingQuestion) {
         Answer answer = m_currentQuestion->getAnswer();
         m_questionLabel->setText(answer.getAnswers().first());
@@ -113,4 +104,44 @@ void FlashcardExaminationView::handleQuestionClicked() {
     }
 
     m_showingQuestion = !m_showingQuestion;
+    m_toggleSwitch->hide();
+    m_toggleLabel->hide();
+}
+
+// Delete all the data from a previous question so that you can display a new one 
+void FlashcardView::clearPreviousQuestion() {
+    if (m_toggleLayout) {
+        // Iterate through and delete all items in m_toggleLayout
+        QLayoutItem* item;
+        while ((item = m_toggleLayout->takeAt(0)) != nullptr) {
+            if (item->widget()) {
+                item->widget()->deleteLater(); // Schedule the widget for deletion
+            }
+            delete item; // Delete the layout item
+        }
+
+        // Delete the layout itself
+        delete m_toggleLayout;
+        m_toggleLayout = nullptr;
+    }
+
+    // Remove the existing layout if it exists
+    if (m_mainQuestionLayout) {
+        // Delete all the widgets that were added to the layout
+        QLayoutItem* item;
+        while ((item = m_mainQuestionLayout->takeAt(0)) != nullptr) {
+            if (item->widget()) {
+                item->widget()->deleteLater(); // Schedule widget for deletion
+            }
+            delete item;
+        }
+        // Delete and reset the layout
+        delete m_mainQuestionLayout;
+        m_mainQuestionLayout = nullptr;
+    }
+
+    // Clean up member variables associated with the previous question
+    m_questionLabel = nullptr; // Reset QLabel pointer
+    m_scrollArea = nullptr;    // Reset QScrollArea pointer
+    m_currentQuestion = nullptr; // Reset the Flashcard pointer
 }

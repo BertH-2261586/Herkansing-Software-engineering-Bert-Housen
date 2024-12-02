@@ -9,10 +9,11 @@
 #include <QMessageBox>
 
 #include "../../model/countdownTimer.h"
-#include "FlashcardExaminationView.h"
-#include "FillInExaminationView.h"
-#include "MultipleChoiceExaminationView.h"
+#include "../questions/FlashcardView.h"
+#include "../questions/FillInView.h"
+#include "../questions/MultipleChoiceView.h"
 #include "../../Controller/questionmanagercontroller.h"
+#include "scoreCardExaminationView.h"
 
 class ExaminationController;
 
@@ -21,37 +22,54 @@ class ExaminationView : public QWidget {
 
 public:
     explicit ExaminationView(QWidget* parent = nullptr);
-    void startExamination(QString path) { emit examinationStarted(path); }
+    void startExamination(QString path, QTime timeLimit = QTime(-1, -1, -1));
 
 signals:
     void examinationStarted(const QString questionSetPath);
     void nextQuestion();
+    void getExaminationData();
 
 public slots:
-    void flashcardHasBeenFlipped();
     void questionLoadedView();
+    void receiveExaminationData(QMap<QString, QString> data);
+    void closeWindow() { this->close(); }
 
 private slots:
     void nextQuestionView();
-    void checkAnswer();
-    void closeWindow() { this->close(); }
+    void showAnswer(bool timeout = false);
     void closeEvent(QCloseEvent* event) override; // Override close event
 
 private:
     void setCurrentQuestionView();
     void clearPreviousQuestionView();
 
-    QLabel* amountOfQuestionsAnswered;
-    QPushButton* submitButton;
-    QPushButton* closeButton;
-    QPushButton* nextQuestionButton;
-    QPushButton* endExaminationButton;
+    // GUI Setup
+    void setupAmountQuestionsAnswered();
+    void setupTimer();
+    void setupSubmitButton();
+    void setupCloseButton();
+    void setupNextQuestionButton();
+    void setupEndExaminationButton();
+    void initializeLayouts();
 
-    CountdownTimer* timePerQuestion;
-    MultipleChoiceExaminationView multipleChoiceView = MultipleChoiceExaminationView();
-    FlashcardExaminationView flashcardView = FlashcardExaminationView();
-    FillInExaminationView fillInView = FillInExaminationView();
+    void hideAllWidgets(QLayout* layout);
 
+    QVBoxLayout* m_mainLayout;
+    QHBoxLayout* m_questionInfoLayout;
+    QLabel* m_amountOfQuestionsAnswered;
+    QPushButton* m_submitButton;
+    QPushButton* m_closeButton;
+    QPushButton* m_nextQuestionButton;
+    QPushButton* m_endExaminationButton;
+
+    // Sub views
+    CountdownTimer* m_timePerQuestion;
+    MultipleChoiceView m_multipleChoiceView = MultipleChoiceView();
+    FlashcardView m_flashcardView = FlashcardView();
+    FillInView m_fillInView = FillInView();
+    scoreCardExaminationView* m_scoreCard;
+
+    // Controller
     ExaminationController* m_examinationController;
 
     bool m_closeFromExaminationEnd = false;         // Deze bool houd bij als er op de "end examination" knop is geklikt, zodat je de close event kunt bypassen

@@ -2,9 +2,12 @@
 #include "fileManager.h"
 
 Questionset::Questionset(QString name, QList<Question*> looseQuestions, QList<Questionset*> subSets, QColor color, Questionset* parent) :
-    m_name(name), m_looseQuestions(looseQuestions), m_subSets(subSets), m_color(color), m_parent(parent)
-{
-
+    m_name(name), m_looseQuestions(looseQuestions), m_subSets(subSets), m_color(color), m_parent(parent) {
+    
+    for (Questionset* subset : m_subSets)
+    {
+        subset->addParent(this);
+    }
 };
 
 //questionset zijn verandtwoordelijkheid om de onderliggende questions op te ruimen
@@ -65,4 +68,20 @@ void Questionset::SetName(QString newName)
     emit changed();
 }
 
+// Check if the question set has a question
+bool Questionset::hasQuestion() const {
+    // Question set has a loose question
+    if (m_looseQuestions.size() > 0) {
+        return true;
+    }
 
+    // Check the subfolders for questions
+    for (Questionset* subset : m_subSets) {
+        if (subset->hasQuestion()) {
+            return true; 
+        }
+    }
+
+    // No questions found
+    return false;
+}

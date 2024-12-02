@@ -209,6 +209,11 @@ void QuestionsetTreeWidget::insertSubset(Questionset* newSubSet, int index)
 }
 void QuestionsetTreeWidget::insertQuestion(Question* newQuestion, int index)
 {
+    QuestionButton* newQButton = new QuestionButton(newQuestion, m_indentation + 1, this);
+    m_underlyingTreeContainer->insertWidget(index, newQButton, 0);
+    QObject::connect(newQButton, &QuestionButton::clicked, this, [this, newQuestion]() {
+        sendDisplayQuestionSignal(new QLabel(newQuestion->getName()));        //TODO nog de goede widgets versturen
+        });
     qDebug() << "Added Question";
     emit Display(new QWidget());
 }

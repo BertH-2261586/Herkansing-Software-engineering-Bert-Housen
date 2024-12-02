@@ -1,22 +1,21 @@
-#include "FillInExaminationView.h"
+#include "FillInView.h"
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatchIterator>
 #include <QTextEdit>
-
+#include <QScrollArea>
 /*
 * This function sets up the fill in examination view properly
 *
 * @pre the question parameter is a question class that is filled with the correct and filled variables (for example: no empty answer)
 * @param question this is the question where you'll get the data for the question from
 */
-void FillInExaminationView::setQuestion(const FillInQuestion* question) {
+void FillInView::setQuestion(const FillInQuestion* question) {
     m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout->setStretch(0, 0);  // No stretching for this layout item
-    m_mainLayout->setContentsMargins(0, 0, 0, 0);  // Optional: Remove unnecessary margins
     m_mainLayout->setSpacing(10);
+
     // Create a row of text with a space for user input
-    m_questionLayout = new QHBoxLayout;
+    m_questionLayout = new QFlowLayout;
 
     QString questionString = question->getQuestion();
     QRegularExpression re("\\[([^\\]]+)\\]");
@@ -40,25 +39,24 @@ void FillInExaminationView::setQuestion(const FillInQuestion* question) {
             m_questionLayout->addWidget(textLabel);
         }
 
-        QVBoxLayout* fillInLayout = new QVBoxLayout;
+        QWidget* answerBlockWidget = new QWidget(this);
+        QVBoxLayout* fillInLayout = new QVBoxLayout(answerBlockWidget);
         QString answerText = match.captured(1); // Get text inside []
         QTextEdit* answerEdit = new QTextEdit;
         QLabel* correctAnswer = new QLabel;
 
-        answerEdit->setMaximumHeight(30);
-        answerEdit->setMaximumSize(75, 30);
+        answerEdit->setMaximumSize(85, 30);
         fillInLayout->addWidget(answerEdit);
         m_answerInputs.append(answerEdit);
 
         correctAnswer->setText(answerText);
         correctAnswer->setStyleSheet("font-weight: bold; color: green; font-size: 18px;");
         fillInLayout->addWidget(correctAnswer, 0, Qt::AlignHCenter);
-        correctAnswer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);  // Prevent the widget from expanding
         m_correctAnswer.append(correctAnswer);
         correctAnswer->hide();
 
         m_fillInLayouts.append(fillInLayout);
-        m_questionLayout->addLayout(fillInLayout);
+        m_questionLayout->addWidget(answerBlockWidget);
     }
 
     // Add the remaining part of the string after the last match
@@ -71,33 +69,52 @@ void FillInExaminationView::setQuestion(const FillInQuestion* question) {
         m_questionLayout->addWidget(remainingLabel);
     }
 
-    m_mainLayout->addLayout(m_questionLayout);
+    QWidget* contentWidget = new QWidget(this);
+    contentWidget->setLayout(m_questionLayout);
+
+    // Create a QScrollArea and set the content widget inside it
+    QScrollArea* scrollArea = new QScrollArea(this);
+    scrollArea->setWidget(contentWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(150);  // Set a minimum width for the scroll area
+    scrollArea->setMinimumWidth(200);  // Set a minimum width for the scroll area
+    scrollArea->setMaximumHeight(800);
+    scrollArea->setMaximumWidth(1250);
+    scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    m_mainLayout->addWidget(scrollArea);
     // Set the layout
     setLayout(m_mainLayout);
 }
 
-void FillInExaminationView::showAnswer(const FillInQuestion* question) {
-    QList<QString> answer = question->getAnswer().getAnswers();
+void FillInView::showAnswer(QVector<int> wrongAnswers) {
     for (int i = 0; i < m_answerInputs.size(); ++i) {
-        QTextEdit* inputField = m_answerInputs[i];
-        QString userAnswer = inputField->toPlainText().trimmed().toLower(); // Get the user input
-        QString correctAnswer = answer[i].trimmed().toLower();     // Get the corresponding correct answer
         m_answerInputs[i]->setReadOnly(true);
         m_correctAnswer[i]->show();
 
-        if (userAnswer == correctAnswer) {
+        if (!wrongAnswers.contains(i)) {
             // Correct answer, set background to green
-            inputField->setStyleSheet("background-color: green;");
+            m_answerInputs[i]->setStyleSheet("background-color: green;");
             m_correctAnswer[i]->setText("");      // Set the correct answer to empty so that it still pushes the textedit upwards but not displaying the text
         }
         else {
             // Incorrect answer, set background to red
-            inputField->setStyleSheet("background-color: red;");
+            m_answerInputs[i]->setStyleSheet("background-color: red;");
         }
     }
 }
 
-void FillInExaminationView::clearPreviousQuestion() {
+QVector<QString> FillInView::getAllAnswerText() {
+    QVector<QString> answerText;
+
+    for (QTextEdit* input : m_answerInputs) {
+        answerText.append(input->toPlainText().trimmed());  // Get the plain text entered            
+    }
+
+    return answerText;
+}
+
+void FillInView::clearPreviousQuestion() {
     // Clear all layouts in m_fillInLayouts
     qDeleteAll(m_fillInLayouts);
     m_fillInLayouts.clear();

@@ -12,6 +12,7 @@ public:
 	// Getters
 	int getAmountAnswers() const { return m_answer.size(); }
 	QList<QString> getCorrectAnswers() const;
+	QList<int> getIndicesCorrectAnswers() const;
 	QList<QString> getAnswers() const { return m_answer; }
 
 	QJsonObject toJson() const;
