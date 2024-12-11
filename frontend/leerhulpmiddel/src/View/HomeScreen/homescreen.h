@@ -3,17 +3,24 @@
 
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QWidget>
 
 class LeerhulpmiddelMainWindow;
 
-#include "qwidget.h"
 #include "questionsetbrowser.h"
 #include "../../Controller/questionmanagercontroller.h"
+#include "inboxView.h"
 
 class HomeScreen: public QWidget
 {
 public:
     HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent);
+
+public slots:
+    void DisplayWidget(QWidget* displayWidget);
+
+private slots:
+    void startInboxAnimation();
 
 private:
     QWidget* GenerateTopButtonBar();
@@ -24,8 +31,8 @@ private:
 
     LeerhulpmiddelMainWindow* m_mainWindow;
 
-public slots:
-    void DisplayWidget(QWidget* displayWidget);
+    InboxView* m_inboxView;
+    QPropertyAnimation* m_inboxAnimation;
 };
 
 #endif // HOMESCREEN_H

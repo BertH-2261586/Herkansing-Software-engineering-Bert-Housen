@@ -28,7 +28,6 @@
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetbutton.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp" />
-    <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
     <ClCompile Include="src\view\HomeScreen\questionsetbrowser.cpp" />
     <ClCompile Include="src\view\questions\FillInView.cpp" />
     <ClCompile Include="src\view\questions\FlashcardView.cpp" />
@@ -41,6 +40,8 @@
     <ClCompile Include="src\model\manager\NetworkManager.cpp" />
     <ClCompile Include="src\view\Login\LoginView.cpp" />
     <ClCompile Include="src\Controller\LoginController.cpp" />
+    <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
+    <ClCompile Include="src\View\HomeScreen\inboxView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />
@@ -75,6 +76,7 @@
     <QtMoc Include="src\view\toggleSwitch.h" />
     <QtMoc Include="src\model\manager\NetworkManager.h" />
     <QtMoc Include="src\view\Login\LoginView.h" />
+    <QtMoc Include="src\View\HomeScreen\inboxView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questioncontroller.h" />
@@ -100,5 +102,6 @@
     <ClInclude Include="src\view\QFlowLayout.h" />
     <ClInclude Include="src\view\style.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
+    <ClInclude Include="src\Exceptions\NoSavedSessionException.h" />
   </ItemGroup>
 </Project>
