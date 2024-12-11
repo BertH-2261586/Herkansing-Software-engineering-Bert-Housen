@@ -12,11 +12,6 @@ def get_database(session: Session = Depends(get_session)) -> UserManager:
     return UserManager(session)
 
 
-@router.get("/add", response_model=User)
-async def create_user_route(db: UserManager = Depends(get_database)):
-    return db.create_user(User(username="TestUser", password="blablabla"))
-
-
 @router.post("/register/", response_model=dict)
 async def register_user(user: UserBase, db: UserManager = Depends(get_database)):
     username_exists = db.get_user(user)
