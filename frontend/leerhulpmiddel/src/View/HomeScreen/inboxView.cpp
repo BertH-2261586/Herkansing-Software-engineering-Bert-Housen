@@ -1,4 +1,5 @@
 #include "inboxView.h"
+#include "homeScreen.h"  // Include the full definition of HomeScreen here
 
 InboxView::InboxView(QWidget* parent) : QWidget(parent) {
     setSlidingMenu();
@@ -14,19 +15,36 @@ InboxView::InboxView(QWidget* parent) : QWidget(parent) {
     m_menuLayout = new QVBoxLayout(m_menuContentWidget);
     m_scrollArea->setWidget(m_menuContentWidget);
 
-    for (int i = 0; i < 20; ++i) {
+    // Cast the qwidget parent to homescreen to make connect recognize it
+    HomeScreen* homeScreen = qobject_cast<HomeScreen*>(parent);
+    connect(this, &InboxView::removeInboxItem, homeScreen, &HomeScreen::removeInboxItem);
+
+    // Set the text for when there are no inbox items
+    m_noItemsInInbox = new QLabel("The inbox is currently empty");
+    m_noItemsInInbox->setStyleSheet("font-size: 15px; font-weight: bold;");
+    m_noItemsInInbox->hide();
+    m_menuLayout->addWidget(m_noItemsInInbox, 0, Qt::AlignCenter);
+    setInboxRequests();
+
+    setMainLayout();
+}
+
+void InboxView::setInboxRequests() {
+    if (m_inboxRequests.size() == 0) {
+        m_noItemsInInbox->show();
+    }
+
+    for (int i = 0; i < m_inboxRequests.size(); ++i) {
         m_menuItemLayouts.append(new QGridLayout());
-        m_menuItemInfo.append(new QLabel("Friend " + QString::number(i) + " has sent a questionset"));
+        m_menuItemInfo.append(new QLabel("Friend " + m_inboxRequests[i] + " has sent a questionset"));
         m_menuItemInfo[i]->setWordWrap(true);
-    
+
         setAcceptButton(i);
         setRejectButton(i);
 
         setMenuItemLayout(i);
         addFrame(i);
     }
-
-    setMainLayout();
 }
 
 // Set the GUI of the reject button in a inbox item
@@ -91,22 +109,24 @@ void InboxView::setMenuItemLayout(int index) {
 }
 
 void InboxView::addFrame(int index) {
-    QFrame* itemFrame = new QFrame(m_menuContentWidget);
-    itemFrame->setLayout(m_menuItemLayouts[index]);
-    itemFrame->setFrameShape(QFrame::Box);
-    itemFrame->setFrameShadow(QFrame::Raised);
+    m_itemFrames.append(new QFrame(m_menuContentWidget));
+    m_itemFrames[index]->setLayout(m_menuItemLayouts[index]);
+    m_itemFrames[index]->setFrameShape(QFrame::Box);
+    m_itemFrames[index]->setFrameShadow(QFrame::Raised);
 
     // Set the stylesheet
-    itemFrame->setObjectName("itemFrame");      // Set an object name for specific styling of the frame
-    itemFrame->setStyleSheet(
+    m_itemFrames[index]->setObjectName("itemFrame");      // Set an object name for specific styling of the frame
+    m_itemFrames[index]->setStyleSheet(
         "#itemFrame {"
         "  border-width: 1px;"
         "  border-style: solid;"
         "  border-color: black;"
         "}"
     );
+    m_itemFrames[index]->setMaximumHeight(125);
+    m_itemFrames[index]->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    m_menuLayout->addWidget(itemFrame);
+    m_menuLayout->addWidget(m_itemFrames[index]);
 }
 
 void InboxView::setMainLayout() {
@@ -129,8 +149,7 @@ void InboxView::setSlidingMenu() {
     // Create the sliding menu widget
     m_slidingMenu = new QWidget(this);
     m_slidingMenu->setStyleSheet("background-color: #5c5c5c;");
-    m_slidingMenu->setFixedSize(menuWidth, screenGeometry.height());    // Set the size of the menu
-    m_slidingMenu->move(screenWidth, 0);                                // Positioned off-screen to the right
+    m_slidingMenu->setFixedSize(menuWidth, screenGeometry.height() - 150);       
 
     // Set a layout for the sliding menu
     m_slidingMenuLayout = new QVBoxLayout();
@@ -138,9 +157,35 @@ void InboxView::setSlidingMenu() {
 }
 
 void InboxView::acceptedQuestionSet(int index) {
-    qDebug() << "accept " + QString::number(index);
+    deleteInboxItem(index);
+    emit removeInboxItem();
 }
 
 void InboxView::rejectedQuestionSet(int index) {
-    qDebug() << "reject " + QString::number(index);
+    deleteInboxItem(index);
+    emit removeInboxItem();
+}
+
+void InboxView::deleteInboxItem(int index) {
+    // Removing and re-adding all items is necessary, or else the indices wont reset and will cause index out of bounds errors
+    // For example item in place 3 stays 3 even when 2 is removed
+
+    // Remove all the items associated with the item from the inbox 
+    for (int i = 0; i < m_inboxRequests.size(); ++i) {
+        delete m_menuItemLayouts[0];
+        m_menuItemLayouts.removeAt(0);          // Remove 0 every time because m_inboxRequests gets smaller with the deletions
+        delete m_menuItemInfo[0];
+        m_menuItemInfo.removeAt(0);
+        delete m_acceptButtons[0];
+        m_acceptButtons.removeAt(0);
+        delete m_rejectButtons[0];
+        m_rejectButtons.removeAt(0);
+        delete m_itemFrames[0];
+        m_itemFrames.removeAt(0);
+    }
+
+    m_inboxRequests.removeAt(index);
+
+    // Re add the remaining items than wont need to be removed
+    setInboxRequests();
 }

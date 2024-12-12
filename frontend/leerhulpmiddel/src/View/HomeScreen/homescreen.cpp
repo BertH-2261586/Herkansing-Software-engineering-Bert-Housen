@@ -18,11 +18,19 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
 
     m_rightSideScreen = new QWidget();
     m_container->addWidget(m_rightSideScreen, 4);
+    
+    setInboxView();
 
+    main_container->addWidget(GenerateTopButtonBar());
+    main_container->addLayout(m_container);
 
+    setLayout(main_container);
+}
+
+void HomeScreen::setInboxView() {
     // Create the inbox sliding menu
     m_inboxView = new InboxView(this);
-    m_container->addWidget(m_inboxView);
+    m_container->addWidget(m_inboxView, 0, Qt::AlignTop);
 
     // Calculate the inbox menu width and screen width for initialization
     int screenWidth = this->width();
@@ -32,11 +40,6 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
     m_inboxAnimation->setDuration(500);
     m_inboxAnimation->setStartValue(QPoint(screenWidth, 50));            // Starting position off-screen
     m_inboxAnimation->setEndValue(QPoint(screenWidth - menuWidth, 50));
-
-    main_container->addWidget(GenerateTopButtonBar());
-    main_container->addLayout(m_container);
-
-    setLayout(main_container);
 }
 
 QWidget* HomeScreen::GenerateTopButtonBar()
@@ -53,36 +56,15 @@ QWidget* HomeScreen::GenerateTopButtonBar()
         m_mainWindow->PushMainViewport(new LoginView(new LoginController()));
     });
     
-    // Create the inbox button
-    QPushButton* inboxButton = new QPushButton("");
-    // Set the inbox icon
-    QIcon startExamIcon("resources/inbox-icon.png");
-    inboxButton->setIcon(startExamIcon);
-    inboxButton->setIconSize(QSize(25, 25));
-
-    // Initialize the button
-    inboxButton->setStyleSheet(
-        "QPushButton {"
-        "   border: 1px solid black;"
-        "   border-radius: 15px;"
-        "   background-color: #5c5c5c;"
-        "   width: 35px;"
-        "   height: 35px;"
-        "}"
-        "QPushButton:hover {"
-        "   background-color: white;"
-        "}"
-    );
-    inboxButton->setFixedSize(35, 35); 
-    inboxButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    connect(inboxButton, &QPushButton::pressed, this, &HomeScreen::startInboxAnimation);
 
     // Add all the buttons to the layout
     QHBoxLayout* container = new QHBoxLayout();
     container->addWidget(startExamButton);
     container->addWidget(makeNewQsetButton);
     container->addWidget(loginButton);
-    container->addWidget(inboxButton);
+    // Add the icon buttons to the layout
+    setAddFriendButton(container);
+    setInboxButton(container);
 
     QWidget* outputWidget = new QWidget();
     outputWidget->setStyleSheet("background-color: #5c5c5c;");
@@ -109,6 +91,105 @@ void HomeScreen::startInboxAnimation() {
     m_inboxAnimation->start();  
 }
 
+void HomeScreen::setAddFriendButton(QHBoxLayout* container) {
+    // Create the inbox button
+    QPushButton* addFriendButton = new QPushButton("");
+    setIconButton(addFriendButton, "resources/add-friend.png");
+    //connect(addFriendButton, &QPushButton::pressed, this, &HomeScreen::startInboxAnimation);
+
+    // Add the widget to the container
+    container->addWidget(addFriendButton);
+}
+
+void HomeScreen::setInboxButton(QHBoxLayout* container) {
+    // Create the inbox button
+    QPushButton* inboxButton = new QPushButton("");
+    setIconButton(inboxButton, "resources/inbox-icon.png");
+    connect(inboxButton, &QPushButton::pressed, this, &HomeScreen::startInboxAnimation);
+
+    // Set the label for the amount of requests inside of the inbox
+    QWidget* buttonContainer = setInboxRequestLabel(inboxButton);
+
+    // Add the buttonContainer to the main container layout
+    container->addWidget(buttonContainer);
+}
+
+QWidget* HomeScreen::setInboxRequestLabel(QPushButton* inboxButton) {
+    // Create a container for the button and request amount
+    QWidget* buttonContainer = new QWidget();
+    buttonContainer->setFixedSize(inboxButton->sizeHint());
+    QVBoxLayout* inboxButtonLayout = new QVBoxLayout(buttonContainer);
+    inboxButtonLayout->setContentsMargins(0, 0, 0, 0); 
+    inboxButtonLayout->setSpacing(0);
+    inboxButtonLayout->addWidget(inboxButton);
+
+    // Create a request amount label
+    m_requestAmountLabel = new QLabel(buttonContainer);
+    // Set the request amount
+    setInboxRequestAmount();
+
+    // Set the stylesheet of the request amount
+    m_requestAmountLabel->setAlignment(Qt::AlignCenter);
+    m_requestAmountLabel->setStyleSheet(
+        "QLabel {"
+        "   background-color: red;"
+        "   color: white;"
+        "   font-size: 9px;"
+        "   border-radius: 5px;"
+        "   font-weight: bold;"
+        "   max-width: 15px;"
+        "   max-height: 15px;"
+        "}"
+    );
+    m_requestAmountLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_requestAmountLabel->move(20, 0);
+    m_requestAmountLabel->raise();                // Ensure the request amount is on top of the button
+
+    return buttonContainer;
+}
+
+// Set the amount inside of the label that displays the amount of requests inside of the inbox
+void HomeScreen::setInboxRequestAmount() {
+    // Get the amount of requests and set the text correctly
+    int requestAmount = m_inboxView->getAmountInboxRequests();
+    if (requestAmount == 0) {
+        m_requestAmountLabel->hide();
+    }
+    else {
+        m_requestAmountLabel->setText(QString::number(requestAmount));
+    }
+}
+
+/*
+* Set the stylesheet of a button that contains an icon
+* @pre you need a valid iconName
+* @param button this is the button you want to change
+* @param iconName this is the name of the icon
+*/
+void HomeScreen::setIconButton(QPushButton* button, QString iconName){
+    // Set the icon
+    QIcon startExamIcon(iconName);
+    button->setIcon(startExamIcon);
+    button->setIconSize(QSize(25, 25));
+
+    // Initialize the button
+    button->setStyleSheet(
+        "QPushButton {"
+        "   border: 1px solid black;"
+        "   border-radius: 15px;"
+        "   background-color: #5c5c5c;"
+        "   width: 35px;"
+        "   height: 35px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: white;"
+        "}"
+    );
+
+    // Make it circular 
+    button->setFixedSize(35, 35);
+    button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+}
 
 void HomeScreen::DisplayWidget(QWidget* displayWidget)
 {

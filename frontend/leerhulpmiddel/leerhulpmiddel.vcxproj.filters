@@ -77,6 +77,7 @@
     <QtMoc Include="src\model\manager\NetworkManager.h" />
     <QtMoc Include="src\view\Login\LoginView.h" />
     <QtMoc Include="src\View\HomeScreen\inboxView.h" />
+    <QtMoc Include="src\view\HomeScreen\homescreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questioncontroller.h" />
@@ -96,7 +97,6 @@
     <ClInclude Include="src\model\fileManager.h" />
     <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
     <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
-    <ClInclude Include="src\view\HomeScreen\homescreen.h" />
     <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />

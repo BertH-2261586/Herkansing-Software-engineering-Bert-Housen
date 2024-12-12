@@ -13,17 +13,27 @@ class LeerhulpmiddelMainWindow;
 
 class HomeScreen: public QWidget
 {
+    Q_OBJECT
 public:
     HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent);
 
 public slots:
     void DisplayWidget(QWidget* displayWidget);
+    void removeInboxItem() { setInboxRequestAmount(); }
 
 private slots:
     void startInboxAnimation();
 
 private:
     QWidget* GenerateTopButtonBar();
+
+    void setInboxView();
+    void setAddFriendButton(QHBoxLayout* container);
+    void setInboxButton(QHBoxLayout* container);
+    QWidget* setInboxRequestLabel(QPushButton* inboxButton);
+    void setIconButton(QPushButton* button, QString iconName);
+
+    void setInboxRequestAmount();
 
     QuestionsetBrowser* m_vragensetBrowser;
     QWidget* m_rightSideScreen;
@@ -32,6 +42,7 @@ private:
     LeerhulpmiddelMainWindow* m_mainWindow;
 
     InboxView* m_inboxView;
+    QLabel* m_requestAmountLabel;
     QPropertyAnimation* m_inboxAnimation;
 };
 
