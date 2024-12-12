@@ -4,11 +4,11 @@
 
 // Initialize the GUI of the view
 // @param questionSetSelectOnly this bool indicates that the user can select only the top level or individual questions
-ChooseQuestionView::ChooseQuestionView(bool questionSetSelectOnly, QWidget* parent) : QWidget(parent) {
+ChooseQuestionView::ChooseQuestionView(bool questionSetSelectOnly, bool selectMultiple,QWidget* parent) : QWidget(parent) {
     FileManager fileManager = FileManager();
     m_questionSets = fileManager.loadQuestionSetsObject();
 
-    setupTreeWidget(questionSetSelectOnly);
+    setupTreeWidget(questionSetSelectOnly, selectMultiple);
 
     // Create the icons for the folder and file structure
     QFileIconProvider iconProvider;
@@ -31,9 +31,12 @@ ChooseQuestionView::ChooseQuestionView(bool questionSetSelectOnly, QWidget* pare
 }
 
 // Initialize the QTreeWidget
-void ChooseQuestionView::setupTreeWidget(bool questionSetSelectOnly) {
+void ChooseQuestionView::setupTreeWidget(bool questionSetSelectOnly,bool selectMultiple) {
     m_treeWidget = new QTreeWidget(this);
     m_treeWidget->setHeaderLabel(questionSetSelectOnly ? "Choose a question set" : "Choose the questions you want");
+
+    m_treeWidget->setSelectionMode(selectMultiple ? QAbstractItemView::MultiSelection : QAbstractItemView::SingleSelection);
+
     m_treeWidget->setStyleSheet(
         "QTreeWidget::item {"
         "    margin-bottom: 5px;"
@@ -47,7 +50,7 @@ void ChooseQuestionView::setupTreeWidget(bool questionSetSelectOnly) {
     }
 
     // Check if you only allow top level checkboxes (for examples with examinations) and connect the checkboxes to the correct handler
-    if (questionSetSelectOnly) {
+    if (questionSetSelectOnly && !selectMultiple) {
         connect(m_treeWidget, &QTreeWidget::itemClicked, this, [this](QTreeWidgetItem* item, int column) {
             handleQuestionSetOnlyItemCheckChange(item, column);
         });
@@ -145,6 +148,20 @@ QString ChooseQuestionView::getQuestionSetPath() {
 
     // Nothing was selected
     return "";
+}
+
+QList<QString> ChooseQuestionView::getQuestionSetPaths()
+{
+    QList<QString> paths;
+    // Iterate over all top level question sets
+    for (int i = 0; i < m_treeWidget->topLevelItemCount(); ++i) {
+		QTreeWidgetItem* item = m_treeWidget->topLevelItem(i);
+
+		if (item->checkState(0) == Qt::Checked) {
+			paths.append(item->text(0));
+		}
+	}
+	return paths;
 }
 
 /*

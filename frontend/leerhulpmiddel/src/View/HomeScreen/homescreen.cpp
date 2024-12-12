@@ -2,7 +2,9 @@
 #include "../Examination/createExaminationView.h"
 #include "../Login/LoginView.h"
 #include "../../Controller/LoginController.h"
+#include "../../Controller/ShareController.h"
 #include "../../model/manager/NetworkManager.h"
+#include "../Share/shareview.h"
 #include "../leerhulpmiddelmainwindow.h"
 #include <QDebug>
 
@@ -30,10 +32,23 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
 
 QWidget* HomeScreen::GenerateTopButtonBar()
 {
+
+
+    NetworkManager* networkManager = new NetworkManager();
+
+    QPushButton* shareButton = new QPushButton("Share");
+    connect(shareButton, &QPushButton::pressed, this, [=] {
+		ShareView* shareView = new ShareView( new ShareController(networkManager),this);
+        shareView->show();
+	});
+
+
     QPushButton* startExamButton = new QPushButton("Start examination");
     connect(startExamButton, &QPushButton::pressed, this, [=] {
         m_mainWindow->PushMainViewport(new CreateExaminationView());
     });
+
+
 
     QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
 
@@ -43,7 +58,6 @@ QWidget* HomeScreen::GenerateTopButtonBar()
 
     QPushButton* loginButton = new QPushButton("Login/Register");
     connect(loginButton, &QPushButton::pressed, this, [=] {
-        NetworkManager* networkManager = new NetworkManager();
         LoginView* loginView = new LoginView(new LoginController(networkManager));
 
         connect(networkManager, &NetworkManager::loginFailed,
@@ -63,6 +77,7 @@ QWidget* HomeScreen::GenerateTopButtonBar()
 
 
     QHBoxLayout* container = new QHBoxLayout();
+    container->addWidget(shareButton);
     container->addWidget(startExamButton);
     container->addWidget(makeNewQsetButton);
     container->addWidget(logoutButton);

@@ -41,6 +41,8 @@
     <ClCompile Include="src\model\manager\NetworkManager.cpp" />
     <ClCompile Include="src\view\Login\LoginView.cpp" />
     <ClCompile Include="src\Controller\LoginController.cpp" />
+    <ClCompile Include="src\Controller\ShareController.cpp" />
+    <ClCompile Include="src\View\Share\ShareView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />
@@ -75,6 +77,7 @@
     <QtMoc Include="src\view\toggleSwitch.h" />
     <QtMoc Include="src\model\manager\NetworkManager.h" />
     <QtMoc Include="src\view\Login\LoginView.h" />
+    <QtMoc Include="src\View\Share\ShareView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questioncontroller.h" />
@@ -100,5 +103,7 @@
     <ClInclude Include="src\view\QFlowLayout.h" />
     <ClInclude Include="src\view\style.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
+    <ClInclude Include="src\Controller\ShareController.h" />
+    <ClInclude Include="src\View\Overlay.h" />
   </ItemGroup>
 </Project>

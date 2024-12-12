@@ -95,6 +95,8 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\View\Share\ShareView.cpp" />
+    <ClCompile Include="src\Controller\ShareController.cpp" />
     <ClCompile Include="src\Controller\examinationController.cpp" />
     <ClCompile Include="src\Controller\LoginController.cpp" />
     <ClCompile Include="src\Controller\questioncontroller.cpp" />
@@ -140,6 +142,8 @@
     <QtMoc Include="src\Controller\examinationController.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\View\Share\ShareView.h" />
+    <ClInclude Include="src\Controller\ShareController.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
     <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
@@ -154,6 +158,7 @@
     <QtMoc Include="src\model\manager\NetworkManager.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
     <QtMoc Include="src\view\Login\LoginView.h" />
+    <ClInclude Include="src\View\Overlay.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />
     <ClInclude Include="src\view\style.h" />
     <QtMoc Include="src\view\toggleSwitch.h" />
