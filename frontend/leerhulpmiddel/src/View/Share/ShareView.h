@@ -17,5 +17,6 @@ private:
 	Overlay* m_overlay;
 public slots:
 	void showShareCode(QString code);
+	void showShareFailed();
 };
 

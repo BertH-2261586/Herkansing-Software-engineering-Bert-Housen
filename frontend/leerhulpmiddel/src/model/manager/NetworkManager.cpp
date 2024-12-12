@@ -5,6 +5,7 @@
 #include <QNetworkReply>
 #include <QSettings>
 
+#include "../fileManager.h"
 #include "../../Exceptions/NoSavedSessionException.h"
 
 NetworkManager::NetworkManager()
@@ -62,13 +63,10 @@ void NetworkManager::registerUser(QString username, QString password)
 	connect(reply, &QNetworkReply::finished, [this, reply]() {
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
-			qDebug() << "Network error:" << reply->errorString();
 			QByteArray responseData = reply->readAll();
-			qDebug() << "Response data:" << responseData;
 			reply->deleteLater();
 			emit registerFailed();
 			return;
-			//TODO: username already token
 		}
 
 		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object();
@@ -80,6 +78,47 @@ void NetworkManager::registerUser(QString username, QString password)
 		emit loginSuccess();
 	});
 }
+
+/*
+*
+* @param questionSetPaths: list of paths to question sets
+*/
+void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
+{
+	QNetworkRequest request(QUrl("http://localhost:80/questionset/share"));
+	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
+
+
+	FileManager* fileManager = new FileManager();
+	QByteArray compressedData = fileManager->createZip(questionSetPaths);
+
+	if (compressedData.isEmpty()) {
+		emit shareFailed();
+		return;
+	}
+
+	QNetworkReply* reply = networkManager->post(request, compressedData); 
+	connect(reply, &QNetworkReply::finished, [this, reply]() { 
+		// Check for network errors
+		if (reply->error() != QNetworkReply::NoError) { 
+			QByteArray responseData = reply->readAll(); 
+			reply->deleteLater(); 
+			emit shareFailed(); 
+			return;
+		}
+
+		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object(); 
+		QString code = "";
+		if (responseData.contains("code") && responseData["code"].isString()) { 
+			QString code = responseData["code"].toString();
+		}
+
+		reply->deleteLater(); 
+		emit shareSuccess(code); 
+	});
+}
+
+
 
 /*
 * Saves session cookie to device

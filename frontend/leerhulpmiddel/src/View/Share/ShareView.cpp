@@ -41,10 +41,26 @@ ShareView::ShareView(ShareController* controller, QWidget* parent) : QWidget(par
 			toast->move((width() - toast->width()) / 2, height() - 70);
 			toast->show();
 		}
-		//m_shareController->shareQuestionSets(questionSetPaths);
+		m_shareController->shareQuestionSets(questionSetPaths);
 		});
 }
 
+
+void ShareView::showShareCode(QString code)
+{
+	ToastMessage* toast = new ToastMessage("Share code: " + code, this);
+	toast->setFixedWidth(400);
+	toast->move((width() - toast->width()) / 2, height() - 70);
+	toast->show();
+}
+
+void ShareView::showShareFailed()
+{
+	ToastMessage* toast = new ToastMessage("Failed to share question sets, Something Went Wrong", this);
+	toast->setFixedWidth(400);
+	toast->move((width() - toast->width()) / 2, height() - 70);
+	toast->show();
+}
 
 ShareView::~ShareView()
 {

@@ -40,6 +40,11 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     connect(shareButton, &QPushButton::pressed, this, [=] {
 		ShareView* shareView = new ShareView( new ShareController(networkManager),this);
         shareView->show();
+
+        connect(networkManager, &NetworkManager::shareSuccess,
+			shareView, &ShareView::showShareCode);
+		connect(networkManager, &NetworkManager::shareFailed,
+            shareView, &ShareView::showShareFailed);
 	});
 
 

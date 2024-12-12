@@ -11,6 +11,7 @@ public:
 
 	void login(QString username, QString password);
 	void registerUser(QString username, QString password);
+	void shareQuestionSets(QList<QString> questionSetPaths);
 private:
 	QNetworkAccessManager* networkManager;
 
@@ -20,5 +21,7 @@ signals:
 	void loginFailed();
 	void registerFailed();
 	void loginSuccess();
+	void shareFailed();
+	void shareSuccess(QString code);
 };
 

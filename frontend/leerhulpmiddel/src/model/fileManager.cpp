@@ -6,6 +6,8 @@
 #include <QJsonObject>
 #include <filesystem>
 #include <QJsonArray>
+#include <QProcess>
+#include <QBuffer>
 
 #include "fileManager.h"
 #include "Questions/MultipleChoiceQuestion.h"
@@ -349,4 +351,69 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
     }
 
     return questions;
+}
+
+QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
+    QProcess zipProcess;
+    QByteArray zipData;
+    QBuffer buffer(&zipData);
+    buffer.open(QIODevice::WriteOnly);
+
+    #if defined(Q_OS_WIN)
+    // Construct a PowerShell command to create a zip file using Compress-Archive
+    QString script = "Compress-Archive -Path ";
+    for (const QString& path : questionSetPaths) {
+        // Convert paths to Windows format and append them to the PowerShell script
+        script += "\"" + (getPath() + "/" + path).replace("/", "\\") + "\",";
+    }
+    script.chop(1); // Remove the trailing comma from the list of paths
+    script += " -DestinationPath \"$env:TEMP\\temp.zip\""; // Use a temporary file
+
+    QStringList args;
+    args << "-Command" << script; // Add the constructed script to PowerShell arguments
+
+    zipProcess.start("powershell", args);
+
+    // Wait for the process to complete
+    if (!zipProcess.waitForFinished() || zipProcess.exitCode() != 0) {
+        qWarning() << "PowerShell zipping failed:" << zipProcess.readAllStandardError();
+        return QByteArray();
+    }
+
+    // Read the generated zip file into QByteArray
+    QFile tempFile(qgetenv("TEMP") + "/temp.zip");
+    if (tempFile.open(QIODevice::ReadOnly)) {
+        zipData = tempFile.readAll();
+        tempFile.remove(); // Clean up the temporary file
+        qDebug() << "Successfully read temporary zip file!";
+    }
+    else {
+        qWarning() << "Failed to read temporary zip file!";
+    }
+    
+
+    #else
+    // Construct a zip command for Linux/macOS
+    QStringList zipArgs;
+    zipArgs << "-r" << "-"; // Output zip to stdout
+    for (const QString& path : questionSetPaths) {
+        // Add each file/directory to the zip command arguments
+        zipArgs << getPath() + "/" + path;
+    }
+
+    zipProcess.start("zip", zipArgs);
+
+    // Wait for the process to complete
+    if (!zipProcess.waitForFinished() || zipProcess.exitCode() != 0) {
+        qWarning() << "Zipping failed:" << zipProcess.readAllStandardError();
+        return QByteArray();
+    }
+
+    // Read the zip output directly from the process's standard output
+    zipData = zipProcess.readAllStandardOutput();
+
+    // The zip data is now in the buffer
+#endif
+
+    return zipData;
 }
