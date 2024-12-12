@@ -15,6 +15,8 @@ class User(UserBase, table=True):
 
     groups_owned: List["Group"] = Relationship(back_populates="owner")
 
+class UserIdInput(SQLModel):
+    id: int
 
 #Group Model
 class GroupCreate(SQLModel):
@@ -28,3 +30,6 @@ class Group(GroupCreate, table=True):
 
 
     owner: User = Relationship(back_populates="groups_owned")
+
+class GroupIdInput(SQLModel):
+    id: int

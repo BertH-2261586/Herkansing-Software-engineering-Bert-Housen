@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlmodel import Session
 from ..database import *
-from ..models import User, UserBase, UserLogin
+from ..models import User, UserBase, UserLogin, UserIdInput
 from ..security import PasswordHasher, UserSessionManager
 
 router = APIRouter()
@@ -27,7 +27,7 @@ async def register_user(user: UserBase, db: UserManager = Depends(get_database))
     new_user = db.create_user(new_user)
     user_token = session_manager.create_session_token({"id": new_user.id, "username": new_user.username})
 
-    return {"message": "User registered", "username": new_user.username,"token": user_token}
+    return {"message": "User registered", "id": new_user.id, "username": new_user.username,"token": user_token}
 
 
 @router.post("/login/", response_model=dict)
@@ -39,4 +39,14 @@ async def check_user_login(user: UserLogin, db: UserManager = Depends(get_databa
     
     user_token = session_manager.create_session_token({"id": db_user.id, "username": db_user.username})
 
-    return {"message": "User logged in", "username":db_user.username, "id": db_user.id, "token": user_token}
+    return {"message": "User logged in", "id": db_user.id, "username":db_user.username, "id": db_user.id, "token": user_token}
+
+@router.post("/remove/", response_model=dict)
+async def remove_user(user: UserIdInput, token_data: dict = Depends(session_manager.token_verification), db: UserManager = Depends(get_database)):
+    if token_data["id"] == user.id:
+        if db.remove_user(user.id):
+            return {"message": "user deleted succesfully"}
+        else:
+            raise HTTPException(status_code=400, detail="Unable to remove user")
+    else:
+        raise HTTPException(status_code=401, detail="Invalid token")

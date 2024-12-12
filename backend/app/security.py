@@ -1,3 +1,4 @@
+from fastapi import Header, HTTPException
 from passlib.context import CryptContext
 import jwt
 
@@ -34,3 +35,12 @@ class UserSessionManager:
             return token_data
         except jwt.PyJWTError:
             None
+    
+    def token_verification(self, token: str = Header(...)) -> dict:
+        token_data = self.verify_session_token(token)
+
+        if not token_data or "id" not in token_data:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        return token_data
+
