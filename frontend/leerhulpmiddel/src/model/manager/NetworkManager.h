@@ -10,15 +10,20 @@ public:
      NetworkManager();
 
 	void login(QString username, QString password);
+	void logout();
 	void registerUser(QString username, QString password);
+	void getLoggedInStatus();
 private:
 	QNetworkAccessManager* networkManager;
 
 	void saveSessionCookie(QString sessionCookie);
 	QString getSessionCookie() const;
+	void setLoginStatus(bool status);
 signals:
 	void loginFailed();
 	void registerFailed();
 	void loginSuccess();
+	void loggedIn();
+	void loggedOut();
 };
 

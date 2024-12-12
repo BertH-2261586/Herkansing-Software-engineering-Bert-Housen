@@ -40,7 +40,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\manager\NetworkManager.cpp" />
     <ClCompile Include="src\view\Login\LoginView.cpp" />
-    <ClCompile Include="src\Controller\LoginController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />

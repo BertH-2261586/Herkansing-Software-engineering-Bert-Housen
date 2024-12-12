@@ -12,6 +12,9 @@ NetworkManager::NetworkManager()
 	networkManager = new QNetworkAccessManager(this);
 }
 
+/*
+* Sends request to webserver to validate user login
+*/
 void NetworkManager::login(QString username, QString password)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/user/login"));
@@ -39,6 +42,7 @@ void NetworkManager::login(QString username, QString password)
 		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object();
 		if (responseData.contains("token") && responseData["token"].isString()) {
 			saveSessionCookie(responseData["token"].toString());
+			setLoginStatus(true);
 		}
 
 		reply->deleteLater();
@@ -47,6 +51,17 @@ void NetworkManager::login(QString username, QString password)
 
 }
 
+/*
+* Logs user out
+*/
+void NetworkManager::logout() {
+	setLoginStatus(false);
+	saveSessionCookie("");		//Clear session cookie
+}
+
+/*
+* Send request to webserver to create user
+*/
 void NetworkManager::registerUser(QString username, QString password)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/user/register"));
@@ -74,11 +89,26 @@ void NetworkManager::registerUser(QString username, QString password)
 		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object();
 		if (responseData.contains("token") && responseData["token"].isString()) {
 			saveSessionCookie(responseData["token"].toString());
+			setLoginStatus(true);
 		}		
 		
 		reply->deleteLater();
 		emit loginSuccess();
 	});
+}
+
+void NetworkManager::getLoggedInStatus() {
+	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+	QString loginStatus = settings.value("loggedIn").toString();
+
+	if (loginStatus == "true") {
+		qDebug() << "logged in";
+		emit loggedIn();
+	}
+	else {
+		qDebug() << "logged out";
+		emit loggedOut();
+	}
 }
 
 /*
@@ -107,4 +137,15 @@ QString NetworkManager::getSessionCookie() const {
 	}
 
 	return sessionCookie;
+}
+
+/*
+* Sets login status
+* @param status: logged in or not?
+* @post login status set
+*/
+void NetworkManager::setLoginStatus(bool status) {
+	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+
+	settings.setValue("loggedIn", status);
 }

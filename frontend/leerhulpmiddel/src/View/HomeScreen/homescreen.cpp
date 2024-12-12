@@ -1,13 +1,14 @@
 #include "homescreen.h"
 #include "../Examination/createExaminationView.h"
 #include "../Login/LoginView.h"
-#include "../../Controller/LoginController.h"
-#include "../../model/manager/NetworkManager.h"
 #include "../leerhulpmiddelmainwindow.h"
 #include <QDebug>
 
 HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent) : m_mainWindow(parent), QWidget(parent)
 {
+    m_networkManager = new NetworkManager();
+    m_loginController = new LoginController(m_networkManager);
+
     QVBoxLayout* main_container = new QVBoxLayout();
     main_container->setContentsMargins(0, 0, 0, 0);
     main_container->setSpacing(0);
@@ -27,6 +28,11 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
     setLayout(main_container);
 }
 
+HomeScreen::~HomeScreen() {
+    delete m_loginController;
+    delete m_networkManager;
+}
+
 
 QWidget* HomeScreen::GenerateTopButtonBar()
 {
@@ -38,19 +44,36 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
 
     QPushButton* logoutButton = new QPushButton("Logout");
-    logoutButton->hide();
-    //TODO: connect logout
+    logoutButton->setFixedSize(100, 30);    //Fixed size to prevent Qt from throwing errors when switching between hide and show
 
     QPushButton* loginButton = new QPushButton("Login/Register");
-    connect(loginButton, &QPushButton::pressed, this, [=] {
-        NetworkManager* networkManager = new NetworkManager();
-        LoginView* loginView = new LoginView(new LoginController(networkManager));
+    loginButton->setFixedSize(100, 30);
 
-        connect(networkManager, &NetworkManager::loginFailed,
+    connect(m_networkManager, &NetworkManager::loggedIn, this, [=] {
+        loginButton->hide();
+        logoutButton->show();
+    });
+
+    connect(m_networkManager, &NetworkManager::loggedOut, this, [=] {
+        logoutButton->hide();
+        loginButton->show();
+    });
+    
+    connect(logoutButton, &QPushButton::pressed, this, [=] {
+        m_loginController->logout();
+
+        loginButton->show();
+        logoutButton->hide();
+    });
+
+    connect(loginButton, &QPushButton::pressed, this, [=] {
+        LoginView* loginView = new LoginView(new LoginController(m_networkManager));
+
+        connect(m_networkManager, &NetworkManager::loginFailed,
             loginView, &LoginView::failedLoginFeedback);
-        connect(networkManager, &NetworkManager::registerFailed,
+        connect(m_networkManager, &NetworkManager::registerFailed,
             loginView, &LoginView::failedRegisterFeedback);
-        connect(networkManager, &NetworkManager::loginSuccess,
+        connect(m_networkManager, &NetworkManager::loginSuccess,
             this, [=] {
                 loginButton->hide();
                 logoutButton->show();
@@ -61,6 +84,7 @@ QWidget* HomeScreen::GenerateTopButtonBar()
         m_mainWindow->PushMainViewport(loginView);
     });
 
+    m_loginController->getLoggedInStatus();
 
     QHBoxLayout* container = new QHBoxLayout();
     container->addWidget(startExamButton);

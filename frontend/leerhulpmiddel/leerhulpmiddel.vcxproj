@@ -96,7 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Controller\examinationController.cpp" />
-    <ClCompile Include="src\Controller\LoginController.cpp" />
     <ClCompile Include="src\Controller\questioncontroller.cpp" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Controller\questionsetcontroller.cpp" />

@@ -4,6 +4,9 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 
+#include "../../Controller/LoginController.h"
+#include "../../model/manager/NetworkManager.h"
+
 class LeerhulpmiddelMainWindow;
 
 #include "qwidget.h"
@@ -14,6 +17,7 @@ class HomeScreen: public QWidget
 {
 public:
     HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent);
+    ~HomeScreen();
 
 private:
     QWidget* GenerateTopButtonBar();
@@ -24,6 +28,8 @@ private:
 
     LeerhulpmiddelMainWindow* m_mainWindow;
 
+    NetworkManager* m_networkManager;
+    LoginController* m_loginController;
 public slots:
     void DisplayWidget(QWidget* displayWidget);
 };
