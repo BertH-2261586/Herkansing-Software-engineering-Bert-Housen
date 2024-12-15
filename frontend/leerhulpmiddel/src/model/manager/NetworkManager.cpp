@@ -4,12 +4,13 @@
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QSettings>
+#include <QJsonArray>
 
 #include "../../Exceptions/NoSavedSessionException.h"
 
 NetworkManager::NetworkManager()
 {
-	networkManager = new QNetworkAccessManager(this);
+	m_networkManager = new QNetworkAccessManager(this);
 }
 
 void NetworkManager::login(QString username, QString password)
@@ -24,7 +25,7 @@ void NetworkManager::login(QString username, QString password)
 
 	QByteArray data = QJsonDocument(json).toJson();
 
-	QNetworkReply* reply = networkManager->post(request, data);
+	QNetworkReply* reply = m_networkManager->post(request, data);
 	connect(reply, &QNetworkReply::finished, [this,reply]() {
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
@@ -57,7 +58,7 @@ void NetworkManager::registerUser(QString username, QString password)
 
 	QByteArray data = QJsonDocument(json).toJson();
 
-	QNetworkReply* reply = networkManager->post(request, data);
+	QNetworkReply* reply = m_networkManager->post(request, data);
 	connect(reply, &QNetworkReply::finished, [this, reply]() {
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
@@ -75,7 +76,7 @@ void NetworkManager::registerUser(QString username, QString password)
 		}		
 		
 		reply->deleteLater();
-		});
+	});
 }
 
 /*
@@ -105,3 +106,53 @@ QString NetworkManager::getSessionCookie() {
 
 	return sessionCookie;
 }
+
+void NetworkManager::getUsersByPage(const int page, const QString userInput)
+{
+	// Build the URL
+	QString url = "http://localhost:80/user/getUsers?page=" + QString::number(page);
+	if (!userInput.isEmpty()) {
+		// Append userInput if it's not empty
+		url += "&search=" + QUrl::toPercentEncoding(userInput);			
+	}
+	QNetworkRequest request(url);
+	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+	// Send the request
+	QNetworkReply* reply = m_networkManager->get(request);
+
+	connect(reply, &QNetworkReply::finished, this, [this, reply]() { 
+		receiveUserByPageHandler(reply);
+	});
+}
+
+void NetworkManager::receiveUserByPageHandler(QNetworkReply* reply) {
+	// Check if an error has occurred
+	if (reply->error() != QNetworkReply::NoError) {
+		qDebug() << "Error fetching users:" << reply->errorString();
+		return;
+	}
+
+	// Parse the response data as a JSON array
+	QByteArray response = reply->readAll();
+	QJsonDocument doc = QJsonDocument::fromJson(response);
+	// Check if the received data is an array of users
+	if (!doc.isArray()) {
+		qDebug() << "Error: Expected a JSON array!";
+		reply->deleteLater();
+		return;
+	}
+
+	// Set the list of received users
+	QList<QString> userList;
+	QJsonArray usersArray = doc.array();
+	for (const QJsonValue& value : usersArray) {
+		userList.append(value.toString());
+	}
+
+	reply->deleteLater();
+
+	// Send a signal to the controller with all the users 
+	emit usersFetched(userList);
+}
+

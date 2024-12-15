@@ -95,7 +95,9 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Controller\addFriendController.cpp" />
     <ClCompile Include="src\Controller\examinationController.cpp" />
+    <ClCompile Include="src\Controller\inboxController.cpp" />
     <ClCompile Include="src\Controller\LoginController.cpp" />
     <ClCompile Include="src\Controller\questioncontroller.cpp" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
@@ -114,6 +116,7 @@
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Question.cpp" />
+    <ClCompile Include="src\View\add_friends\add_friend_view.cpp" />
     <ClCompile Include="src\view\chooseQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp" />
@@ -146,6 +149,8 @@
     <QtMoc Include="src\Controller\examinationController.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\Controller\addFriendController.h" />
+    <ClInclude Include="src\Controller\inboxController.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
     <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
@@ -160,6 +165,7 @@
     <ClInclude Include="src\model\fileManager.h" />
     <QtMoc Include="src\model\manager\NetworkManager.h" />
     <QtMoc Include="src\View\HomeScreen\inboxView.h" />
+    <QtMoc Include="src\View\add_friends\add_friend_view.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
     <QtMoc Include="src\view\Login\LoginView.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />

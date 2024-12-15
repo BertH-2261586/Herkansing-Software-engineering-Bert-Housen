@@ -42,6 +42,9 @@
     <ClCompile Include="src\Controller\LoginController.cpp" />
     <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
     <ClCompile Include="src\View\HomeScreen\inboxView.cpp" />
+    <ClCompile Include="src\View\add_friends\add_friend_view.cpp" />
+    <ClCompile Include="src\Controller\inboxController.cpp" />
+    <ClCompile Include="src\Controller\addFriendController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />
@@ -78,6 +81,8 @@
     <QtMoc Include="src\view\Login\LoginView.h" />
     <QtMoc Include="src\View\HomeScreen\inboxView.h" />
     <QtMoc Include="src\view\HomeScreen\homescreen.h" />
+    <QtMoc Include="src\View\add_friends\add_friend_view.h" />
+    <QtMoc Include="src\Controller\addFriendController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\questioncontroller.h" />
@@ -103,5 +108,6 @@
     <ClInclude Include="src\view\style.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
     <ClInclude Include="src\Exceptions\NoSavedSessionException.h" />
+    <ClInclude Include="src\Controller\inboxController.h" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include "../Login/LoginView.h"
 #include "../../Controller/LoginController.h"
 #include "../leerhulpmiddelmainwindow.h"
+#include "../add_friends/add_friend_view.h"
 
 HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent) : m_mainWindow(parent), QWidget(parent)
 {
@@ -95,7 +96,9 @@ void HomeScreen::setAddFriendButton(QHBoxLayout* container) {
     // Create the inbox button
     QPushButton* addFriendButton = new QPushButton("");
     setIconButton(addFriendButton, "resources/add-friend.png");
-    //connect(addFriendButton, &QPushButton::pressed, this, &HomeScreen::startInboxAnimation);
+    connect(addFriendButton, &QPushButton::pressed, this, [=]() {
+        m_mainWindow->PushMainViewport(new AddFriendView());
+    });
 
     // Add the widget to the container
     container->addWidget(addFriendButton);

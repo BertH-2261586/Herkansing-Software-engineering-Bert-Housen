@@ -13,17 +13,20 @@ public:
 private:
 	void setupValidators();
 	void hideErrorLabels();
-	LoginController* loginController;
-	QLineEdit* usernameEdit;
-	QLineEdit* passwordEdit;
-	QLineEdit* passwordConfirmEdit;
-	QLabel* usernameErrorLabel;
-	QLabel* passwordErrorLabel;
-	QLabel* passwordConfirmErrorLabel;
-	QLabel* titleLabel;
-	QPushButton* loginBtn;
-	QPushButton* registerBtn;
-	QPushButton* goBackToLoginBtn;
+
+	LoginController* m_loginController;
+
+	QLineEdit* m_usernameEdit;
+	QLineEdit* m_passwordEdit;
+	QLineEdit* m_passwordConfirmEdit;
+	QLabel* m_usernameErrorLabel;
+	QLabel* m_passwordErrorLabel;
+	QLabel* m_passwordConfirmErrorLabel;
+	QLabel* m_titleLabel;
+	QPushButton* m_loginBtn;
+	QPushButton* m_registerBtn;
+	QPushButton* m_goBackToLoginBtn;
+
 private slots:
 	void changeToLogin();
 	void changeToRegister();
