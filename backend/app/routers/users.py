@@ -50,3 +50,16 @@ async def remove_user(user: UserIdInput, token_data: dict = Depends(session_mana
             raise HTTPException(status_code=400, detail="Unable to remove user")
     else:
         raise HTTPException(status_code=401, detail="Invalid token")
+    
+@router.post("/invites/", response_model=dict)
+async def get_user_invites(user: UserIdInput, token_data: dict = Depends(session_manager.token_verification), db: UserManager = Depends(get_database)):
+    if token_data["id"] == user.id:
+        invites = db.get_user_invites(user.id)
+
+        if invites:
+            return {"message": "User has invites", "invites": invites}  
+        else:
+            return {"message": "user has no group invites"}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid token")
+

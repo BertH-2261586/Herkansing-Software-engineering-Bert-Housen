@@ -1,5 +1,5 @@
 from sqlmodel import create_engine, Session, select
-from .models import User, UserBase, Group
+from .models import User, UserBase, Group, GroupInvite
 
 DATABASE_URL = "mysql+pymysql://user:password@mysql-db:3306/dbname"
 
@@ -32,7 +32,7 @@ class UserManager:
         user = self.session.exec(select(User).filter_by(id=user_id)).first()
 
         if user:
-            self.group_manager.remove_owned_groups(user_id)
+            #self.group_manager.remove_owned_groups(user_id)
 
             self.session.delete(user)
             self.session.commit()
@@ -40,6 +40,11 @@ class UserManager:
             return True
         else:
             return False
+        
+    def get_user_invites(self, user_id):
+        """Gets all user invites"""
+        return self.session.exec(select(User).filter_by(id=user_id)).first().group_invites
+
 
 class GroupManager:
     def __init__(self, session : Session):
@@ -80,5 +85,18 @@ class GroupManager:
             return True
         else:
             return False
+    
+    def invite_user(self, group_id, user_id):
+        """Invites user to group returns true if success"""
+        group = self.session.exec(select(Group).filter_by(id=group_id)).first()
+        user = self.session.exec(select(User).filter_by(id=user_id)).first()
+
+        if group and user:
+            self.session.add(GroupInvite(group_id=group_id, user_id=user_id))
+            self.session.commit()
+            return True
+        
+        return False
+
 
 
