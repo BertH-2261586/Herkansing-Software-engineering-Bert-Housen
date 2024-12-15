@@ -99,6 +99,14 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 
 	QNetworkReply* reply = networkManager->post(request, compressedData); 
 	connect(reply, &QNetworkReply::finished, [this, reply]() { 
+
+		//TEMP TO CHECK IF IT WORKS REMOVE ONCE API IS DONE
+		emit shareSuccess("1234");
+		reply->deleteLater();
+		return;
+
+
+
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) { 
 			QByteArray responseData = reply->readAll(); 

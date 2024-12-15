@@ -360,27 +360,27 @@ QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
     buffer.open(QIODevice::WriteOnly);
 
     #if defined(Q_OS_WIN)
+
     // Construct a PowerShell command to create a zip file using Compress-Archive
     QString script = "Compress-Archive -Path ";
     for (const QString& path : questionSetPaths) {
         // Convert paths to Windows format and append them to the PowerShell script
         script += "\"" + (getPath() + "/" + path).replace("/", "\\") + "\",";
     }
+
     script.chop(1); // Remove the trailing comma from the list of paths
     script += " -DestinationPath \"$env:TEMP\\temp.zip\""; // Use a temporary file
 
     QStringList args;
-    args << "-Command" << script; // Add the constructed script to PowerShell arguments
+    args << "-Command" << script;
 
     zipProcess.start("powershell", args);
 
-    // Wait for the process to complete
     if (!zipProcess.waitForFinished() || zipProcess.exitCode() != 0) {
         qWarning() << "PowerShell zipping failed:" << zipProcess.readAllStandardError();
         return QByteArray();
     }
 
-    // Read the generated zip file into QByteArray
     QFile tempFile(qgetenv("TEMP") + "/temp.zip");
     if (tempFile.open(QIODevice::ReadOnly)) {
         zipData = tempFile.readAll();
