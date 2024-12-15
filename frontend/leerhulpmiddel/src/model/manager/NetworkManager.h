@@ -12,6 +12,7 @@ public:
 	void login(QString username, QString password);
 	void registerUser(QString username, QString password);
 	void shareQuestionSets(QList<QString> questionSetPaths);
+	void shareQuestionSetsWithFriends(QList<QString> FriendIds, int code);
 private:
 	QNetworkAccessManager* networkManager;
 

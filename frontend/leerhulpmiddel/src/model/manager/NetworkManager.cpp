@@ -126,6 +126,17 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 	});
 }
 
+/**
+* Notifies the server to share the question sets with the friends
+* @param FriendIds: list of friend IDs
+* @param code: code of the question set
+*/
+void NetworkManager::shareQuestionSetsWithFriends(QList<QString> FriendIds, int code)
+{
+	QNetworkRequest request(QUrl("http://localhost:80/friend/"));
+
+}
+
 
 
 /*
