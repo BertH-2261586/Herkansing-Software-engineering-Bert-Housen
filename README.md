@@ -36,7 +36,12 @@
 
 [Link](docs/UC_maak_vragenset.md) naar de fully dressed use case "Maak vragenset"
 
+[Link](docs/UC_maak_groep_aan.md) naar de fully dressed use case "Maak groep aan"
+
+[Link](docs/UC_nodig_gebruikers_uit_tot_groep.md) naar de fully dressed use case "Nodig gebruikers uit tot groep"
+
 [Link](docs/UC_login.md) naar de fully dressed use case "Login"
+
 
 [Link](docs/Casual_use_cases.md) naar de pagina van alle casual use cases
 
