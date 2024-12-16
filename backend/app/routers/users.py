@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlmodel import Session
 from ..database import *
-from ..models import User, UserBase, UserLogin, UserIdInput
+from ..models import User, UserBase, UserLogin, UserIdInput, GroupInviteIdInput
 from ..security import PasswordHasher, UserSessionManager
 
 router = APIRouter()
@@ -60,6 +60,26 @@ async def get_user_invites(user: UserIdInput, token_data: dict = Depends(session
             return {"message": "User has invites", "invites": invites}  
         else:
             return {"message": "user has no group invites"}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+@router.post("/invites/accept", response_model=dict)
+async def accept_user_invite(invite: GroupInviteIdInput, token_data: dict = Depends(session_manager.token_verification), db: UserManager = Depends(get_database)):
+    if db.has_invite_by_id(token_data["id"], invite.id):
+        if db.accept_invite(invite.id):
+            return {"message": "Successfully accepted invite"}  
+        else:
+            return {"message": "Failed to accept invite"}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+@router.post("/invites/reject", response_model=dict)
+async def reject_user_invite(invite: GroupInviteIdInput, token_data: dict = Depends(session_manager.token_verification), db: UserManager = Depends(get_database)):
+    if db.has_invite_by_id(token_data["id"], invite.id):
+        if db.reject_invite(invite.id):
+            return {"message": "Successfully rejected invite"}  
+        else:
+            return {"message": "Failed to reject invite"}
     else:
         raise HTTPException(status_code=401, detail="Invalid token")
 

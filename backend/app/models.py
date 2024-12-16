@@ -39,9 +39,20 @@ class GroupInviteInput(SQLModel):
     group_id: int
     user_id: int
 
+class GroupInviteIdInput(SQLModel):
+    id: int
+
 class GroupInvite(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     group_id: int = Field(default=None, foreign_key="group.id", ondelete="CASCADE")
     user_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
 
     invited_user: User = Relationship(back_populates="group_invites")
+
+class GroupMember(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    group_id: int = Field(default=None, foreign_key="group.id", ondelete="CASCADE")
+    user_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
+
+
+
