@@ -10,9 +10,19 @@
 
 NetworkManager::NetworkManager()
 {
-	networkManager = new QNetworkAccessManager(this);
+	m_networkManager = new QNetworkAccessManager(this);
 }
 
+
+/**
+ * Logs in a user with the provided username and password.
+ * Sends a POST request to the server with the login credentials.
+ * If the login is successful, saves the session token.
+ * Emits loginSuccess() signal on success, loginFailed() signal on failure.
+ *
+ * @param username The username of the user.
+ * @param password The password of the user.
+ */
 void NetworkManager::login(QString username, QString password)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/user/login"));
@@ -25,7 +35,7 @@ void NetworkManager::login(QString username, QString password)
 
 	QByteArray data = QJsonDocument(json).toJson();
 
-	QNetworkReply* reply = networkManager->post(request, data);
+	QNetworkReply* reply = m_networkManager->post(request, data);
 	connect(reply, &QNetworkReply::finished, [this,reply]() {
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
@@ -48,6 +58,11 @@ void NetworkManager::login(QString username, QString password)
 
 }
 
+/**
+* Sends request to server to reqister User
+* @param username: string of username
+* @param password: string of password
+*/
 void NetworkManager::registerUser(QString username, QString password)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/user/register"));
@@ -59,7 +74,7 @@ void NetworkManager::registerUser(QString username, QString password)
 
 	QByteArray data = QJsonDocument(json).toJson();
 
-	QNetworkReply* reply = networkManager->post(request, data);
+	QNetworkReply* reply = m_networkManager->post(request, data);
 	connect(reply, &QNetworkReply::finished, [this, reply]() {
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
@@ -80,7 +95,7 @@ void NetworkManager::registerUser(QString username, QString password)
 }
 
 /*
-*
+* Makes a zip from all questions and sends it to server
 * @param questionSetPaths: list of paths to question sets
 */
 void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
@@ -97,7 +112,7 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 		return;
 	}
 
-	QNetworkReply* reply = networkManager->post(request, compressedData); 
+	QNetworkReply* reply = m_networkManager->post(request, compressedData); 
 	connect(reply, &QNetworkReply::finished, [this, reply]() { 
 
 		//TEMP TO CHECK IF IT WORKS REMOVE ONCE API IS DONE
@@ -134,7 +149,7 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 void NetworkManager::shareQuestionSetsWithFriends(QList<QString> FriendIds, int code)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/friend/"));
-
+	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 }
 
 

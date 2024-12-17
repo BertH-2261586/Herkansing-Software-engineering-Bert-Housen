@@ -14,7 +14,7 @@ public:
 	void shareQuestionSets(QList<QString> questionSetPaths);
 	void shareQuestionSetsWithFriends(QList<QString> FriendIds, int code);
 private:
-	QNetworkAccessManager* networkManager;
+	QNetworkAccessManager* m_networkManager;
 
 	void saveSessionCookie(QString sessionCookie);
 	QString getSessionCookie() const;

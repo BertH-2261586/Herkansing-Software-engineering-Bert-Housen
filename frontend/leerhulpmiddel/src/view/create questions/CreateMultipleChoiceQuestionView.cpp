@@ -23,12 +23,14 @@ CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* pare
 
 
 	m_layout = new QVBoxLayout(this);
-	
+	m_layout->addStretch();
+
 
 
 	QWidget* contentWidget = new QWidget(this);
 	contentWidget->setLayout(m_layout);
 
+	
 
 	QScrollArea* scrollArea = new QScrollArea(this);
 	scrollArea->setWidget(contentWidget);  // Set the scrollable content widget
@@ -42,8 +44,16 @@ CreateMultipleChoiceQuestionView::CreateMultipleChoiceQuestionView(QWidget* pare
 	outerLayout->addWidget(btnAddAnswer);
 	outerLayout->addWidget(scrollArea);
 	setLayout(outerLayout);
+
+	//add 2 answer slots in the beginning
+	addAnswer();
+	addAnswer();
 }
 
+
+/**
+* @brief Get the question from the text edit
+*/
 QString CreateMultipleChoiceQuestionView::getQuestion() const {
 	if (m_txtQuestion->toPlainText().isEmpty())
 	{
@@ -52,6 +62,11 @@ QString CreateMultipleChoiceQuestionView::getQuestion() const {
 	return m_txtQuestion->toPlainText();
 }
 
+/**
+* Creates an answer object from the answers and correct answers in the view
+* @return Answer object: a list of answers and a list of the indexes of the correct answers
+* @throws EmptyFieldException if an answer is empty
+*/
 Answer CreateMultipleChoiceQuestionView::getAnswer(){
 
 	QList<QString> answers;
@@ -73,24 +88,31 @@ Answer CreateMultipleChoiceQuestionView::getAnswer(){
 
 		if (qobject_cast<QCheckBox*>(answerLayout->itemAt(2)->widget())->isChecked())
 		{
-			correctAnswers.append(count);
+			correctAnswers.append(count); //add the index of the correct answer
 		}
 		count++;
 
 
+	}
+	if (correctAnswers.isEmpty())
+	{
+		throw EmptyFieldException("At least 1 answer must be selected as correct");
 	}
 	return Answer(answers,correctAnswers);
 }
 
 
 
+
+/**
+* Adds an answer dield to the view Creates a toast message if the maximum amount of answers is reached
+*/
 void CreateMultipleChoiceQuestionView::addAnswer() {
 
-	if (m_layout->count() > 15)
+	if (m_layout->count() - 1 > 15)
 	{
 		ToastMessage* toast = new ToastMessage("You can only add 15 answers", this);
-		toast->setFixedWidth(200);  // Adjust width as needed
-		toast->move((width() - toast->width()) / 2, height() - 50);  // Position near the bottom center
+		toast->move((width() - toast->width()) / 2, height() - 70);  // Position near the bottom center
 		toast->show();
 	}
 	else
@@ -114,13 +136,43 @@ void CreateMultipleChoiceQuestionView::addAnswer() {
 		answerLayout->addWidget(removeButton);
 		answerLayout->addWidget(correctCheckBox);
 
+
+
 		m_layout->addLayout(answerLayout);
+
 
 		connect(removeButton, &QPushButton::clicked, [this, answerLayout]() {
 			m_layout->removeItem(answerLayout);
-			answerLayout->deleteLater();
+			QLayoutItem* child;
+			while ((child = answerLayout->takeAt(0)) != nullptr) {
+				delete child->widget(); // delete the widget
+				delete child;   // delete the layout item
+			}
+			delete answerLayout;
+			updateRemoveButtonState();
 			});
 
+		updateRemoveButtonState();
 		update();
+
+	}
+}
+
+/**
+* Updates the state of the remove buttons if 2 or less answers disables the deletion of answers
+*/
+void CreateMultipleChoiceQuestionView::updateRemoveButtonState()
+{
+
+	bool enableRemove = m_layout->count() > 3;  // 2 answer fields + 1 stretch
+
+	for (QObject* child : m_layout->children()) { 
+		QHBoxLayout* answerLayout = qobject_cast<QHBoxLayout*>(child); 
+		if (answerLayout) {
+			QPushButton* removeButton = qobject_cast<QPushButton*>(answerLayout->itemAt(1)->widget()); 
+			if (removeButton) { 
+				removeButton->setEnabled(enableRemove);
+			}
+		}
 	}
 }

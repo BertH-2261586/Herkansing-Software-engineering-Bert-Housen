@@ -99,15 +99,14 @@ void CreateQuestionView::confirm() {
 
 	}
 	catch (const EmptyFieldException &e) {
+		qDebug() << "Test:" << e.what();
 		ToastMessage* toast = new ToastMessage(e.what(), this);
-		toast->setFixedWidth(200);
-		toast->move((width() - toast->width()) / 2, height() - 50);
+		toast->move((width() - toast->width()) / 2, height() - 70);
 		toast->show();
 	}
 	catch (const std::exception &e) {
 		ToastMessage* toast = new ToastMessage(e.what(), this);
-		toast->setFixedWidth(400);
-		toast->move((width() - toast->width()) / 2, height() - 50);
+		toast->move((width() - toast->width()) / 2, height() - 70);
 		toast->show();
 	}
 

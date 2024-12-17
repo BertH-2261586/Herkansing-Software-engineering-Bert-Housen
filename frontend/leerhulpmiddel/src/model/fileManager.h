@@ -14,7 +14,7 @@
 
 using namespace std;
 
-// De klasse voor alle files en folders te managen omremt vragen en vragensets
+// The FileManager class is responsible for loading and saving question sets and questions to and from JSON files.
 class FileManager {
 public:
     QList<Questionset*> loadQuestionSetsObject(const QString path = "") const;

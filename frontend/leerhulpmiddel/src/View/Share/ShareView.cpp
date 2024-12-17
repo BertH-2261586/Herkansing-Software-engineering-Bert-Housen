@@ -23,6 +23,13 @@ ShareView::ShareView(ShareController* controller, QWidget* parent) : QWidget(par
 	move(globalCenter.x() - width() / 2, globalCenter.y() - height() / 2);
 
 	m_layout = new QVBoxLayout(this);
+
+
+	//Sets up gray overlay in background
+	m_overlay->resizeToParent();
+	m_overlay->show();
+
+
 	setUpQuestionSetChooser();
 }
 
@@ -42,14 +49,16 @@ void ShareView::showShareCode(QString code)
 		delete item->widget();
 		delete item;
 	}
+
 	
 	QHBoxLayout* codeBox = new QHBoxLayout();
 	codeBox->setAlignment(Qt::AlignCenter);
-	// Create a label to display the sharing code
+
+
 	QLabel* codeLabel = new QLabel("Your share code: " + code, this);
 	codeLabel->setStyleSheet("font-size: 18px; font-weight: bold;");
 
-	// Create a button to copy the code to the clipboard
+
 	QPushButton* copyButton = new QPushButton();
 	copyButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy));
 	copyButton->setToolTip("Copy to clipboard");
@@ -60,10 +69,12 @@ void ShareView::showShareCode(QString code)
 		clipboard->setText(code);
 	});
 
+
 	QLabel* friendsLabel = new QLabel("Share with friends:", this);
 	QListWidget* friendsList = new QListWidget(this);
 	friendsList->setSelectionMode(QAbstractItemView::MultiSelection);
 
+	// Dummy data REPLACE WHEN CAN GET ACTUAL DATA
 	QStringList friends = { "Alice", "Bob", "Charlie", "Diana" };
 
 	for (QString i : friends) {
@@ -71,9 +82,9 @@ void ShareView::showShareCode(QString code)
 		item->setData(Qt::UserRole, "1234"); // Friend ID
 	}
 
-	// Create a send button
-	QPushButton* sendButton = new QPushButton(tr("Send to Friend"), this);
-	connect(sendButton, &QPushButton::clicked, this, [this,friendsList,code]() {
+	QPushButton* sendBtn = new QPushButton("Send to Friend", this);
+	connect(sendBtn, &QPushButton::clicked, this, [this,friendsList,code]() {
+
 		QList<QListWidgetItem*> selectedItems = friendsList->selectedItems();
 
 		if (!selectedItems.isEmpty()) {
@@ -88,7 +99,6 @@ void ShareView::showShareCode(QString code)
 		}
 		else {
 			ToastMessage* toast = new ToastMessage("No Friends Selected", this);
-			toast->setFixedWidth(400);
 			toast->move((width() - toast->width()) / 2, height() - 70);
 			toast->show();
 		}
@@ -100,23 +110,25 @@ void ShareView::showShareCode(QString code)
 	m_layout->addSpacing(20);
 	m_layout->addWidget(friendsLabel);
 	m_layout->addWidget(friendsList);
-	m_layout->addWidget(sendButton);
+	m_layout->addWidget(sendBtn);
 }
 
+
+/**
+* Toast Message to show that sharing question sets failed
+*/
 void ShareView::showShareFailed()
 {
 	ToastMessage* toast = new ToastMessage("Failed to share question sets, Something Went Wrong", this);
-	toast->setFixedWidth(400);
 	toast->move((width() - toast->width()) / 2, height() - 70);
 	toast->show();
 	m_shareButton->setDisabled(false);
 }
 
-ShareView::~ShareView()
-{
-	m_overlay->deleteLater();
-}
 
+/**
+* Sets up the ChooseQuestionView with connects to share button
+*/
 void ShareView::setUpQuestionSetChooser()
 {
 	m_shareButton = new QPushButton("Share selected questionsets", this);
@@ -124,8 +136,6 @@ void ShareView::setUpQuestionSetChooser()
 
 	ChooseQuestionView* chooseQuestionView = new ChooseQuestionView(true, true);
 
-	m_overlay->resizeToParent();
-	m_overlay->show();
 
 	m_layout->addWidget(chooseQuestionView);
 	m_layout->addWidget(m_shareButton);
@@ -136,7 +146,6 @@ void ShareView::setUpQuestionSetChooser()
 		QList<QString> questionSetPaths = chooseQuestionView->getQuestionSetPaths();
 		if (questionSetPaths.size() == 0) {
 			ToastMessage* toast = new ToastMessage("You must select at least one question set", this);
-			toast->setFixedWidth(400);
 			toast->move((width() - toast->width()) / 2, height() - 70);
 			toast->show();
 		}
@@ -149,3 +158,7 @@ void ShareView::setUpQuestionSetChooser()
 
 
 
+ShareView::~ShareView()
+{
+	m_overlay->deleteLater();
+}

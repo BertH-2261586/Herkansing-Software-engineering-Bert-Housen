@@ -132,7 +132,6 @@ void CreateExaminationView::startExamination() {
     // No question set was selected, so show a toast message to alert the user
     if (questionSetPath == "") {
         ToastMessage* toast = new ToastMessage("You have to select a question set", this);
-        toast->setFixedWidth(200);  
         toast->move((width() - toast->width()) / 2, height() - 85);
         toast->show();
         return;

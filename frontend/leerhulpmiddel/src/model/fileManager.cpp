@@ -16,51 +16,52 @@
 
 namespace filesystem = std::filesystem; 
 
-// Functie om het basisprojectpad te krijgen
+// Function te get the basic path to the project
 QString FileManager::getPath() const {
-    // Dit haalt het pad van de .exe file op. Let op dit is niet het pad van het project
+    // Gets the path to the .exe file. Pay attention this isnt the file to the project folder
     QString projectDirPath = QCoreApplication::applicationDirPath();
 
     QStringList segments = projectDirPath.split('/');
-    // Verwijder de laatste 2 segmenten om van het pad naar de .exe file om naar de project folder te gaan
-    segments.removeLast(); // Verwijder 'Debug'
+    // Remove the last 2 segments of the path to the .exe file to get to the project folder
+    segments.removeLast(); // Remove 'Debug'
     if (segments.last() != "frontend")
     {
-        segments.removeLast(); // Verwijder 'x64'
+        segments.removeLast(); // Remove 'x64'
     }
 
-    // Voeg de segmenten weer samen tot één pad
+    // Combine all the segments
     QString newPath = segments.join('/');
-    return newPath + "/leerhulpmiddel/questionSets";        // Voeg het pad toe voor aan de lokale opslag plaats te geraken
+    return newPath + "/leerhulpmiddel/questionSets";        // Add the questionSets folder to the path for where the question sets are stored locally
 }
 
+
 /**
- * Laadt de vraagensets uit het opgegeven pad.
+ * Loads the question sets from the specified path.
  *
- * @param path De directory waarin de vraagensets zich bevinden. Indien geen path gegeven, wordt de standaardprojectdirectory gebruikt.
- * @return QMap<QString, QVariantList> Map die de mapnaam koppelt aan een lijst met vragen of onderdelen van de vragenset.
- * @throws FolderQuestionSetMovedException als de map niet gevonden kan worden op het basis pad
+ * @param path The directory where the question sets are located. If no path is given, the default project directory is used.
+ * @return QMap<QString, QVariantList> Map that associates the folder name with a list of questions or components of the question set.
+ * @throws FolderQuestionSetMovedException if the folder cannot be found at the base path
  */
 QMap<QString, QVariantList> FileManager::loadQuestionSets(QString path) const {
     if (path.isEmpty()) {
-        // Gebruik het standaardpad als er geen pad is opgegeven
+        // Use the standard path if no path is given
         path = getPath();
     }
 
     QDir dir(path);
 
-    // Controleer of de map bestaat
+    // Control if the map exists
     if (!dir.exists()) {
         throw FolderQuestionSetMovedException("The question set folder is not found on the given path: " + dir.path());
     }
 
-    // Laad bestanden en vragen vanuit de map
+    // Load the file and questions from the given path
     QMap<QString, QVariantList> list = loadFilesAndQuestions(dir);
 
     return list;
 }
 
-// Er wordt een folder voor een nieuwe question set gemaakt
+// Makes a new folder for a new question set
 void FileManager::makeQuestionSet(QString path, QString fileName) const {
     try {
         QString pathName = getPath() /*path*/ + "/" + fileName;
@@ -72,50 +73,50 @@ void FileManager::makeQuestionSet(QString path, QString fileName) const {
 }
 
 /**
- * Hulpfunctie die vragen en onderdelen van de vragenset laadt vanuit een pad.
+ * Helper function that loads questions and components of the question set from a path.
  *
- * @pre dir is een correct pad naar alle opgeslagen vragensets en vragen
- * @param dir De QDir-map waar alle vragen en onderdelen zijn opgeslagen.
- * @param currentDepth De huidige diepte van recursie, om een maximaal niveau te beperken.
- * @return QMap<QString, QVariantList> De inhoud van de map, gegroepeerd per submap.
+ * @pre dir is a correct path to all saved question sets and questions
+ * @param dir The QDir directory where all questions and components are stored.
+ * @param currentDepth The current depth of recursion, to limit a maximum level.
+ * @return QMap<QString, QVariantList> The contents of the directory, grouped by subdirectory.
  */
 QMap<QString, QVariantList> FileManager::loadFilesAndQuestions(const QDir& dir, int currentDepth) const {
-    // Controleer of de maximale diepte is overschreden
+    // Control if the max depth is reached
     const int MAX_DEPTH = 1;
     if (currentDepth > MAX_DEPTH) {
-        return QMap<QString, QVariantList>(); // Return leeg als de maximale diepte is bereikt
+        return QMap<QString, QVariantList>(); // Return empty if the max depth is reached
     }
 
     QMap<QString, QVariantList> folderFiles;
 
-    // Lijst alle submappen
+    // List of all subdirectories in the current directory
     QStringList directories = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    // Doorloop elke submap
+    // Go through all sub directories
     foreach(const QString & dirName, directories) {
-        // Maak een nieuwe QDir aan voor de submap die je recursief gaat doorlopen
+        // Make a new QDir for the sub folder
         QDir subDir(dir.absoluteFilePath(dirName));
         QStringList files = subDir.entryList(QDir::Files);
         QVariantList contents;
 
-        // Ga recursief over de submap heen om dieper te kijken in de structuur
+        // Go recursively through the subfolder
         QMap<QString, QVariantList> subfolderContents = loadFilesAndQuestions(subDir, ++currentDepth);
 
 
-        // Voeg de inhoud van de submap toe aan de volledige mapinhoud
+        // Add the subfolder contents to the main content
         foreach(const QString & subDirName, subfolderContents.keys()) {
             QVariantList subfolderInfo;
-            subfolderInfo.append(subDirName);                       // Voeg de naam van de submap toe
-            subfolderInfo.append(subfolderContents[subDirName]);    // Voeg de inhoud van de submap toe
-            contents.append(QVariant::fromValue(subfolderInfo));    // Voeg de volledige submap-info toe aan inhoud
+            subfolderInfo.append(subDirName);                       // Add the name of the subfolder
+            subfolderInfo.append(subfolderContents[subDirName]);    // Add the data of the subfolder
+            contents.append(QVariant::fromValue(subfolderInfo));    // Add the full info for subfolder to the main content
         }
 
-        // Voeg de gevonden files toe aan de inhoudslijst
+        // Add the found files to the content
         foreach(const QString& fileName, files) {
             contents.append(fileName);
         }
 
-        // Sla de inhoud op in de map, met de mapnaam als sleutel
+        // Add the data to the map, with the folder name as key
         folderFiles[dirName] = contents;
         currentDepth = 0;
     }
@@ -124,12 +125,12 @@ QMap<QString, QVariantList> FileManager::loadFilesAndQuestions(const QDir& dir, 
 }
 
 /**
- * Slaat een vraag lokaal op in een JSON-bestand op een gespecificeerde locatie.
+ * Saves a question locally in a JSON file at a specified location.
  *
- * @param questionPath Het bestandspad waar de vraag moet worden opgeslagen.
- * @param question De vraag om op te slaan in JSON-formaat.
- * @throw saveException als er een file bestaat met dezelfde naam of als er iets fout gaat met het saven van de file
- * @return bool Geeft true terug als het opslaan succesvol was.
+ * @param questionPath The file path where the question should be saved.
+ * @param question The question to save in JSON format.
+ * @throw saveException if a file with the same name already exists or if something goes wrong while saving the file.
+ * @return bool Returns true if the save was successful.
  */
 void FileManager::saveQuestionToJSON(const QString questionSet, const QString subset, const Question& question) const {
     QJsonObject jsonObject;
@@ -149,7 +150,7 @@ void FileManager::saveQuestionToJSON(const QString questionSet, const QString su
         addedPath += "/" + subset;
     }
 
-    // Open de file in write-only mode. Dit maakt de JSON file indien deze niet bestaat
+    // Open the file in write-only mode. This makes the JSON file incase it doesn't exist
     QString path = getPath()+ addedPath + "/" + QString::fromStdString(question.getName().toStdString()) + ".json";
     QFile file(path);
     if (file.exists()) {
@@ -160,22 +161,21 @@ void FileManager::saveQuestionToJSON(const QString questionSet, const QString su
         throw saveException("Something went wrong while creating the file.");
     }
 
-    // Schrijf de JSON data naar de file
-    file.write(jsonDoc.toJson());  // Converteer de QJsonDocument naar een JSON-formaat
+    // Write the Json data to the file
+    file.write(jsonDoc.toJson());  // Convert the QJsonDocument to JSON-formaat
     file.close();
 }
 
 
 /**
- * Haalt een vraag uit de lokale opslag op en zet deze om naar de gepaste question klasse en deze geeft deze terug mee.
+ * Retrieves a question from local storage and converts it to the appropriate question class, then returns it.
  *
- * @param questionPath Het bestandspad waar de vraag moet worden opgeslagen.
- * @param questionName De naam van de vraag waar naar gezocht wordt.
- * @throw loadException Als de vraag niet bestaat, wanneer de file niet gelezen kan worden, kan niet naar JSON formaat omgezet worden, er wordt een niet bestaande vraag gegeven
- * @return unique_ptr<Question> Geeft de gepaste vraag.
-*/
+ * @param questionPath The file path where the question is stored.
+ * @param questionName The name of the question to search for.
+ * @throw loadException If the question does not exist, if the file cannot be read, if it cannot be converted to JSON format, or if a non-existent question is given.
+ * @return unique_ptr<Question> Returns the appropriate question.
+ */
 unique_ptr<Question> FileManager::loadQuestionFromJSON(const QString questionSet, const QString subset, const QString questionName) const {
-    // Construeer de file path
 
     // Path created from the question set and subset
     QString addedPath = "/" + questionSet;
@@ -187,21 +187,21 @@ unique_ptr<Question> FileManager::loadQuestionFromJSON(const QString questionSet
     QString path = getPath() + addedPath + "/" + questionName + ".json";
     QFile file(path);
 
-    // Check als de vraag bestaat in de gegeven folder
+    // Check if the question file exists
     if (!file.exists()) {
         throw loadException("The file does not exist: " + path);
     }
 
-    // Open de file in read-only mode
+    // Opens the file in read-only mode
     if (!file.open(QIODevice::ReadOnly)) {
         throw loadException("Could not open the file: " + path);
     }
 
-    // Lees de data uit de file
+    // Reads the data from the file
     QByteArray fileData = file.readAll();
-    file.close(); // Sluit de file nadat alle data is gelezen
+    file.close(); // Closes the file after reading
 
-    // Zet het om naar een JSON document
+    // convert to a JSON document
     QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
     if (jsonDoc.isNull() || !jsonDoc.isObject()) {
         throw loadException("Failed to create JSON doc from the file: " + path);
@@ -209,7 +209,7 @@ unique_ptr<Question> FileManager::loadQuestionFromJSON(const QString questionSet
 
     QJsonObject jsonObject = jsonDoc.object();
 
-    // Haal de nodige data uit de file
+    // Gets the needed data from the JSON object
     QString questionTypeString = jsonObject["QuestionType"].toString();
     QuestionType questionType = Question::stringToQuestionType(questionTypeString);
     QString question = jsonObject["Question"].toString();
@@ -362,9 +362,9 @@ QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
     #if defined(Q_OS_WIN)
 
     // Construct a PowerShell command to create a zip file using Compress-Archive
+
     QString script = "Compress-Archive -Path ";
     for (const QString& path : questionSetPaths) {
-        // Convert paths to Windows format and append them to the PowerShell script
         script += "\"" + (getPath() + "/" + path).replace("/", "\\") + "\",";
     }
 
@@ -395,9 +395,8 @@ QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
     #else
     // Construct a zip command for Linux/macOS
     QStringList zipArgs;
-    zipArgs << "-r" << "-"; // Output zip to stdout
+    zipArgs << "-r" << "-"; 
     for (const QString& path : questionSetPaths) {
-        // Add each file/directory to the zip command arguments
         zipArgs << getPath() + "/" + path;
     }
 
