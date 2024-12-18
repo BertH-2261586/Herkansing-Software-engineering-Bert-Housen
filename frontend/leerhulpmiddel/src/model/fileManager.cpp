@@ -385,7 +385,6 @@ QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
     if (tempFile.open(QIODevice::ReadOnly)) {
         zipData = tempFile.readAll();
         tempFile.remove(); // Clean up the temporary file
-        qDebug() << "Successfully read temporary zip file!";
     }
     else {
         qWarning() << "Failed to read temporary zip file!";

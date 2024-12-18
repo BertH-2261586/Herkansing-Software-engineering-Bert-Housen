@@ -99,7 +99,6 @@ void CreateQuestionView::confirm() {
 
 	}
 	catch (const EmptyFieldException &e) {
-		qDebug() << "Test:" << e.what();
 		ToastMessage* toast = new ToastMessage(e.what(), this);
 		toast->move((width() - toast->width()) / 2, height() - 70);
 		toast->show();

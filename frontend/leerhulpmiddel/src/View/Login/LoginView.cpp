@@ -8,6 +8,15 @@
 
 LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_loginController{ loginController }, QWidget{ parent } {
 	
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
+
+    QPushButton* goBackbtn = new QPushButton( this);
+    goBackbtn->setText("Go Back");
+    goBackbtn->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoHome));
+    goBackbtn->setToolTip("Go Back");
+    goBackbtn->setIconSize(QSize(30, 30));
+
+
     m_titleLabel = new QLabel("Login to Your Account", this);
     m_titleLabel->setAlignment(Qt::AlignCenter);
     QFont titleFont = m_titleLabel->font();
@@ -59,6 +68,7 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
 
     // Create layout
     QVBoxLayout* layout = new QVBoxLayout(this);
+    layout->addWidget(goBackbtn,0, Qt::AlignLeft);
     layout->addWidget(m_titleLabel);
     layout->addWidget(m_serverFeedback);
     layout->addWidget(m_usernameEdit);
@@ -78,6 +88,7 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
     setLayout(layout);
 
 
+    connect(goBackbtn, &QPushButton::clicked, this, [=] {this->close(); });
     connect(m_loginBtn, &QPushButton::clicked, this, &LoginView::onLoginOrRegisterClicked);
     connect(m_registerBtn, &QPushButton::clicked, this, &LoginView::changeToRegister);
     connect(m_goBackToLoginBtn, &QPushButton::clicked, this, &LoginView::changeToLogin);
