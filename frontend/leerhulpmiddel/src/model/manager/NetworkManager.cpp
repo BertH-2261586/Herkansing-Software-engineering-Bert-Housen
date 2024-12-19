@@ -58,6 +58,7 @@ void NetworkManager::login(QString username, QString password)
 		if (responseData.contains("token") && responseData["token"].isString()) {
 			saveSessionCookie(responseData["token"].toString());
 			setLoginStatus(true);
+			setUserId(responseData["id"].toInt());
 		}
 
 		reply->deleteLater();
@@ -103,6 +104,7 @@ void NetworkManager::registerUser(QString username, QString password)
 		if (responseData.contains("token") && responseData["token"].isString()) {
 			saveSessionCookie(responseData["token"].toString());
 			setLoginStatus(true);
+			setUserId(responseData["id"].toInt());
 		}		
 		
 		reply->deleteLater();
@@ -133,7 +135,7 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/questionset/share"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
-
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
 
 
 	FileManager* fileManager = new FileManager();
@@ -185,6 +187,7 @@ void NetworkManager::shareQuestionSetsWithFriends(QList<int> FriendIds, QString 
 {
 	QNetworkRequest request(QUrl("http://localhost:80/inbox/add/QuestionSets"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
 
 	QJsonObject json = QJsonObject(); 
 
@@ -195,7 +198,7 @@ void NetworkManager::shareQuestionSetsWithFriends(QList<int> FriendIds, QString 
 
 	json["friend_ids"] = friendsArray; 
 	json["code"] = code;
-	json["id"] = getUserIdFromCookie(getSessionCookie());
+	json["id"] = getUserId();
 
 	QByteArray data = QJsonDocument(json).toJson();
 
@@ -258,37 +261,25 @@ void NetworkManager::setLoginStatus(bool status) {
 	settings.setValue("loggedIn", status);
 }
 
+void NetworkManager::setUserId(int id) {
+	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+
+	settings.setValue("userId", id);
+}
+
+int NetworkManager::getUserId() const {
+	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+	int userId = settings.value("userId").toInt();
+
+	return userId;
+}
+
 // Check if a cookie exists
 bool NetworkManager::cookieExists() {
 	QSettings settings("groep_7", "leerhulpmiddel");
 	QString sessionCookie = settings.value("sessionCookie").toString();
 
 	return !sessionCookie.isEmpty();
-}
-
-int NetworkManager::getUserIdFromCookie(const QString& sessionCookie)
-{
-	QStringList jwtParts = sessionCookie.split(".");
-	if (jwtParts.size() != 3) {
-		qWarning() << "Invalid token format";
-		return -1;
-	}
-
-	// Decode the payload (Base64)
-	QByteArray payload = QByteArray::fromBase64(jwtParts[1].toUtf8());
-	QJsonDocument payloadDoc = QJsonDocument::fromJson(payload);
-	if (!payloadDoc.isObject()) {
-		qWarning() << "Invalid payload";
-		return -1;
-	}
-
-	QJsonObject payloadObj = payloadDoc.object();
-	if (payloadObj.contains("id")) {
-		return payloadObj["id"].toInteger();
-	}
-
-	qWarning() << "User ID not found in token";
-	return -1;
 }
 
 void NetworkManager::getUsersByPage(const int page, const QString userInput)
@@ -301,6 +292,7 @@ void NetworkManager::getUsersByPage(const int page, const QString userInput)
 	}
 	QNetworkRequest request(url);
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
 
 	// Send the request
 	QNetworkReply* reply = m_networkManager->get(request);
@@ -345,6 +337,8 @@ int NetworkManager::getUserIdByUsername(const QString username) {
 	// Build the URL
 	QNetworkRequest request(QUrl("http://localhost:80/user/get_user_id?username=" + username));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
+
 	QNetworkReply* reply = m_networkManager->get(request);
 
 	// Wait for the request to complete
@@ -379,10 +373,10 @@ void NetworkManager::sendFriendRequest(const QString userToAdd)
 	// Build the URL
 	QNetworkRequest request(QUrl("http://localhost:80/inbox/add"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
 
 	// Get the user IDs
-	QString cookie = getSessionCookie();
-	int sendingID = getUserIdFromCookie(cookie);
+	int sendingID = getUserId();
 	if (sendingID == -1) {
 		return;
 		// TODO error handling
@@ -403,20 +397,19 @@ void NetworkManager::sendFriendRequest(const QString userToAdd)
 }
 
 void NetworkManager::getInboxMessages() {
-	// Get the userID
-	QString cookie = getSessionCookie();
-	int userID = getUserIdFromCookie(cookie);
-	if (userID == -1) {
-		return;
-		// TODO error handling
-	}
-
 	// Build the URL
-	QNetworkRequest request("http://localhost:80/inbox/get_inbox_messages?ID=" + QString::number(userID));
+	QNetworkRequest request(QUrl("http://localhost:80/inbox/GetInboxMessages"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+	//Post data
+	QJsonObject json = QJsonObject();
+	json["id"] = getUserId();
+
+	QByteArray data = QJsonDocument(json).toJson();
 
 	// Send the request
-	QNetworkReply* reply = m_networkManager->get(request);
+	QNetworkReply* reply = m_networkManager->post(request, data);
 
 	connect(reply, &QNetworkReply::finished, this, [this, reply]() {
 		// Check for network errors
@@ -459,6 +452,7 @@ void NetworkManager::removeInboxMessage(int ID) {
 	// Build the URL 
 	QNetworkRequest request(QUrl("http://localhost:80/inbox/remove?inbox_message_id=" + QString::number(ID)));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
 
 	// Send the delete request
 	QNetworkReply* reply = m_networkManager->deleteResource(request);
@@ -479,8 +473,7 @@ void NetworkManager::removeInboxMessage(int ID) {
 
 void NetworkManager::addFriend(int sendingUserID) {
 	// Get the user ID of the user accepting the friend request
-	QString cookie = getSessionCookie();
-	int userID = getUserIdFromCookie(cookie);
+	int userID = getUserId();
 	if (userID == -1) {
 		return;
 		// TODO error handling
@@ -489,6 +482,7 @@ void NetworkManager::addFriend(int sendingUserID) {
 	// Build URL
 	QNetworkRequest request(QUrl("http://localhost:80/friend/add"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
 
 	// Create the object
 	QJsonObject json = QJsonObject();

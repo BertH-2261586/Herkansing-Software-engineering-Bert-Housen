@@ -34,7 +34,8 @@ private:
 	void saveSessionCookie(QString sessionCookie);
 	QString getSessionCookie();
 	void setLoginStatus(bool status);
-	int getUserIdFromCookie(const QString& sessionCookie);
+	void setUserId(int id);
+	int getUserId() const;
 	int getUserIdByUsername(const QString username);
 	void receiveUserByPageHandler(QNetworkReply* reply);
 
