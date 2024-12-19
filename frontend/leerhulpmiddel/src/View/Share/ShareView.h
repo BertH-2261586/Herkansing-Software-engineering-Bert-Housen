@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
+#include "../chooseQuestionView.h"
 
 
 class ShareView : public QWidget
@@ -20,6 +21,7 @@ private:
 	Overlay* m_overlay;
 	QVBoxLayout* m_layout;
 	QPushButton* m_shareButton;
+	ChooseQuestionView* m_chooseQuestionView;
 public slots:
 	void showShareCode(QString code);
 	void showShareFailed();

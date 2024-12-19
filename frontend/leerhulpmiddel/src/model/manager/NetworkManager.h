@@ -18,7 +18,7 @@ public:
 	void login(QString username, QString password);
 	void registerUser(QString username, QString password);
 	void shareQuestionSets(QList<QString> questionSetPaths);
-	void shareQuestionSetsWithFriends(QList<QString> FriendIds, QString code);
+	void shareQuestionSetsWithFriends(QList<int> FriendIds, QString code);
 
 	void getUsersByPage(const int page, const QString userInput);
 	void sendFriendRequest(const QString userToAdd);

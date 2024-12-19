@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from ..database import *
-from ..models import InboxBase
+from ..models import InboxBase,QuestionSetShare
 from sqlalchemy.exc import SQLAlchemyError
 
 router = APIRouter()
@@ -9,9 +9,15 @@ router = APIRouter()
 def get_database(session: Session = Depends(get_session)) -> InboxManager:
     return InboxManager(session)
 
-@router.post("/add")
+@router.post("/add/FriendRequests")
 async def create_inbox_item(inbox_data: InboxBase, db: InboxManager = Depends(get_database)):
     db.create_inbox_item(Inbox(type = inbox_data.type, sending_user = inbox_data.sending_user, receiving_user = inbox_data.receiving_user))
+
+@router.post("/add/QuestionSets")
+async def create_inbox_item(QuestionSetData: QuestionSetShare, db: InboxManager = Depends(get_database)):
+    for friend in QuestionSetData.friend_ids:
+        db.create_inbox_item(Inbox(type = "question_set", sending_user = QuestionSetData.id, receiving_user = friend, code=QuestionSetData.code))
+
 
 @router.get('/get_inbox_messages', response_model = list[dict])
 async def getUserInboxMessages(request: Request, db: InboxManager = Depends(get_database)):

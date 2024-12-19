@@ -111,6 +111,7 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
 
 
+
 	FileManager* fileManager = new FileManager();
 	QByteArray compressedData = fileManager->createZip(questionSetPaths);
 
@@ -118,11 +119,14 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 		emit shareFailed();
 		return;
 	}
+	
 
 	QNetworkReply* reply = m_networkManager->post(request, compressedData); 
 	connect(reply, &QNetworkReply::finished, [this, reply]() { 
 
 		//TEMP TO CHECK IF IT WORKS REMOVE ONCE API IS DONE
+
+
 		emit shareSuccess("1234");
 		reply->deleteLater();
 		return;
@@ -153,10 +157,40 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 * @param FriendIds: list of friend IDs
 * @param code: code of the question set
 */
-void NetworkManager::shareQuestionSetsWithFriends(QList<QString> FriendIds, QString code)
+void NetworkManager::shareQuestionSetsWithFriends(QList<int> FriendIds, QString code)
 {
-	QNetworkRequest request(QUrl("http://localhost:80/friend/"));
+	QNetworkRequest request(QUrl("http://localhost:80/inbox/add/QuestionSets"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+	QJsonObject json = QJsonObject(); 
+
+	QJsonArray friendsArray;
+	for (int friendId : FriendIds) {
+		friendsArray.append(friendId);
+	}
+
+	json["friend_ids"] = friendsArray; 
+	json["code"] = code;
+	json["id"] = getUserIdFromCookie(getSessionCookie());
+
+	QByteArray data = QJsonDocument(json).toJson();
+
+	QNetworkReply* reply = m_networkManager->post(request, data);
+
+	connect(reply, &QNetworkReply::finished, [this, reply]() {
+		// Check for network errors
+		if (reply->error() != QNetworkReply::NoError) {
+			QByteArray responseData = reply->readAll();
+			reply->deleteLater();
+			emit shareFailed();
+			return;
+		}
+
+		reply->deleteLater();
+		//emit shareSuccess();
+	});
+
+
 }
 
 

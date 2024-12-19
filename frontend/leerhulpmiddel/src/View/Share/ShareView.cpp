@@ -40,17 +40,13 @@ ShareView::ShareView(ShareController* controller, QWidget* parent) : QWidget(par
 */
 void ShareView::showShareCode(QString code)
 {
-	m_shareButton->setDisabled(false);
-
-
-	// Clear the layout
-	QLayoutItem* item;
-	while ((item = m_layout->takeAt(0))) {
-		delete item->widget();
-		delete item;
-	}
-
 	
+	
+	m_chooseQuestionView->setDisabled(true);
+	m_shareButton->setDisabled(true);
+	m_shareButton->setText("Finished");	
+
+
 	QHBoxLayout* codeBox = new QHBoxLayout();
 	codeBox->setAlignment(Qt::AlignCenter);
 
@@ -67,7 +63,7 @@ void ShareView::showShareCode(QString code)
 	connect(copyButton, &QPushButton::clicked, this, [code]() {
 		QClipboard* clipboard = QGuiApplication::clipboard();
 		clipboard->setText(code);
-	});
+		});
 
 
 	QLabel* friendsLabel = new QLabel("Share with friends:", this);
@@ -79,23 +75,25 @@ void ShareView::showShareCode(QString code)
 
 	for (QString i : friends) {
 		QListWidgetItem* item = new QListWidgetItem(i, friendsList);
-		item->setData(Qt::UserRole, "1234"); // Friend ID
+		item->setData(Qt::UserRole, 1234); // Friend ID
 	}
 
+
+
 	QPushButton* sendBtn = new QPushButton("Send to Friends", this);
-	connect(sendBtn, &QPushButton::clicked, this, [this,friendsList,code]() {
+	connect(sendBtn, &QPushButton::clicked, this, [this, friendsList, code]() {
 
 		QList<QListWidgetItem*> selectedItems = friendsList->selectedItems();
 
 		if (!selectedItems.isEmpty()) {
-			QList<QString> selectedFriendIDs; 
+			QList<int> selectedFriendIDs;
 
 			QString selectedFriend = friendsList->currentItem()->text();
 			for (QListWidgetItem* item : selectedItems) {
-				selectedFriendIDs << item->data(Qt::UserRole).toString(); // Friend ID
+				selectedFriendIDs << item->data(Qt::UserRole).toInt(); // Friend ID
 			}
 
-			m_shareController->shareQuestionSetsWithFriends(selectedFriendIDs,code);
+			m_shareController->shareQuestionSetsWithFriends(selectedFriendIDs, code);
 		}
 		else {
 			ToastMessage* toast = new ToastMessage("No Friends Selected", this);
@@ -134,25 +132,29 @@ void ShareView::setUpQuestionSetChooser()
 	m_shareButton = new QPushButton("Share selected questionsets", this);
 
 
-	ChooseQuestionView* chooseQuestionView = new ChooseQuestionView(true, true);
+	m_chooseQuestionView = new ChooseQuestionView(true, true);
 
 
-	m_layout->addWidget(chooseQuestionView);
+	m_layout->addWidget(m_chooseQuestionView);
 	m_layout->addWidget(m_shareButton);
 
 
 	connect(m_shareButton, &QPushButton::pressed, this, [=] {
 
-		QList<QString> questionSetPaths = chooseQuestionView->getQuestionSetPaths();
+		QList<QString> questionSetPaths = m_chooseQuestionView->getQuestionSetPaths();
 		if (questionSetPaths.size() == 0) {
 			ToastMessage* toast = new ToastMessage("You must select at least one question set", this);
 			toast->move((width() - toast->width()) / 2, height() - 70);
 			toast->show();
+			return;
 		}
 
-		m_shareController->shareQuestionSets(questionSetPaths);
+		m_shareButton->setText("Loading...");
 		m_shareButton->setDisabled(true);
+		QCoreApplication::processEvents();
 
+
+		m_shareController->shareQuestionSets(questionSetPaths);
 		});
 }
 
