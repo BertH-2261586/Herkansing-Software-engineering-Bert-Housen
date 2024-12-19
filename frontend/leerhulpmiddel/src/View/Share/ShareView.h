@@ -25,5 +25,6 @@ private:
 public slots:
 	void showShareCode(QString code);
 	void showShareFailed();
+	void closeView() { this->close(); };
 };
 
