@@ -39,7 +39,7 @@ async def check_user_login(user: UserLogin, db: UserManager = Depends(get_databa
     
     user_token = session_manager.create_session_token({"id": db_user.id, "username": db_user.username})
 
-    return {"message": "User logged in", "id": db_user.id, "username":db_user.username, "id": db_user.id, "token": user_token}
+    return {"message": "User logged in", "id": db_user.id, "username":db_user.username, "token": user_token}
 
 @router.post("/remove/", response_model=dict)
 async def remove_user(user: UserIdInput, token_data: dict = Depends(session_manager.token_verification), db: UserManager = Depends(get_database)):

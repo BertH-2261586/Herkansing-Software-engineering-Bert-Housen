@@ -17,7 +17,7 @@ class PasswordHasher:
 
 class UserSessionManager:
     def __init__(self):
-        self.secret_key = "placeholder"
+        self.secret_key = "4b8e9a19c4a9486e9677b3c10fadc43dbf8dbda1966c18e1a6b42cf47e8ad4f2"
         self.algo = "HS256"
         self.expiration = 60        #expiration time in minutes
     
