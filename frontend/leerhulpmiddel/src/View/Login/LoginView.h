@@ -13,6 +13,7 @@ public:
 private:
 	void setupValidators();
 	void hideErrorLabels();
+
 	LoginController* m_loginController;
 	QLineEdit* m_usernameEdit;
 	QLineEdit* m_passwordEdit;
@@ -25,6 +26,7 @@ private:
 	QPushButton* m_loginBtn;
 	QPushButton* m_registerBtn;
 	QPushButton* m_goBackToLoginBtn;
+
 private slots:
 	void changeToLogin();
 	void changeToRegister();

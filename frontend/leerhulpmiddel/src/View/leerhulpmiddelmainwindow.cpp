@@ -12,19 +12,9 @@ LeerhulpmiddelMainWindow::LeerhulpmiddelMainWindow(QuestionManagerController* qu
 
     m_container = new QVBoxLayout();
 
-    QPushButton* btnStartExamination = new QPushButton("Start Examination");
-    btnStartExamination->hide();
-
-
-    connect(btnStartExamination, &QPushButton::pressed, this, [=] {
-        PushMainViewport(new CreateExaminationView());
-    });
-
-
     m_homeScreenWidget = new HomeScreen(questionManagerController, this);
     m_homeScreenWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    m_container->addWidget(btnStartExamination);
     m_container->addWidget(m_homeScreenWidget);
 
     m_mainViewStack.push(m_homeScreenWidget);

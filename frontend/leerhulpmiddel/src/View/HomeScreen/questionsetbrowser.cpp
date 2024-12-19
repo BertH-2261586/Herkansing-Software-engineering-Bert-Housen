@@ -1,8 +1,6 @@
 
 #include "questionsetbrowser.h"
-#include "QuestionsetBrowserWidgets/questionsettreewidget.h"
 #include "homescreen.h"
-#include "QuestionsetBrowserWidgets/questionsetwidget.h"
 #include <QDebug>
 
 #include <QGraphicsProxyWidget>

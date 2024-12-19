@@ -33,6 +33,8 @@ private:
 
     void startExamination();
 
+    void clearLayout(QLayout* layout);
+
     ExaminationView* m_examinationView;
 
     QVBoxLayout* m_mainLayout;

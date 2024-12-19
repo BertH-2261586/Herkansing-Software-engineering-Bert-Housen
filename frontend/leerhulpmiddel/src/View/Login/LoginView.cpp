@@ -62,7 +62,8 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
     m_serverFeedback->hide();
 
     m_loginBtn = new QPushButton("Login", this);
-	m_registerBtn = new QPushButton("Register", this);
+
+    m_registerBtn = new QPushButton("Register", this);
     m_goBackToLoginBtn = new QPushButton("Back to Login", this);
     m_goBackToLoginBtn->hide();
 
@@ -77,15 +78,12 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
     layout->addWidget(m_passwordErrorLabel);
     layout->addWidget(m_passwordConfirmEdit);
     layout->addWidget(m_passwordConfirmErrorLabel);
-
     layout->addWidget(m_loginBtn);
     layout->addWidget(m_registerBtn);
     layout->addWidget(m_goBackToLoginBtn);
 
-
-
-
     setLayout(layout);
+
 
 
     connect(goBackbtn, &QPushButton::clicked, this, [=] {this->close(); });
@@ -208,8 +206,6 @@ void LoginView::onLoginOrRegisterClicked() {
         m_passwordErrorLabel->setText("Invalid password. It must be at least 8 characters and contain valid characters.");
         isValid = false;
     }
-
-
 
     if (isValid)
     {
