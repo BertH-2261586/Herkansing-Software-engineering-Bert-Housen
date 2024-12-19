@@ -146,7 +146,7 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 * @param FriendIds: list of friend IDs
 * @param code: code of the question set
 */
-void NetworkManager::shareQuestionSetsWithFriends(QList<QString> FriendIds, int code)
+void NetworkManager::shareQuestionSetsWithFriends(QList<QString> FriendIds, QString code)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/friend/"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");

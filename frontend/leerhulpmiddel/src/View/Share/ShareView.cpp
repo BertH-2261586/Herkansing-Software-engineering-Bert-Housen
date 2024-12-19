@@ -82,7 +82,7 @@ void ShareView::showShareCode(QString code)
 		item->setData(Qt::UserRole, "1234"); // Friend ID
 	}
 
-	QPushButton* sendBtn = new QPushButton("Send to Friend", this);
+	QPushButton* sendBtn = new QPushButton("Send to Friends", this);
 	connect(sendBtn, &QPushButton::clicked, this, [this,friendsList,code]() {
 
 		QList<QListWidgetItem*> selectedItems = friendsList->selectedItems();
@@ -95,7 +95,7 @@ void ShareView::showShareCode(QString code)
 				selectedFriendIDs << item->data(Qt::UserRole).toString(); // Friend ID
 			}
 
-			m_shareController->shareQuestionSetsWithFriends(selectedFriendIDs,code.toInt());
+			m_shareController->shareQuestionSetsWithFriends(selectedFriendIDs,code);
 		}
 		else {
 			ToastMessage* toast = new ToastMessage("No Friends Selected", this);

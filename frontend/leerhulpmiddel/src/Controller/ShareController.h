@@ -8,7 +8,7 @@ class ShareController
 public:
 	inline ShareController(NetworkManager* networkManager) : m_networkManager{networkManager} {};
 	void shareQuestionSets(QList<QString> questionSetPaths);
-	void shareQuestionSetsWithFriends(QList<QString> FriendIds,int code);
+	void shareQuestionSetsWithFriends(QList<QString> FriendIds,QString code);
 private:
 	NetworkManager* m_networkManager;
 };
