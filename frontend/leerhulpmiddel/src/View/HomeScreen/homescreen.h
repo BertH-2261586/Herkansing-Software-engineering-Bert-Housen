@@ -19,7 +19,7 @@ public:
 
 public slots:
     void DisplayWidget(QWidget* displayWidget);
-    void removeInboxItem() { setInboxRequestAmount(); }
+    void setRequestAmount() { setInboxRequestAmount(); }
 
 private slots:
     void startInboxAnimation();
@@ -30,7 +30,7 @@ private:
     void setInboxView();
     void setAddFriendButton(QHBoxLayout* container);
     void setInboxButton(QHBoxLayout* container);
-    QWidget* setInboxRequestLabel(QPushButton* inboxButton);
+    QWidget* setInboxRequestLabel();
     void setIconButton(QPushButton* button, QString iconName);
 
     void setInboxRequestAmount();
@@ -40,6 +40,9 @@ private:
     QHBoxLayout* m_container;
 
     LeerhulpmiddelMainWindow* m_mainWindow;
+
+    QPushButton* m_addFriendButton;
+    QPushButton* m_inboxButton;
 
     InboxView* m_inboxView;
     QLabel* m_requestAmountLabel;

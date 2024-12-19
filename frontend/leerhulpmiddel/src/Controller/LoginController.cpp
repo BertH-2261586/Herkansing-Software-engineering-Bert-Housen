@@ -5,10 +5,10 @@
 
 void LoginController::login(QString username, QString password)
 {
-	networkManager->login(username, password);
+	m_networkManager->login(username, password);
 }
 
 void LoginController::registerUser(QString username, QString password)
 {
-	networkManager->registerUser(username, password);
+	m_networkManager->registerUser(username, password);
 }

@@ -5,11 +5,11 @@
 class LoginController
 {
 public:
-	inline LoginController() : networkManager{new NetworkManager} {};
+	inline LoginController() : m_networkManager{new NetworkManager} {};
 	void login(QString username, QString password);
 	void registerUser(QString username, QString password);
 
 private:
-	NetworkManager* networkManager;
+	NetworkManager* m_networkManager;
 };
 

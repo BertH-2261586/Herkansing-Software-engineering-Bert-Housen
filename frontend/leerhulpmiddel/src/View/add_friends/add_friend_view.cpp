@@ -55,7 +55,7 @@ void AddFriendView::setSearchBar() {
 
     // Connect signal for text changes
     connect(m_searchBar, &QLineEdit::textChanged, this, [=](const QString text) {
-        deleteUsersFromList();
+        deleteUserInformation();
         m_addFriendController.getUsersByPage(1, text);         // Always start from the first page when typing something new
     });
 }
@@ -68,15 +68,15 @@ void AddFriendView::setUserSearch() {
     m_noUserFound->setStyleSheet(
         "QLabel {"
             "border: none;"  // Ensure no border is applied to the label by the frame
+            "font-size: 25px;"
+            "font-weight: bold;"
         "}"
     );
     if (m_addFriendController.getUserPageSize() != 0) {
         m_noUserFound->hide();
     }
-    m_userSearch->addWidget(m_noUserFound);
+    m_userSearch->addWidget(m_noUserFound, 0, Qt::AlignCenter);
     
-    setAllUsers();
-
     m_userSearchFrame = new QFrame(m_userSearchWidget);
     m_userSearchFrame->setLayout(m_userSearch);
     m_userSearchFrame->setFrameShape(QFrame::Box);
@@ -92,7 +92,8 @@ void AddFriendView::setUserSearch() {
     QScreen* screen = QGuiApplication::primaryScreen();
     QRect screenGeometry = screen->geometry();
     int screenWidth = screenGeometry.width();
-    m_userSearchFrame->setFixedWidth(screenWidth * 0.3);
+    int screenHeight = screenGeometry.height();
+    m_userSearchFrame->setFixedSize(screenWidth * 0.3, screenHeight * 0.6);
     m_userSearchFrame->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
 }
 
@@ -103,7 +104,7 @@ void AddFriendView::setAllUsers() {
     else {
         m_noUserFound->hide();
     }
-    qDebug() << m_addFriendController.getUserPageSize();
+
     for (int i = 0; i < m_addFriendController.getUserPageSize(); ++i) {
         QString username = m_addFriendController.getUser(i);
         qDebug() << "name " <<  username;
@@ -116,11 +117,16 @@ void AddFriendView::setAllUsers() {
         );
         m_addUserButtons.append(new QPushButton("Add as friend"));
         connect(m_addUserButtons[i], &QPushButton::clicked, this, [=]() {
-            qDebug() << "Added user: " + m_addFriendController.getUser(i);
-            ToastMessage* toast = new ToastMessage("Sent " + m_addFriendController.getUser(i) + " a friend request.", this);
+            // Display a toast message
+            QString username = m_addFriendController.getUser(i);
+            ToastMessage* toast = new ToastMessage("Sent " + username + " a friend request.", this);
             toast->setFixedWidth(200);
             toast->move((width() - toast->width()) / 2, height() - 85);
             toast->show();
+
+            m_addUserButtons[i]->setText("Sent friend request");
+            m_addUserButtons[i]->setEnabled(false);
+            m_addFriendController.sendFriendRequest(username);
         });
 
         // Set the stylesheet
@@ -146,6 +152,7 @@ void AddFriendView::setAllUsers() {
         m_frames[i]->setLayout(m_userLayouts[i]);
         m_frames[i]->setFrameShape(QFrame::Box);
         m_frames[i]->setFrameShadow(QFrame::Raised);
+        m_frames[i]->setMaximumHeight(75);
         m_frames[i]->setStyleSheet(
             "  border-width: 1px;"
             "  border-style: solid;"
@@ -154,6 +161,19 @@ void AddFriendView::setAllUsers() {
         m_userSearch->addWidget(m_frames[i]);
     }
 
+    int totalPageAmount = m_addFriendController.getPageAmount();
+    // Check if there is more than 1 page
+    if (totalPageAmount != 0) {
+        // Add pagination
+        int currentPage = m_addFriendController.getCurrentPage();
+        m_pagination = new Pagination(totalPageAmount, currentPage);
+        m_userSearch->addWidget(m_pagination);
+        // Get the new page data
+        connect(m_pagination, &Pagination::newPage, this, [=](const int pageNumber) {
+            newPage(pageNumber);
+            deleteUserInformation();
+        });
+    }
 }
 
 void AddFriendView::setMainLayout() {
@@ -165,19 +185,29 @@ void AddFriendView::setMainLayout() {
     setLayout(m_mainLayout);
 }
 
-void AddFriendView::deleteUsersFromList() {
-    // Removing and re-adding all users is necessary, or else the indices wont reset and will cause index out of bounds errors
-    // For example item in place 3 stays 3 even when 2 is removed
-
+/*
+* This function deletes all the GUI and controller data.
+* This is because else the controller had to keep track of every user. Now you just load only one page and update the GUI dynamically
+* @post every part of pointer data and normal gets cleared/deleted, so that you can dynamically create it again
+*/
+void AddFriendView::deleteUserInformation() {
     // Remove all the widgets associated with the item from the inbox 
     for (int i = 0; i < m_addFriendController.getUserPageSize(); ++i) {
         delete m_userLayouts[0];
-        m_userLayouts.removeAt(0);          // Remove 0 every time because m_inboxRequests gets smaller with the deletions
+        m_userLayouts.removeAt(0);          // Remove 0 every time because the lists gets smaller with the deletions
         delete m_userNames[0];
         m_userNames.removeAt(0);
         delete m_addUserButtons[0];
         m_addUserButtons.removeAt(0);
         delete m_frames[0];
         m_frames.removeAt(0);
+    }
+
+    // Clear the controller list of users
+    m_addFriendController.clearUserList();
+
+    // Check if the pagination exists
+    if (m_pagination) {
+        delete m_pagination;
     }
 }

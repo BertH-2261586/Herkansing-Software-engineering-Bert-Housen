@@ -4,6 +4,7 @@
 #include "../../Controller/LoginController.h"
 #include "../leerhulpmiddelmainwindow.h"
 #include "../add_friends/add_friend_view.h"
+#include "../../Exceptions/NoSavedSessionException.h"
 
 HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent) : m_mainWindow(parent), QWidget(parent)
 {
@@ -94,37 +95,55 @@ void HomeScreen::startInboxAnimation() {
 
 void HomeScreen::setAddFriendButton(QHBoxLayout* container) {
     // Create the inbox button
-    QPushButton* addFriendButton = new QPushButton("");
-    setIconButton(addFriendButton, "resources/add-friend.png");
-    connect(addFriendButton, &QPushButton::pressed, this, [=]() {
+    m_addFriendButton = new QPushButton("");
+    setIconButton(m_addFriendButton, "resources/add-friend.png");
+    connect(m_addFriendButton, &QPushButton::pressed, this, [=]() {
         m_mainWindow->PushMainViewport(new AddFriendView());
     });
 
     // Add the widget to the container
-    container->addWidget(addFriendButton);
+    container->addWidget(m_addFriendButton);
+
+    // Check if the user is logged in
+    NetworkManager newNetworkManager = NetworkManager();
+
+    // Show the button if the user is logged in
+    newNetworkManager.cookieExists() ? m_addFriendButton->show() : m_addFriendButton->hide();
 }
 
 void HomeScreen::setInboxButton(QHBoxLayout* container) {
     // Create the inbox button
-    QPushButton* inboxButton = new QPushButton("");
-    setIconButton(inboxButton, "resources/inbox-icon.png");
-    connect(inboxButton, &QPushButton::pressed, this, &HomeScreen::startInboxAnimation);
+    m_inboxButton = new QPushButton("");
+    setIconButton(m_inboxButton, "resources/inbox-icon.png");
+    connect(m_inboxButton, &QPushButton::pressed, this, &HomeScreen::startInboxAnimation);
 
     // Set the label for the amount of requests inside of the inbox
-    QWidget* buttonContainer = setInboxRequestLabel(inboxButton);
+    QWidget* buttonContainer = setInboxRequestLabel();
 
     // Add the buttonContainer to the main container layout
     container->addWidget(buttonContainer);
+
+    // Check if the user is logged in
+    NetworkManager newNetworkManager = NetworkManager();
+    if(newNetworkManager.cookieExists()){
+        m_inboxButton->show();
+        m_requestAmountLabel->show();
+    }
+    // There is no cookie, so the user is not logged in yet
+    else {
+        m_inboxButton->hide();
+        m_requestAmountLabel->hide();
+    }
 }
 
-QWidget* HomeScreen::setInboxRequestLabel(QPushButton* inboxButton) {
+QWidget* HomeScreen::setInboxRequestLabel() {
     // Create a container for the button and request amount
     QWidget* buttonContainer = new QWidget();
-    buttonContainer->setFixedSize(inboxButton->sizeHint());
+    buttonContainer->setFixedSize(m_inboxButton->sizeHint());
     QVBoxLayout* inboxButtonLayout = new QVBoxLayout(buttonContainer);
     inboxButtonLayout->setContentsMargins(0, 0, 0, 0); 
     inboxButtonLayout->setSpacing(0);
-    inboxButtonLayout->addWidget(inboxButton);
+    inboxButtonLayout->addWidget(m_inboxButton);
 
     // Create a request amount label
     m_requestAmountLabel = new QLabel(buttonContainer);

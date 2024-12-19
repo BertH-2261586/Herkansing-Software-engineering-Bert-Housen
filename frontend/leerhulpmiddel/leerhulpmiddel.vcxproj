@@ -139,6 +139,7 @@
     <ClCompile Include="src\View\HomeScreen\inboxView.cpp" />
     <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
     <ClCompile Include="src\view\Login\LoginView.cpp" />
+    <ClCompile Include="src\View\pagination.cpp" />
     <ClCompile Include="src\view\QFlowLayout.cpp" />
     <ClCompile Include="src\view\questions\FillInView.cpp" />
     <ClCompile Include="src\view\questions\FlashcardView.cpp" />
@@ -150,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\addFriendController.h" />
-    <ClInclude Include="src\Controller\inboxController.h" />
+    <QtMoc Include="src\Controller\inboxController.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
     <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
@@ -166,6 +167,7 @@
     <QtMoc Include="src\model\manager\NetworkManager.h" />
     <QtMoc Include="src\View\HomeScreen\inboxView.h" />
     <QtMoc Include="src\View\add_friends\add_friend_view.h" />
+    <QtMoc Include="src\View\pagination.h" />
     <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
     <QtMoc Include="src\view\Login\LoginView.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />

@@ -2,6 +2,7 @@
 #define ADD_FRIEND_VIEW_H
 
 #include "../../Controller/addFriendController.h"
+#include "../pagination.h"
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -15,6 +16,9 @@ class AddFriendView : public QWidget
 public:
     AddFriendView(QWidget* parent = nullptr);
 
+public slots:
+    void newPage(const int newPage) { m_addFriendController.getUsersByPage(newPage); }
+
 private slots:
     void goBack() { this->close(); }
 
@@ -26,7 +30,7 @@ private:
     void setMainLayout();
 
     void setAllUsers();
-    void deleteUsersFromList();
+    void deleteUserInformation();
    
     addFriendController m_addFriendController = addFriendController();
 
@@ -44,6 +48,8 @@ private:
     QList<QPushButton*> m_addUserButtons;
     QList<QFrame*> m_frames;
     QLabel* m_noUserFound;
+
+    Pagination* m_pagination;
 };
 
 #endif // QUESTIONSETBROWSER_H

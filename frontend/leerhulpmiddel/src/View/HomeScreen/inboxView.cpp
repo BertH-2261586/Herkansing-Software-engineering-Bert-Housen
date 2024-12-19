@@ -2,6 +2,8 @@
 #include "homeScreen.h"  // Include the full definition of HomeScreen here
 
 InboxView::InboxView(QWidget* parent) : QWidget(parent) {
+    m_inboxController.getUserInboxMessages();
+
     setSlidingMenu();
 
     // Create a QScrollArea to make the menu scrollable
@@ -17,26 +19,43 @@ InboxView::InboxView(QWidget* parent) : QWidget(parent) {
 
     // Cast the qwidget parent to homescreen to make connect recognize it
     HomeScreen* homeScreen = qobject_cast<HomeScreen*>(parent);
-    connect(this, &InboxView::removeInboxItem, homeScreen, &HomeScreen::removeInboxItem);
+    connect(this, &InboxView::removeInboxItem, homeScreen, &HomeScreen::setRequestAmount);
+    connect(this, &InboxView::updateInboxItemLabel, homeScreen, &HomeScreen::setRequestAmount);
 
     // Set the text for when there are no inbox items
     m_noItemsInInbox = new QLabel("The inbox is currently empty");
     m_noItemsInInbox->setStyleSheet("font-size: 15px; font-weight: bold;");
     m_noItemsInInbox->hide();
     m_menuLayout->addWidget(m_noItemsInInbox, 0, Qt::AlignCenter);
-    setInboxRequests();
 
     setMainLayout();
+
+    // Update the view with the fetched inbox messages
+    connect(&m_inboxController, &inboxController::inboxMessagesFetched, this, [=]() {
+        setInboxRequests();
+        emit updateInboxItemLabel();
+    });
 }
 
 void InboxView::setInboxRequests() {
-    if (m_inboxRequests.size() == 0) {
+    if (m_inboxController.getAmountOfMessages() == 0) {
         m_noItemsInInbox->show();
     }
 
-    for (int i = 0; i < m_inboxRequests.size(); ++i) {
+    for (int i = 0; i < m_inboxController.getAmountOfMessages(); ++i) {
         m_menuItemLayouts.append(new QGridLayout());
-        m_menuItemInfo.append(new QLabel("Friend " + m_inboxRequests[i] + " has sent a questionset"));
+
+        // Set the label
+        QString message = "";
+        QString messageType = m_inboxController.getInboxMessageType(i);
+        QString username = m_inboxController.getSendingUserName(i);
+        if (messageType == "friend_request") {
+            message = username + " has sent a friend request";
+        }
+        else if (messageType == "question_set") {
+            message = username + " has sent a question set";
+        }
+        m_menuItemInfo.append(new QLabel(message));
         m_menuItemInfo[i]->setWordWrap(true);
 
         setAcceptButton(i);
@@ -51,7 +70,7 @@ void InboxView::setInboxRequests() {
 void InboxView::setAcceptButton(int index) {
     m_acceptButtons.append(new QPushButton("Accept"));
     connect(m_acceptButtons[index], &QPushButton::clicked, this, [=]() {
-        acceptedQuestionSet(index);
+        inboxRequestResponse(index, true);
     });
 
     // Set the stylesheet
@@ -76,7 +95,7 @@ void InboxView::setAcceptButton(int index) {
 void InboxView::setRejectButton(int index) {
     m_rejectButtons.append(new QPushButton("Reject"));
     connect(m_rejectButtons[index], &QPushButton::clicked, this, [=]() {
-        rejectedQuestionSet(index);
+        inboxRequestResponse(index, false);
     });
 
     // Set the stylesheet
@@ -156,12 +175,8 @@ void InboxView::setSlidingMenu() {
     m_slidingMenu->setLayout(m_slidingMenuLayout);  
 }
 
-void InboxView::acceptedQuestionSet(int index) {
-    deleteInboxItem(index);
-    emit removeInboxItem();
-}
-
-void InboxView::rejectedQuestionSet(int index) {
+void InboxView::inboxRequestResponse(int index, bool accepted) {
+    m_inboxController.inboxRequestResponse(index, accepted);
     deleteInboxItem(index);
     emit removeInboxItem();
 }
@@ -171,7 +186,7 @@ void InboxView::deleteInboxItem(int index) {
     // For example item in place 3 stays 3 even when 2 is removed
 
     // Remove all the items associated with the item from the inbox 
-    for (int i = 0; i < m_inboxRequests.size(); ++i) {
+    for (int i = 0; i < m_inboxController.getAmountOfMessages(); ++i) {
         delete m_menuItemLayouts[0];
         m_menuItemLayouts.removeAt(0);          // Remove 0 every time because m_inboxRequests gets smaller with the deletions
         delete m_menuItemInfo[0];
@@ -184,7 +199,7 @@ void InboxView::deleteInboxItem(int index) {
         m_itemFrames.removeAt(0);
     }
 
-    m_inboxRequests.removeAt(index);
+    m_inboxController.removeInboxMessage(index);
 
     // Re add the remaining items than wont need to be removed
     setInboxRequests();

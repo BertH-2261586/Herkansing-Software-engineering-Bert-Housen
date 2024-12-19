@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from ..database import *
+from ..models import FriendBase
 
 router = APIRouter()
 
 def get_database(session: Session = Depends(get_session)) -> FriendManager:
     return FriendManager(session)
 
-# Handles the addition of a user
-# @router.get("/add", response_model=User)
-# async def create_user_route(db: UserManager = Depends(get_database)):
-#     return db.create_user(User(username="TestUser", password="blablabla"))
+# Add a friend connection to the database
+@router.post("/add")
+async def create_friend_connection(friend_data: FriendBase, db: FriendManager = Depends(get_database)):
+    db.create_friend_connection(Friend(user1 = friend_data.user1, user2 = friend_data.user2))

@@ -3,7 +3,7 @@ from sqlmodel import Session
 from ..database import *
 from ..models import User, UserBase, UserLogin
 from ..security import PasswordHasher, UserSessionManager
-from typing import List
+from sqlalchemy.exc import SQLAlchemyError  
 
 router = APIRouter()
 pw_hasher = PasswordHasher()
@@ -55,18 +55,28 @@ async def check_user_login(user: UserLogin, db: UserManager = Depends(get_databa
     return {"message": "User logged in", "username":db_user.username, "id": db_user.id, "token": user_token}
 
 # Gets a certain amount of users
-@router.get('/getUsers', response_model=List[str])
+@router.get('/getUsers', response_model=dict)
 async def getUsersByPage(request: Request, db: UserManager = Depends(get_database)):
     # Get the query parameters from the URL
     current_page = int(request.query_params.get('page', 1))             # Default to page 1 if not provided
-    current_page_size = int(request.query_params.get('pageSize', 10))   # Default to page size 10 if not provided
+    current_page_size = int(request.query_params.get('pageSize', 1))   # Default to page size 10 if not provided
     current_search_query = request.query_params.get('search', None)             # Default to None if no user input provided
 
-    # Query the database for the list of users
-    users = db.get_users_by_page(page = current_page, page_size = current_page_size, search_query = current_search_query)
-
-    # No users found
-    if not users:
-        raise HTTPException(status_code=404, detail="No users found")
-
-    return users
+    try: 
+        # Query the database for the list of users
+        total_count, users = db.get_users_by_page(page = current_page, page_size = current_page_size, search_query = current_search_query)
+        return {"total_count": total_count, "users": users}
+    except SQLAlchemyError:
+        # Log the database error
+        print(f"Database error occurred: {str(e)}")
+        return {"error": "Database error", "details": str(e)}
+    except Exception as e:
+        # Catch any other unexpected errors
+        print(f"Unexpected error occurred: {str(e)}")
+        return {"error": "Unexpected error", "details": str(e)}
+    
+@router.get("/get_user_id", response_model = dict)
+async def create_inbox_item(request: Request, db: UserManager = Depends(get_database)):
+    username = request.query_params.get('username')
+    user_id = db.get_userID_via_username(username = username)
+    return {"user_id": user_id}
