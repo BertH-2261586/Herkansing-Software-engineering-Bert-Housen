@@ -57,20 +57,93 @@ Laag tot hoog, afhankelijk van hoe vaak vragensets worden gedeeld door gebruiker
 
 ## Contracten
 
-### **Naam:** <br/>
+### **Naam:** Optie "Deel met vriend" selecteren<br/>
 **Cross References:** 
 * **Use cases:** Deel vragen met vriend<br/>
 * **SSD’s:** Deel vragen met vriend
   
-**Pre-condities:** Er bestaat minstens 1 vragenset die kan geselecteerd worden en deze bevat minstens 1 vraag<br/>
+**Pre-condities:** De gebruiker is ingelogd
+
 **Post-condities:** 
-* **Associations formed:** De geselecteerde vragenset wordt gekoppeld aan de ondervraging
-* **Instance creation:** Een ondervraging instantie wordt aangemaakt.
+* **Instance creation:** Er wordt een instantie gemaakt van een deel met vriend window
 
 ---
 
+### **Naam:** Vragenset(s) selecteren<br/>
+**Cross References:** 
+* **Use cases:** Deel vragen met vriend<br/>
+* **SSD’s:** Deel vragen met vriend
+  
+**Pre-condities:** Er zijn vragensets beschikbaar om te kunnen selecteren
+
+**Post-condities:** 
+* **Attribute modification:** De geselecteerde vragenset(s) worden gemarkeerd als "klaar om te delen".
+
+---
+
+### **Naam:** Lijst met vrienden en “share code” tonen<br/>
+**Cross References:** 
+* **Use cases:** Deel vragen met vriend<br/>
+* **SSD’s:** Deel vragen met vriend
+  
+**Pre-condities:** De student heeft een vragenset geselecteerd.
+
+**Post-condities:** 
+* **Instance creation:** Er wordt een instantie gemaakt van een vrienden lijst window
+
+---
+
+### **Naam:** Vriend(en) selecteren <br/>
+**Cross References:** 
+* **Use cases:** Deel vragen met vriend<br/>
+* **SSD’s:** Deel vragen met vriend
+  
+**Pre-condities:** Geen
+
+**Post-condities:** 
+* **Associations formed:** Een tijdelijke associatie wordt gemaakt tussen de geselecteerde vriend(en) en de te delen vragenset(s).
+
+---
+
+### **Naam:** Vragenset opslaan en melding verzenden<br/>
+**Cross References:** 
+* **Use cases:** Deel vragen met vriend<br/>
+* **SSD’s:** Deel vragen met vriend
+  
+**Pre-condities:** De gebruiker heeft minstens één vriend geselecteerd
+
+**Post-condities:** 
+* **Instance creation:** Er wordt een inbox-item aangemaakt in het systeem.
+* **Associations formed:** De notificatie wordt gekoppeld aan de inbox van de geselecteerde vriend(en).
+
+---
+
+### **Naam:** Notificatie ontvangen in inbox<br/>
+**Cross References:** 
+* **Use cases:** Deel vragen met vriend<br/>
+* **SSD’s:** Deel vragen met vriend
+  
+**Pre-condities:** De notificatie is succesvol verzonden
+
+**Post-condities:** 
+* **Instance creation:** De notificatie verschijnt in de inbox van de geselecteerde vriend(en).
+
+---
+
+### **Naam:** Notificatie accepteren<br/>
+**Cross References:** 
+* **Use cases:** Deel vragen met vriend<br/>
+* **SSD’s:** Deel vragen met vriend
+  
+**Pre-condities:** De vriend heeft de notificatie in zijn/haar inbox ontvangen.
+
+**Post-condities:** 
+* **Associations broken:** De verbinding wordt verbroken en de notificatie wordt verwijderd 
+* **Instance creation:** De vragenset wordt lokaal opgeslagen op het systeem van de vriend
 
 ## UML Diagrammen ontwerp
+De gebruiker heeft al een vragen set(s) gekozen om te vesturen. De gebruiker selecteert nu naar welke vrienden dit verstuurt moet worden.
+![Kies vragenset sequentie diagram](./Images/UML_question_set_delen.png)</br>
 
 ## Klassen diagram
 ![Klassendiagram](./Images/Klasse_Diagram_leerhulpmiddel.png)

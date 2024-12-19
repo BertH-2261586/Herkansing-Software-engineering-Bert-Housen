@@ -42,6 +42,8 @@
 
 [Link](docs/UC_login.md) naar de fully dressed use case "Login"
 
+[Link](docs/UC_deel_vragen_met_vriend.md) naar de fully dressed use case "Deel vragen met vriend"
+
 
 [Link](docs/Casual_use_cases.md) naar de pagina van alle casual use cases
 
