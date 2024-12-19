@@ -46,6 +46,7 @@ signals:
 	void loggedOut();
 	void shareFailed();
 	void shareSuccess(QString code);
+	void shareQuestionSetsSuccess();
 	void usersFetched(int totalCount, QList<QString> users);
 	void inboxMessagesFetched(QList<QJsonObject> inboxMessages);};
 

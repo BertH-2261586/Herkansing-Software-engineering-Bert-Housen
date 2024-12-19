@@ -211,7 +211,13 @@ void NetworkManager::shareQuestionSetsWithFriends(QList<int> FriendIds, QString 
 		}
 
 		reply->deleteLater();
-		//emit shareSuccess();
+		emit shareQuestionSetsSuccess();
+
+		//DO IT
+
+
+
+
 	});
 
 
