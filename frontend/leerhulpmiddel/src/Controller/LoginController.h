@@ -10,6 +10,7 @@ public:
 	inline void logout() { m_networkManager->logout(); }
 	inline void getLoggedInStatus() { m_networkManager->getLoggedInStatus(); }
 	inline void registerUser(QString username, QString password) { m_networkManager->registerUser(username, password); }
+
 private:
 	NetworkManager* m_networkManager;
 };

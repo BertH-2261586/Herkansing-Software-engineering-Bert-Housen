@@ -12,11 +12,12 @@ class ChooseQuestionView : public QWidget {
     Q_OBJECT
 
 public:
-    ChooseQuestionView(bool questionSelectOnly, QWidget* parent = nullptr);
+    ChooseQuestionView(bool questionSelectOnly,bool selectMultiple = false, QWidget* parent = nullptr);
     QString getQuestionSetPath();
+    QList<QString> getQuestionSetPaths();   //used for multiple select
 
 private:
-    void setupTreeWidget(bool questionSetSelectOnly);
+    void setupTreeWidget(bool questionSetSelectOnly,bool selectMultiple);
     void populateTreeWithQuestionset(QTreeWidgetItem* parentItem, Questionset* questionSet, bool questionSetSelectOnly);
     void handleQuestionSetOnlyItemCheckChange(QTreeWidgetItem* item, int column);
     void handleItemCheckChange(QTreeWidgetItem* item, int column);

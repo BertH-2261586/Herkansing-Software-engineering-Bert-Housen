@@ -132,15 +132,21 @@ void CreateExaminationView::startExamination() {
     // No question set was selected, so show a toast message to alert the user
     if (questionSetPath == "") {
         ToastMessage* toast = new ToastMessage("You have to select a question set", this);
-        toast->setFixedWidth(200);  
         toast->move((width() - toast->width()) / 2, height() - 85);
         toast->show();
         return;
     }
 
+    clearLayout(m_mainLayout);
     m_examinationView = new ExaminationView;
-    this->hide();
-    m_examinationView->show();              //TODO: swap layout to examinationview
+    m_mainLayout->addWidget(m_examinationView);
+    // If m_examinationView is closed also close this 
+    connect(m_examinationView, &QWidget::destroyed, this, [=] {
+        // Delete the remaining widgets
+        //delete m_examinationView;
+        delete m_mainLayout;
+        this->close();
+    });
 
     if (m_toggle->isChecked()) {
         QTime currentTime = m_timer->time();
@@ -148,5 +154,21 @@ void CreateExaminationView::startExamination() {
     }
     else {
         m_examinationView->startExamination(questionSetPath, QTime(-1, -1, -1));
+    }
+}
+
+void CreateExaminationView::clearLayout(QLayout* layout) {
+    // Iterate through the layout and remove all widgets and sub-layouts
+    QLayoutItem* item;
+    while ((item = layout->takeAt(0)) != nullptr) {
+        // If the item is a widget, delete it
+        if (item->widget()) {
+            delete item->widget();
+        }
+        // If the item is a layout, recursively clear its contents and delete it
+        else if (item->layout()) {
+            clearLayout(item->layout());  // Recursively clear nested layouts
+            delete item->layout();        // Delete the layout after clearing its contents
+        }
     }
 }

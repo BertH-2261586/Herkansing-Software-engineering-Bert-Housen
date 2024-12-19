@@ -14,6 +14,7 @@ public:
 	QString getQuestion() const;
 	Answer getAnswer();
 private:
+	void updateRemoveButtonState();
 	void addAnswer();
 	QTextEdit* m_txtQuestion;
 	QBoxLayout* m_layout;

@@ -9,14 +9,21 @@ class ToastMessage : public QLabel {
     Q_OBJECT
 public:
     explicit ToastMessage(const QString& message, QWidget* parent = nullptr) : QLabel(parent) {
+
         setText(message);
-        
+        setContentsMargins(5, 5, 5, 5);
+
+
         setStyleSheet(
             "background-color: palette(midlight); "  
             "color: palette(toolTipText); "            
             "border-radius: 5px; "                    
             "padding: 5px;"
         );
+
+        adjustSize();
+
+
         
 
         setAlignment(Qt::AlignCenter);

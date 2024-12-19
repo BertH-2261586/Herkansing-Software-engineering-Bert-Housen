@@ -7,29 +7,29 @@ class PasswordHasher:
     def __init__(self):
         self.context = CryptContext(schemes=["bcrypt"], deprecated="auto")
     
+    # Hashes the given password
     def hash_password(self, password):
-        """hashes passed password"""
         return self.context.hash(password)
 
+    # Verifies password with hashed password
     def verify_password(self, password, hashed_password):
-        """verifies password with hashed password, returns true if passwords are the same"""
         return self.context.verify(password, hashed_password)
 
 class UserSessionManager:
     def __init__(self):
         self.secret_key = "4b8e9a19c4a9486e9677b3c10fadc43dbf8dbda1966c18e1a6b42cf47e8ad4f2"
         self.algo = "HS256"
-        self.expiration = 60        #expiration time in minutes
+        self.expiration = 60        # Expiration time in minutes
     
+    # Create JWT
     def create_session_token(self, data: dict):
-        """Create JWT"""
         token_data = data.copy()
         token = jwt.encode(token_data, self.secret_key, self.algo)
         
         return token
     
+    # Verify JWT
     def verify_session_token(self, token):
-        """Verify JWT"""
         try:
             token_data = jwt.decode(token, self.secret_key, self.algo)
             return token_data

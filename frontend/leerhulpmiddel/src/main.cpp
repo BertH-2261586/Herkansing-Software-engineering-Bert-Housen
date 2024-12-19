@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QMainWindow>
+#include <QSettings>
 
 #include "Controller/questionmanagercontroller.h"
 #include "model/manager/questionmanager.h"
@@ -9,6 +10,10 @@
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
+
+    // Remove the session key if logged in
+    //QSettings settings("groep_7", "leerhulpmiddel");
+    //settings.remove("sessionCookie");
 
     // Create the main window
     QuestionManager qManager;
