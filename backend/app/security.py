@@ -1,3 +1,4 @@
+from fastapi import Header, HTTPException
 from passlib.context import CryptContext
 import jwt
 
@@ -16,7 +17,7 @@ class PasswordHasher:
 
 class UserSessionManager:
     def __init__(self):
-        self.secret_key = "placeholder"
+        self.secret_key = "4b8e9a19c4a9486e9677b3c10fadc43dbf8dbda1966c18e1a6b42cf47e8ad4f2"
         self.algo = "HS256"
         self.expiration = 60        #expiration time in minutes
     
@@ -34,3 +35,12 @@ class UserSessionManager:
             return token_data
         except jwt.PyJWTError:
             None
+    
+    def token_verification(self, token: str = Header(...)) -> dict:
+        token_data = self.verify_session_token(token)
+
+        if not token_data or "id" not in token_data:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        return token_data
+
