@@ -137,8 +137,16 @@ void CreateExaminationView::startExamination() {
         return;
     }
 
-    clearLayout(m_mainLayout);
     m_examinationView = new ExaminationView;
+    if (m_toggle->isChecked()) {
+        QTime currentTime = m_timer->time();
+        m_examinationView->startExamination(questionSetPath, currentTime);
+    }
+    else {
+        m_examinationView->startExamination(questionSetPath, QTime(-1, -1, -1));
+    }
+
+    clearLayout(m_mainLayout);
     m_mainLayout->addWidget(m_examinationView);
     // If m_examinationView is closed also close this 
     connect(m_examinationView, &QWidget::destroyed, this, [=] {
@@ -147,14 +155,6 @@ void CreateExaminationView::startExamination() {
         delete m_mainLayout;
         this->close();
     });
-
-    if (m_toggle->isChecked()) {
-        QTime currentTime = m_timer->time();
-        m_examinationView->startExamination(questionSetPath, currentTime);
-    }
-    else {
-        m_examinationView->startExamination(questionSetPath, QTime(-1, -1, -1));
-    }
 }
 
 void CreateExaminationView::clearLayout(QLayout* layout) {

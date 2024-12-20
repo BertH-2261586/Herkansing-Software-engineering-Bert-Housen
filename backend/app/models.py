@@ -29,6 +29,13 @@ class User(UserBase, table=True):
 class UserIdInput(SQLModel):
     id: int
 
+class UserSearchRequest(SQLModel):
+    page: int = 1               # Default page is 1
+    search: Optional[str] = None   # Search query is optional
+
+class UsernameInput(SQLModel):
+    username: str
+
 #Group Model
 class GroupCreate(SQLModel):
     name: str = Field(min_length=3, max_length=50, nullable=False)
