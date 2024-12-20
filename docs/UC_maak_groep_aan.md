@@ -27,6 +27,9 @@
 4a. De gebruiker wil meer info toevoegen:
 1. Gebruiker voert beschrijving in
 
+5a. Groep kan niet aangemaakt worden:
+1. Gebruiker wordt op de hoogte gebracht
+
 
 **Special Requirements:** Geen
 
