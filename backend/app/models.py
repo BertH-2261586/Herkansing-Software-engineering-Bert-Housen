@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field, Relationship, ForeignKey
 from typing import Optional, List
 from pydantic import BaseModel
+from datetime import datetime
 
 
 # JSON validation models
@@ -64,8 +65,17 @@ class GroupMember(SQLModel, table=True):
     group_id: int = Field(default=None, foreign_key="group.id", ondelete="CASCADE")
     user_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
 
+class GroupCodeInvite(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    code: str = Field(min_length=10, max_length=10)
+    group_id: int = Field(default=None, foreign_key="group.id", ondelete="CASCADE")
+    expires: datetime
+
+class GroupCodeInput(SQLModel):
+    code: str = Field(min_length=10, max_length=10)
 
 
+#Friend model
 class FriendBase(SQLModel):
     user1: int = Field(foreign_key="user.id", ondelete="CASCADE")   
     user2: int = Field(foreign_key="user.id", ondelete="CASCADE")
@@ -74,7 +84,7 @@ class Friend(FriendBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
 
 
-
+#Inbox model
 class InboxBase(SQLModel):
     type: str                                   
     sending_user: int = Field(foreign_key="user.id", ondelete="CASCADE")   

@@ -1,10 +1,11 @@
 import logging
 from fastapi import Request
 from sqlmodel import create_engine, Session, select
-from .models import User, UserBase, Group, GroupInvite, GroupMember, Inbox, Friend
+from .models import User, UserBase, Group, GroupInvite, GroupMember, Inbox, Friend, GroupCodeInvite
 from sqlalchemy import func  
 from typing import Optional, Tuple, List
 import sys
+from datetime import datetime, timezone
 
 DATABASE_URL = "mysql+pymysql://user:password@mysql-db:3306/dbname"
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -141,8 +142,48 @@ class GroupManager:
         
         return False
 
+    def get_group_by_code(self, codeToCheck) -> Group:
+        """Gets group associated with code"""
+        code_invitation = self.session.exec(select(GroupCodeInvite).filter_by(code=codeToCheck)).first()
 
+        if code_invitation:
+            if code_invitation.expires.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+                return self.session.exec(select(Group).filter_by(id=code_invitation.group_id)).first()
+            else:
+                self.remove_group_code(code_invitation.id)  #delete code from db if expired
+        else:
+            return
+
+    def remove_group_code(self, group_code_id):
+        """Removes group code with given id"""
+        group_code = self.session.exec(select(GroupCodeInvite).filter_by(id=group_code_id)).first()
+
+        if group_code_id:
+            self.session.delete(group_code)
+            self.session.commit()
+
+    def get_group_code(self, group_id_to_check):
+        """Saves code as group invitation code"""
+        code_invitation = self.session.exec(select(GroupCodeInvite).filter_by(group_id=group_id_to_check)).first()
+
+        if code_invitation:
+            if code_invitation.expires.replace(tzinfo=timezone.utc) > datetime.now(timezone.utc):
+                return code_invitation.code
+            else:
+                self.remove_group_code(code_invitation.id)  #delete code from db if expired
+        
+
+    def save_group_code(self, code_to_save, group_id_to_save, expiration_date):
+        """Saves code as group invitation code"""
+        group_code = GroupCodeInvite(code=code_to_save, group_id=group_id_to_save, expires=expiration_date)
+        self.session.add(group_code)
+        self.session.commit()
     
+    def join_group(self, user_id, group_id):
+        """Lets user join group"""
+        self.session.add(GroupMember(group_id=group_id, user_id=user_id))
+        self.session.commit()
+
     # Fetches users in a specific range based on page number and page size
     def get_users_by_page(self, page: int, page_size: int = 10, search_query: Optional[str] = None) -> Tuple[int, List[str]]:
         offset_value = (page - 1) * page_size                                    # Calculate from what row to start
