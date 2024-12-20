@@ -85,10 +85,26 @@ class UserManager:
             return True
         else:
             return False
+        
+    def get_users_by_page(self, page: int, page_size: int = 10, search_query: Optional[str] = None) -> Tuple[int, List[str]]:
+        offset_value = (page - 1) * page_size                                    # Calculate from what row to start
+        query = select(User.username).offset(offset_value).limit(page_size)      # Generate the query
+        if search_query:
+            query = query.filter(User.username.ilike(f"%{search_query}%"))  
+        
+        # Get the list of usernames for the current page
+        user_list = self.session.scalars(query).all()               
+        
+        # Get the total amount of users found
+        count_query = select(func.count(User.username))             
+        total_count = self.session.scalar(count_query)
 
-
-
-
+        return total_count, user_list
+    
+    def get_userID_via_username(self, username: str) -> Optional[int]:
+        query = select(User.id).where(User.username == username)
+        user_id = self.session.scalar(query)
+        return user_id
 
 class GroupManager:
     def __init__(self, session : Session):

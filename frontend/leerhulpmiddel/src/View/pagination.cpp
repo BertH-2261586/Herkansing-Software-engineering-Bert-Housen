@@ -46,7 +46,7 @@ void Pagination::createNavigationButtons(bool backwards) {
 
 // Create the buttons to navigate between pages
 void Pagination::createPageButtons() {
-    const int index_offset = 1;
+    const int index_offset = 10;
     const int pages_before_current_page = 2;            // There are 2 pages (max) displayed before and after the current page
     const int pages_after_current_page = 2;
 

@@ -19,6 +19,6 @@ void inboxController::inboxRequestResponse(int index, bool accepted) {
 		}
 	}
 
-	//m_networkManager->removeInboxMessage(m_inboxMessages[index]["id"].toInt());
+	m_networkManager->removeInboxMessage(m_inboxMessages[index]["id"].toInt());
 }
 

@@ -40,8 +40,8 @@ async def get_user_inbox_messages(user: UserIdInput, token_data: dict = Depends(
 
 
 @router.delete("/remove")
-async def create_inbox_item(request: Request, token_data: dict = Depends(session_manager.token_verification), db: InboxManager = Depends(get_database)):
-    if token_data["id"] == int(request.query_params.get('inbox_message_id')):
+async def remove_inbox_item(request: Request, token_data: dict = Depends(session_manager.token_verification), db: InboxManager = Depends(get_database)):
+    if token_data["id"] == int(request.query_params.get('userID')):
         try:
             inbox_message_ID = int(request.query_params.get('inbox_message_id'))  
             deleted = db.remove_inbox_message(inbox_message_ID)

@@ -2,9 +2,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Header,Request
 from sqlmodel import Session
 from ..database import *
-from ..models import User, UserBase, UserLogin, UserIdInput, GroupInviteIdInput
+from ..models import User, UserBase, UserLogin, UserIdInput, GroupInviteIdInput, UserSearchRequest, UsernameInput
 from ..security import PasswordHasher, UserSessionManager
-from sqlalchemy.exc import SQLAlchemyError  
+
+logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
 router = APIRouter()
 pw_hasher = PasswordHasher()
@@ -12,7 +13,6 @@ session_manager = UserSessionManager()
 
 def get_database(session: Session = Depends(get_session)) -> UserManager:
     return UserManager(session)
-
 
 # Handles the addition of a user
 @router.get("/add", response_model=User)
@@ -95,30 +95,21 @@ async def reject_user_invite(invite: GroupInviteIdInput, token_data: dict = Depe
     else:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-
 # Gets a certain amount of users
-@router.get('/getUsers', response_model=dict)
-async def getUsersByPage(request: Request, db: UserManager = Depends(get_database)):
-    # Get the query parameters from the URL
-    current_page = int(request.query_params.get('page', 1))             # Default to page 1 if not provided
-    current_page_size = int(request.query_params.get('pageSize', 1))   # Default to page size 10 if not provided
-    current_search_query = request.query_params.get('search', None)             # Default to None if no user input provided
-
+@router.post('/getUsers', response_model=dict)
+async def getUsersByPage(searching_info: UserSearchRequest, db: UserManager = Depends(get_database)):
+    current_page_size = 10                                                
     try: 
         # Query the database for the list of users
-        total_count, users = db.get_users_by_page(page = current_page, page_size = current_page_size, search_query = current_search_query)
+        total_count, users = db.get_users_by_page(page = searching_info.page, 
+                                                  page_size = current_page_size, search_query = searching_info.search)
         return {"total_count": total_count, "users": users}
-    except SQLAlchemyError:
-        # Log the database error
-        print(f"Database error occurred: {str(e)}")
-        return {"error": "Database error", "details": str(e)}
     except Exception as e:
         # Catch any other unexpected errors
         print(f"Unexpected error occurred: {str(e)}")
         return {"error": "Unexpected error", "details": str(e)}
     
-@router.get("/get_user_id", response_model = dict)
-async def create_inbox_item(request: Request, db: UserManager = Depends(get_database)):
-    username = request.query_params.get('username')
-    user_id = db.get_userID_via_username(username = username)
+@router.post("/get_user_id", response_model = dict)
+async def create_inbox_item(user: UsernameInput, db: UserManager = Depends(get_database)):
+    user_id = db.get_userID_via_username(username = user.username)
     return {"user_id": user_id}
