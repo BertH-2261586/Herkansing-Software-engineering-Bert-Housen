@@ -38,7 +38,6 @@ async def get_user_inbox_messages(user: UserIdInput, token_data: dict = Depends(
     else:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-
 @router.delete("/remove")
 async def remove_inbox_item(request: Request, token_data: dict = Depends(session_manager.token_verification), db: InboxManager = Depends(get_database)):
     if token_data["id"] == int(request.query_params.get('userID')):

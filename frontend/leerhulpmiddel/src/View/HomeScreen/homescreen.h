@@ -46,6 +46,7 @@ private:
 
     NetworkManager* m_networkManager;
     LoginController* m_loginController;
+
 public slots:
     void DisplayWidget(QWidget* displayWidget);
     void setRequestAmount() { setInboxRequestAmount(); }

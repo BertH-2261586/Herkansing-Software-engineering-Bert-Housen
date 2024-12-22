@@ -26,7 +26,7 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
 
     m_rightSideScreen = new QWidget();
     m_container->addWidget(m_rightSideScreen, 4);
-    
+
     setInboxView();
 
     main_container->addWidget(GenerateTopButtonBar());
@@ -43,7 +43,11 @@ HomeScreen::~HomeScreen() {
 void HomeScreen::setInboxView() {
     // Create the inbox sliding menu
     m_inboxView = new InboxView(this);
-    m_container->addWidget(m_inboxView, 0, Qt::AlignTop);
+    // Set the widget as a floating widget (not constrained by the layout)
+    m_inboxView->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
+    m_inboxView->setAttribute(Qt::WA_TranslucentBackground);
+    m_inboxView->move(QGuiApplication::primaryScreen()->geometry().width(), 75);        // Move the view offscreen
+    m_inboxView->show();
 
     // Calculate the inbox menu width and screen width for initialization
     int screenWidth = this->width();
@@ -51,18 +55,17 @@ void HomeScreen::setInboxView() {
     // Create the animation for sliding the menu
     m_inboxAnimation = new QPropertyAnimation(m_inboxView, "pos");
     m_inboxAnimation->setDuration(500);
-    m_inboxAnimation->setStartValue(QPoint(screenWidth, 50));            // Starting position off-screen
-    m_inboxAnimation->setEndValue(QPoint(screenWidth - menuWidth, 50));
+    m_inboxAnimation->setStartValue(QPoint(screenWidth, 75));            // Starting position off-screen
+    m_inboxAnimation->setEndValue(QPoint(screenWidth - menuWidth, 75));
 }
 
 QWidget* HomeScreen::GenerateTopButtonBar()
 {
-
-
     NetworkManager* networkManager = new NetworkManager();
 
     QPushButton* shareButton = new QPushButton("Share");
     connect(shareButton, &QPushButton::pressed, this, [=] {
+        m_inboxView->move(QGuiApplication::primaryScreen()->geometry().width(), 75);        // Move the inbox view offscreen (so it doesnt stay in another window)
 		ShareView* shareView = new ShareView( new ShareController(networkManager),this);
         shareView->show();
         connect(networkManager, &NetworkManager::shareQuestionSetsSuccess,
@@ -76,6 +79,7 @@ QWidget* HomeScreen::GenerateTopButtonBar()
 
     QPushButton* startExamButton = new QPushButton("Start examination");
     connect(startExamButton, &QPushButton::pressed, this, [=] {
+        m_inboxView->move(QGuiApplication::primaryScreen()->geometry().width(), 75);        // Move the inbox view offscreen (so it doesnt stay in another window)
         m_mainWindow->PushMainViewport(new CreateExaminationView());
     });
 
@@ -93,11 +97,20 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     connect(m_networkManager, &NetworkManager::loggedIn, this, [=] {
         loginButton->hide();
         logoutButton->show();
+        m_inboxButton->show();
+        m_requestAmountLabel->show();
+        m_addFriendButton->show();
+
+        m_inboxView->resetInboxView();
     });
 
     connect(m_networkManager, &NetworkManager::loggedOut, this, [=] {
         logoutButton->hide();
         loginButton->show();
+        m_inboxButton->hide();
+        m_requestAmountLabel->hide();
+        m_addFriendButton->hide();
+        m_inboxView->move(QGuiApplication::primaryScreen()->geometry().width(), 50);        // Move the inbox view offscreen when logging out
     });
     
     connect(logoutButton, &QPushButton::pressed, this, [=] {
@@ -118,6 +131,11 @@ QWidget* HomeScreen::GenerateTopButtonBar()
             this, [=] {
                 loginButton->hide();
                 logoutButton->show();
+                m_inboxButton->show();
+                m_requestAmountLabel->show();
+                m_addFriendButton->show();
+
+                m_inboxView->resetInboxView();
 
                 m_mainWindow->PopMainViewport();
             });
@@ -125,8 +143,6 @@ QWidget* HomeScreen::GenerateTopButtonBar()
         m_mainWindow->PushMainViewport(loginView);
     });
     
-
-    m_loginController->getLoggedInStatus();
 
     // Add all the buttons to the layout
     QHBoxLayout* container = new QHBoxLayout();
@@ -138,6 +154,8 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     // Add the icon buttons to the layout
     setAddFriendButton(container);
     setInboxButton(container);
+
+    m_loginController->getLoggedInStatus();
 
     QWidget* outputWidget = new QWidget();
     outputWidget->setStyleSheet("background-color: #5c5c5c;");
@@ -152,13 +170,13 @@ void HomeScreen::startInboxAnimation() {
 
     if (m_inboxView->x() == screenWidth - menuWidth) {
         // If the menu is visible, slide it out (to the right)
-        m_inboxAnimation->setStartValue(QPoint(screenWidth - menuWidth, 50));
-        m_inboxAnimation->setEndValue(QPoint(screenWidth, 50));
+        m_inboxAnimation->setStartValue(QPoint(screenWidth - menuWidth, 75));
+        m_inboxAnimation->setEndValue(QPoint(screenWidth, 75));
     }
     else {
         // If the menu is hidden, slide it in (to the left)
-        m_inboxAnimation->setStartValue(QPoint(screenWidth, 50));
-        m_inboxAnimation->setEndValue(QPoint(screenWidth - menuWidth, 50));
+        m_inboxAnimation->setStartValue(QPoint(screenWidth, 75));
+        m_inboxAnimation->setEndValue(QPoint(screenWidth - menuWidth, 75));
     }
 
     m_inboxAnimation->start();  
@@ -174,12 +192,6 @@ void HomeScreen::setAddFriendButton(QHBoxLayout* container) {
 
     // Add the widget to the container
     container->addWidget(m_addFriendButton);
-
-    // Check if the user is logged in
-    NetworkManager newNetworkManager = NetworkManager();
-
-    // Show the button if the user is logged in
-    newNetworkManager.cookieExists() ? m_addFriendButton->show() : m_addFriendButton->hide();
 }
 
 void HomeScreen::setInboxButton(QHBoxLayout* container) {
@@ -193,18 +205,6 @@ void HomeScreen::setInboxButton(QHBoxLayout* container) {
 
     // Add the buttonContainer to the main container layout
     container->addWidget(buttonContainer);
-
-    // Check if the user is logged in
-    NetworkManager newNetworkManager = NetworkManager();
-    if(newNetworkManager.cookieExists()){
-        m_inboxButton->show();
-        m_requestAmountLabel->show();
-    }
-    // There is no cookie, so the user is not logged in yet
-    else {
-        m_inboxButton->hide();
-        m_requestAmountLabel->hide();
-    }
 }
 
 QWidget* HomeScreen::setInboxRequestLabel() {

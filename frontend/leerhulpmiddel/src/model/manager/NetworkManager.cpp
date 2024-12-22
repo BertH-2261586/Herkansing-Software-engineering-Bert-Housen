@@ -72,6 +72,7 @@ void NetworkManager::login(QString username, QString password)
 void NetworkManager::logout() {
 	setLoginStatus(false);
 	saveSessionCookie("");		//Clear session cookie
+	emit loggedOut();
 }
 
 /*
@@ -297,6 +298,7 @@ void NetworkManager::getUsersByPage(const int page, const QString userInput)
 
 	//Post data
 	QJsonObject json = QJsonObject();
+	json["userID"] = getUserId();
 	json["page"] = page;
 	if (!userInput.isEmpty()) {
 		json["search"] = userInput;  
@@ -329,17 +331,59 @@ void NetworkManager::receiveUserByPageHandler(QNetworkReply* reply) {
 	}
 
 	// Set the list of received users
-	QList<QString> userList;
 	QJsonObject responseObject = doc.object();
 	QJsonArray usersArray = responseObject["users"].toArray();
+	QList<QString> userList;
 	for (const QJsonValue& value : usersArray) {
 		userList.append(value.toString());
 	}
 
+	// Get all the users are friends with the current user
+	QJsonObject requests = responseObject["are_friends"].toObject();
+
+	// Sort the keys or else the bools dont match up with the user
+	QList<QString> sortedKeys = requests.keys();
+	std::sort(sortedKeys.begin(), sortedKeys.end(), [](const QString& a, const QString& b) {
+		return a.toInt() < b.toInt();
+	});
+	QList<bool> areFriendsList;
+	// Iterate over the keys 
+	for (const QString& key : sortedKeys) {
+		bool areFriends = requests[key].toBool();
+
+		// Add them to the list
+		areFriendsList.append(areFriends);
+	}
+
+	// Get all the users that have received a friend request from you or sent a friend request to you
+	requests = responseObject["sent_friend_requests"].toObject();
+
+	// Sort the keys or else the bools dont match up with the user
+	sortedKeys = requests.keys();
+	std::sort(sortedKeys.begin(), sortedKeys.end(), [](const QString& a, const QString& b) {
+		return a.toInt() < b.toInt();
+		});
+
+	// Prepare lists to store the 'sent' and 'received' statuses
+	QList<bool> sentFriendRequests;
+	QList<bool> receivedFriendRequests;
+	// Iterate over the keys in "sent_friend_requests"
+	for (const QString& key : sortedKeys) {
+		QJsonObject userStatus = requests[key].toObject();
+
+		// Extract the 'sent' and 'received' values for each user
+		bool sent = userStatus["sent"].toBool();
+		bool received = userStatus["received"].toBool();
+
+		// Add them to the respective lists
+		sentFriendRequests.append(sent);
+		receivedFriendRequests.append(received);
+	}
+
 	reply->deleteLater();
 
-	// Send a signal to the controller with all the users 
-	emit usersFetched(responseObject["total_count"].toInt(), userList);
+	// Send a signal to the controller with all the necessary data of the users on the page
+	emit usersFetched(responseObject["total_count"].toInt(), userList, areFriendsList, sentFriendRequests, receivedFriendRequests);
 }
 
 int NetworkManager::getUserIdByUsername(const QString username) {

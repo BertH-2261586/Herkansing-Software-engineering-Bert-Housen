@@ -30,6 +30,7 @@ class UserIdInput(SQLModel):
     id: int
 
 class UserSearchRequest(SQLModel):
+    userID: int
     page: int = 1               # Default page is 1
     search: Optional[str] = None   # Search query is optional
 

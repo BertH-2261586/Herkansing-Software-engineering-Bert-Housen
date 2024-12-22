@@ -18,6 +18,7 @@ class InboxView : public QWidget
 public:
     InboxView(QWidget* parent = nullptr);
     int getAmountInboxRequests() { return m_inboxController.getAmountOfMessages(); }
+    void resetInboxView();
 
 signals:
     void removeInboxItem();
@@ -35,7 +36,7 @@ private:
     void setMainLayout();
     void setSlidingMenu();
 
-    void deleteInboxItem(const int index);
+    void deleteInboxItem(const int index = -1);
 
     inboxController m_inboxController = inboxController();
 
