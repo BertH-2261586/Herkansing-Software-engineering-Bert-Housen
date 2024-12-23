@@ -35,6 +35,7 @@ private:
     addFriendController m_addFriendController = addFriendController();
 
     QVBoxLayout* m_mainLayout;
+    QHBoxLayout* m_searchLayout;
     QVBoxLayout* m_userSearch;
 
     QWidget* m_userSearchWidget;
@@ -42,6 +43,7 @@ private:
 
     QPushButton* m_goBack;
     QLineEdit* m_searchBar;
+    QPushButton* m_searchButton;
 
     QList<QHBoxLayout*> m_userLayouts;
     QList<QLabel*> m_userNames;

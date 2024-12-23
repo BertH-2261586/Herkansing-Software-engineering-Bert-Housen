@@ -8,6 +8,8 @@
 #include "../../Controller/LoginController.h"
 #include "../../model/manager/NetworkManager.h"
 
+#include "../../Controller/ShareController.h"
+
 class LeerhulpmiddelMainWindow;
 
 #include "questionsetbrowser.h"
@@ -46,6 +48,8 @@ private:
 
     NetworkManager* m_networkManager;
     LoginController* m_loginController;
+    ShareController* m_shareController;
+
 public slots:
     void DisplayWidget(QWidget* displayWidget);
     void setRequestAmount() { setInboxRequestAmount(); }

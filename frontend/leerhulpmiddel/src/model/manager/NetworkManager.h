@@ -48,7 +48,8 @@ signals:
 	void shareFailed();
 	void shareSuccess(QString code);
 	void shareQuestionSetsSuccess();
-	void usersFetched(int totalCount, QList<QString> users);
-	void inboxMessagesFetched(QList<QJsonObject> inboxMessages);};
+	void usersFetched(int totalCount, QList<QString> users, QList<bool> areFriendsList, QList<bool> sentFriendRequest, QList<bool> receivedFriendRequest);
+	void inboxMessagesFetched(QList<QJsonObject> inboxMessages);
+};
 
 #endif

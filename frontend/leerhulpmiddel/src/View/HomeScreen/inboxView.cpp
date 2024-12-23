@@ -1,9 +1,7 @@
 #include "inboxView.h"
-#include "homeScreen.h"  // Include the full definition of HomeScreen here
+#include "homeScreen.h"  
 
 InboxView::InboxView(QWidget* parent) : QWidget(parent) {
-    m_inboxController.getUserInboxMessages();
-
     setSlidingMenu();
 
     // Create a QScrollArea to make the menu scrollable
@@ -38,9 +36,7 @@ InboxView::InboxView(QWidget* parent) : QWidget(parent) {
 }
 
 void InboxView::setInboxRequests() {
-    if (m_inboxController.getAmountOfMessages() == 0) {
-        m_noItemsInInbox->show();
-    }
+    m_inboxController.getAmountOfMessages() == 0 ? m_noItemsInInbox->show() : m_noItemsInInbox->hide();
 
     for (int i = 0; i < m_inboxController.getAmountOfMessages(); ++i) {
         m_menuItemLayouts.append(new QGridLayout());
@@ -181,7 +177,15 @@ void InboxView::inboxRequestResponse(int index, bool accepted) {
     emit removeInboxItem();
 }
 
+// Delete all the items and reset the inbox
+void InboxView::resetInboxView() {
+    deleteInboxItem();
+    m_inboxController.getUserInboxMessages();
+}
+
 void InboxView::deleteInboxItem(int index) {
+    int no_index = -1;      // No index provided means that you need to clear the whole view (new user logged in)
+
     // Removing and re-adding all items is necessary, or else the indices wont reset and will cause index out of bounds errors
     // For example item in place 3 stays 3 even when 2 is removed
 
@@ -199,8 +203,15 @@ void InboxView::deleteInboxItem(int index) {
         m_itemFrames.removeAt(0);
     }
 
-    m_inboxController.removeInboxMessage(index);
+    // There is no index provided (new user logged in), clear everything
+    if (index == no_index) {
+        m_inboxController.clearInbox();
+    }
+    // There is a index, clear and reset the view
+    else {
+        m_inboxController.removeInboxMessage(index);
 
-    // Re add the remaining items than wont need to be removed
-    setInboxRequests();
+        // Re add the remaining items than wont need to be removed
+        setInboxRequests();
+    }
 }

@@ -14,6 +14,12 @@ session_manager = UserSessionManager()
 def get_database(session: Session = Depends(get_session)) -> UserManager:
     return UserManager(session)
 
+def get_friend_database(session: Session = Depends(get_session)) -> FriendManager:
+    return FriendManager(session)
+
+def get_inbox_database(session: Session = Depends(get_session)) -> InboxManager:
+    return InboxManager(session)
+
 # Handles the addition of a user
 @router.get("/add", response_model=User)
 async def create_user_route(db: UserManager = Depends(get_database)):
@@ -97,13 +103,22 @@ async def reject_user_invite(invite: GroupInviteIdInput, token_data: dict = Depe
 
 # Gets a certain amount of users
 @router.post('/getUsers', response_model=dict)
-async def getUsersByPage(searching_info: UserSearchRequest, db: UserManager = Depends(get_database)):
-    current_page_size = 10                                                
+async def getUsersByPage(searching_info: UserSearchRequest, user_db: UserManager = Depends(get_database), 
+                        friend_db: FriendManager = Depends(get_friend_database), inbox_db: InboxManager = Depends(get_inbox_database)):
+    current_page_size = 10     
+    ID = searching_info.userID                                    
     try: 
         # Query the database for the list of users
-        total_count, users = db.get_users_by_page(page = searching_info.page, 
+        total_count, user_IDs, users = user_db.get_users_by_page(userID = ID, page = searching_info.page, 
                                                   page_size = current_page_size, search_query = searching_info.search)
-        return {"total_count": total_count, "users": users}
+        
+        # Check if the users found are already friends
+        are_friends = friend_db.are_friends_batch(ID, user_IDs) 
+
+        # Check if the found users already sent a friend request
+        sent_friend_request = inbox_db.check_sent_friend_request_batch(ID, user_IDs)
+
+        return {"total_count": total_count, "users": users, "are_friends": are_friends, "sent_friend_requests": sent_friend_request}
     except Exception as e:
         # Catch any other unexpected errors
         print(f"Unexpected error occurred: {str(e)}")

@@ -34,6 +34,7 @@ void AddFriendView::setGoBack() {
 void AddFriendView::setSearchBar() {
     m_searchBar = new QLineEdit();
     m_searchBar->setPlaceholderText("Search for user...");
+    m_searchBar->setMaximumWidth(275);
 
     // Add the magnifying glass icon
     QAction* searchAction = new QAction(QIcon("resources/magnifying-glass.png"), "", m_searchBar);
@@ -53,10 +54,22 @@ void AddFriendView::setSearchBar() {
         "    background: #f0f8ff;"       
         "}");
 
+    m_searchButton = new QPushButton("Search");
+    m_searchButton->setMaximumWidth(200);
+
+    m_searchLayout = new QHBoxLayout;
+    m_searchLayout->addWidget(m_searchBar, 0, Qt::AlignHCenter);
+    m_searchLayout->addWidget(m_searchButton, 0, Qt::AlignHCenter);
+    m_searchLayout->setAlignment(Qt::AlignHCenter);
+
     // Connect signal for text changes
-    connect(m_searchBar, &QLineEdit::textChanged, this, [=](const QString text) {
-        deleteUserInformation();
-        m_addFriendController.getUsersByPage(1, text);         // Always start from the first page when typing something new
+    connect(m_searchButton, &QPushButton::pressed, this, [=]() {
+        QString text = m_searchBar->text();
+        // Check if the user is retrying the same input, don't repeat the db query if not necessary
+        if (m_addFriendController.allowedToSend(text)) {
+            deleteUserInformation();
+            m_addFriendController.getUsersByPage(1, text);         // Always start from the first page when typing something new
+        }
     });
 }
 
@@ -98,6 +111,7 @@ void AddFriendView::setUserSearch() {
 }
 
 void AddFriendView::setAllUsers() {
+    // Display "No users found" when that is the case
     if (m_addFriendController.getUserPageSize() == 0) {
         m_noUserFound->show();
     }
@@ -107,7 +121,6 @@ void AddFriendView::setAllUsers() {
 
     for (int i = 0; i < m_addFriendController.getUserPageSize(); ++i) {
         QString username = m_addFriendController.getUser(i);
-        qDebug() << "name " <<  username;
         m_userLayouts.append(new QHBoxLayout());
         m_userNames.append(new QLabel(username));
         m_userNames[i]->setStyleSheet(
@@ -115,7 +128,22 @@ void AddFriendView::setAllUsers() {
                 "border: none;"  // Ensure no border is applied to the label by the frame
             "}"
         );
-        m_addUserButtons.append(new QPushButton("Add as friend"));
+
+        if (m_addFriendController.getFriendshipStatus(i)) {
+            m_addUserButtons.append(new QPushButton("You're already friends"));
+            m_addUserButtons[i]->setEnabled(false);
+        }
+        else if (m_addFriendController.hasReceivedFriendRequest(i)) {
+            m_addUserButtons.append(new QPushButton("Already received a friend request"));
+            m_addUserButtons[i]->setEnabled(false);
+        }
+        else if (m_addFriendController.hasSentFriendRequest(i)) {
+            m_addUserButtons.append(new QPushButton("Already sent a friend request"));
+            m_addUserButtons[i]->setEnabled(false);
+        }
+        else {
+            m_addUserButtons.append(new QPushButton("Add as friend"));
+        }
         connect(m_addUserButtons[i], &QPushButton::clicked, this, [=]() {
             // Display a toast message
             QString username = m_addFriendController.getUser(i);
@@ -162,8 +190,9 @@ void AddFriendView::setAllUsers() {
     }
 
     int totalPageAmount = m_addFriendController.getPageAmount();
+    qDebug() << totalPageAmount;
     // Check if there is more than 1 page
-    if (totalPageAmount != 0) {
+    if (totalPageAmount > 1) {
         // Add pagination
         int currentPage = m_addFriendController.getCurrentPage();
         m_pagination = new Pagination(totalPageAmount, currentPage);
@@ -179,7 +208,7 @@ void AddFriendView::setAllUsers() {
 void AddFriendView::setMainLayout() {
 	m_mainLayout = new QVBoxLayout;
     m_mainLayout->addWidget(m_goBack, 0, Qt::AlignLeft | Qt::AlignTop);
-    m_mainLayout->addWidget(m_searchBar, 0, Qt::AlignHCenter);
+    m_mainLayout->addLayout(m_searchLayout);
     m_mainLayout->addWidget(m_userSearchFrame, 0, Qt::AlignHCenter);
 
     setLayout(m_mainLayout);
@@ -209,5 +238,6 @@ void AddFriendView::deleteUserInformation() {
     // Check if the pagination exists
     if (m_pagination) {
         delete m_pagination;
+        m_pagination = nullptr;
     }
 }

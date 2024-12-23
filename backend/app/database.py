@@ -2,7 +2,7 @@ import logging
 from fastapi import Request
 from sqlmodel import create_engine, Session, select
 from .models import User, UserBase, Group, GroupInvite, GroupMember, Inbox, Friend, GroupCodeInvite
-from sqlalchemy import func  
+from sqlalchemy import func, or_  
 from typing import Optional, Tuple, List
 import sys
 from datetime import datetime, timezone
@@ -86,20 +86,25 @@ class UserManager:
         else:
             return False
         
-    def get_users_by_page(self, page: int, page_size: int = 10, search_query: Optional[str] = None) -> Tuple[int, List[str]]:
-        offset_value = (page - 1) * page_size                                    # Calculate from what row to start
-        query = select(User.username).offset(offset_value).limit(page_size)      # Generate the query
+    def get_users_by_page(self, userID: int, page: int, page_size: int, 
+                          search_query: Optional[str] = None) -> Tuple[int, int, List[str]]:
+        offset_value = (page - 1) * page_size                                                   # Calculate from what row to start
+        query = select(User.id, User.username).offset(offset_value).limit(page_size).where(User.id != userID)   # Generate the query
         if search_query:
             query = query.filter(User.username.ilike(f"%{search_query}%"))  
         
         # Get the list of usernames for the current page
-        user_list = self.session.scalars(query).all()               
-        
+        results = self.session.exec(query).all()
+        user_IDs = [row.id for row in results]
+        user_list = [row.username for row in results]
+
         # Get the total amount of users found
-        count_query = select(func.count(User.username))             
+        count_query = select(func.count(User.username)).where(User.id != userID)
+        if search_query:
+            count_query = count_query.filter(User.username.ilike(f"%{search_query}%"))          
         total_count = self.session.scalar(count_query)
 
-        return total_count, user_list
+        return total_count, user_IDs, user_list
     
     def get_userID_via_username(self, username: str) -> Optional[int]:
         query = select(User.id).where(User.username == username)
@@ -200,28 +205,6 @@ class GroupManager:
         self.session.add(GroupMember(group_id=group_id, user_id=user_id))
         self.session.commit()
 
-    # Fetches users in a specific range based on page number and page size
-    def get_users_by_page(self, page: int, page_size: int = 10, search_query: Optional[str] = None) -> Tuple[int, List[str]]:
-        offset_value = (page - 1) * page_size                                    # Calculate from what row to start
-        query = select(User.username).offset(offset_value).limit(page_size)      # Generate the query
-        if search_query:
-            # If a search query is provided, filter the users by username (case insensitive)
-            query = query.filter(User.username.ilike(f"%{search_query}%"))  
-        
-        # Get the list of usernames for the current page
-        user_list = self.session.scalars(query).all()               
-        
-        # Get the total amount of users found
-        count_query = select(func.count(User.username))             
-        total_count = self.session.scalar(count_query)
-
-        return total_count, user_list
-    
-    def get_userID_via_username(self, username: str) -> Optional[int]:
-        query = select(User.id).where(User.username == username)
-        user_id = self.session.scalar(query)
-        return user_id
-
 class InboxManager:
     def __init__(self, session : Session):
         self.session = session
@@ -232,6 +215,30 @@ class InboxManager:
         self.session.commit()
         self.session.refresh(inbox)
     
+    def check_sent_friend_request_batch(self, current_userID: int, user_ids: list) -> dict:
+        # Build the query to check both directions of friend requests (sent or received)
+        query = select(Inbox).where(
+            or_(
+                (Inbox.sending_user == current_userID)  & (Inbox.receiving_user.in_(user_ids))      & (Inbox.type == "friend_request"),
+                (Inbox.sending_user.in_(user_ids))      & (Inbox.receiving_user == current_userID)  & (Inbox.type == "friend_request")
+            )
+        )
+        
+        # Execute the query
+        results = self.session.exec(query).all()
+        
+        # Prepare a dictionary to store friend request statuses for each user
+        friend_request_status = {user_id: {"sent": False, "received": False} for user_id in user_ids}
+        
+        # Process the results to determine the status of the friend request (sent or received)
+        for inbox_entry in results:
+            if inbox_entry.sending_user == current_userID:
+                friend_request_status[inbox_entry.receiving_user]["sent"] = True
+            elif inbox_entry.receiving_user == current_userID:
+                friend_request_status[inbox_entry.sending_user]["received"] = True
+
+        return friend_request_status
+
     def get_inbox_items_user(self, user_ID: int) -> list[dict]:
         # Get all inbox messages and replace the sending_user ID with the username
         query = (
@@ -264,6 +271,7 @@ class InboxManager:
             return True
         return False
 
+logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
     
 class FriendManager:
     def __init__(self, session : Session):
@@ -274,3 +282,29 @@ class FriendManager:
         self.session.add(friendship)
         self.session.commit()
         self.session.refresh(friendship)
+
+    # Check if two users are friends
+    def are_friends_batch(self, current_userID: int, user_ids: list) -> dict:
+        # Build the query to check friendships for the given user_ids
+        query = select(Friend).where(
+            or_(
+                (Friend.user1 == current_userID) & (Friend.user2.in_(user_ids)),
+                (Friend.user1.in_(user_ids)) & (Friend.user2 == current_userID)
+            )
+        )
+        
+        # Execute the query
+        results = self.session.exec(query).all()
+
+        # Prepare a dictionary of friendship status for each user in user_ids
+        friendship_status = {user_id: False for user_id in user_ids}
+        
+        # Mark the users who are friends with the current user as True
+        for friend_relation in results:
+            # If user1 or user2 is the current_userID, the other user is a friend
+            if friend_relation.user1 == current_userID:
+                friendship_status[friend_relation.user2] = True
+            elif friend_relation.user2 == current_userID:
+                friendship_status[friend_relation.user1] = True
+        
+        return friendship_status
