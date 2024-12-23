@@ -62,6 +62,7 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     NetworkManager* networkManager = new NetworkManager();
 
     QPushButton* shareButton = new QPushButton("Share");
+    shareButton->setEnabled(false);
     connect(shareButton, &QPushButton::pressed, this, [=] {
 		ShareView* shareView = new ShareView( new ShareController(networkManager),this);
         shareView->show();
@@ -72,6 +73,7 @@ QWidget* HomeScreen::GenerateTopButtonBar()
 		connect(networkManager, &NetworkManager::shareFailed,
             shareView, &ShareView::showShareFailed);
 	});
+
 
 
     QPushButton* startExamButton = new QPushButton("Start examination");
@@ -93,18 +95,19 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     connect(m_networkManager, &NetworkManager::loggedIn, this, [=] {
         loginButton->hide();
         logoutButton->show();
+        shareButton->setEnabled(true);
     });
 
     connect(m_networkManager, &NetworkManager::loggedOut, this, [=] {
         logoutButton->hide();
         loginButton->show();
+        shareButton->setEnabled(false);
     });
     
     connect(logoutButton, &QPushButton::pressed, this, [=] {
         m_loginController->logout();
-
-        loginButton->show();
-        logoutButton->hide();
+        //Updates all the Views
+        m_loginController->getLoggedInStatus();
     });
 
     connect(loginButton, &QPushButton::pressed, this, [=] {
@@ -116,8 +119,8 @@ QWidget* HomeScreen::GenerateTopButtonBar()
             loginView, &LoginView::failedRegisterFeedback);
         connect(m_networkManager, &NetworkManager::loginSuccess,
             this, [=] {
-                loginButton->hide();
-                logoutButton->show();
+                // Updates all the Views
+                m_loginController->getLoggedInStatus();
 
                 m_mainWindow->PopMainViewport();
             });
