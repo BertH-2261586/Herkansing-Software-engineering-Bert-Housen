@@ -146,4 +146,4 @@ De gebruiker heeft al een vragen set(s) gekozen om te vesturen. De gebruiker sel
 ![Kies vragenset sequentie diagram](./Images/UML_question_set_delen.png)</br>
 
 ## Klassen diagram
-![Klassendiagram](./Images/Klasse_Diagram_leerhulpmiddel.png)
+![Klassendiagram](./Images/Klasse_Diagram_leerhulpmiddel_It2.png)

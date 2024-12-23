@@ -100,4 +100,4 @@ Bevestig uitnodiging toont de system flow wanneer de user een groepsuitnodiging 
 ![Bevestig Groepsaanmaak sequentie diagram](./Images/BevestigUitnodiging.png)
 
 ## Klassen diagram
-![Klassediagram](./Images/Klasse_Diagram_login.png)
+![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel_It2.png)

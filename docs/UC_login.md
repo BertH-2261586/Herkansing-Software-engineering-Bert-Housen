@@ -98,4 +98,4 @@ Bevestig input toont de system flow wanneer er een login/register poging van de 
 ![Bevestig Input sequentie diagram](./Images/Bevestig_Input.png)
 
 ## Klassen diagram
-![Klassediagram](./Images/Klasse_Diagram_login.png)
+![Klassediagram](./Images/Klasse_Diagram_leerhulpmiddel_It2.png)
