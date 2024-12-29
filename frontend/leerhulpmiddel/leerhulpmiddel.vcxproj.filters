@@ -1,22 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="src\Controller\addFriendController.cpp" />
     <ClCompile Include="src\Controller\examinationController.cpp" />
+    <ClCompile Include="src\Controller\inboxController.cpp" />
     <ClCompile Include="src\Controller\questioncontroller.cpp" />
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Controller\questionsetcontroller.cpp" />
+    <ClCompile Include="src\Controller\ShareController.cpp" />
     <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model\countdownTimer.cpp" />
+    <ClCompile Include="src\model\examination.cpp" />
+    <ClCompile Include="src\model\fileManager.cpp" />
     <ClCompile Include="src\model\manager\examinationManager.cpp" />
+    <ClCompile Include="src\model\manager\NetworkManager.cpp" />
     <ClCompile Include="src\model\manager\questionmanager.cpp" />
+    <ClCompile Include="src\model\questionset.cpp" />
     <ClCompile Include="src\model\Questions\Answer.cpp" />
     <ClCompile Include="src\model\Questions\FillInQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Flashcard.cpp" />
     <ClCompile Include="src\model\Questions\MultipleChoiceQuestion.cpp" />
     <ClCompile Include="src\model\Questions\Question.cpp" />
-    <ClCompile Include="src\model\countdownTimer.cpp" />
-    <ClCompile Include="src\model\examination.cpp" />
-    <ClCompile Include="src\model\fileManager.cpp" />
-    <ClCompile Include="src\model\questionset.cpp" />
+    <ClCompile Include="src\View\add_friends\add_friend_view.cpp" />
+    <ClCompile Include="src\view\chooseQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp" />
     <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp" />
     <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp" />
@@ -24,100 +31,91 @@
     <ClCompile Include="src\view\Examination\createExaminationView.cpp" />
     <ClCompile Include="src\view\Examination\examinationView.cpp" />
     <ClCompile Include="src\view\Examination\scoreCardExaminationView.cpp" />
+    <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
+    <ClCompile Include="src\View\HomeScreen\inboxView.cpp" />
+    <ClCompile Include="src\view\HomeScreen\questionsetbrowser.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetbutton.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.cpp" />
     <ClCompile Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.cpp" />
-    <ClCompile Include="src\view\HomeScreen\questionsetbrowser.cpp" />
+    <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
+    <ClCompile Include="src\view\Login\LoginView.cpp" />
+    <ClCompile Include="src\View\pagination.cpp" />
+    <ClCompile Include="src\view\QFlowLayout.cpp" />
     <ClCompile Include="src\view\questions\FillInView.cpp" />
     <ClCompile Include="src\view\questions\FlashcardView.cpp" />
     <ClCompile Include="src\view\questions\MultipleChoiceView.cpp" />
-    <ClCompile Include="src\view\chooseQuestionView.cpp" />
-    <ClCompile Include="src\view\leerhulpmiddelmainwindow.cpp" />
-    <ClCompile Include="src\view\QFlowLayout.cpp" />
-    <ClCompile Include="src\view\toggleSwitch.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\model\manager\NetworkManager.cpp" />
-    <ClCompile Include="src\view\Login\LoginView.cpp" />
-<<<<<<< HEAD
-=======
-    <ClCompile Include="src\Controller\LoginController.cpp" />
     <ClCompile Include="src\View\Share\ShareView.cpp" />
-    <ClCompile Include="src\Controller\ShareController.cpp" />
-    <ClCompile Include="src\Controller\inboxController.cpp" />
-    <ClCompile Include="src\View\add_friends\add_friend_view.cpp" />
-    <ClCompile Include="src\view\HomeScreen\homescreen.cpp" />
-    <ClCompile Include="src\View\HomeScreen\inboxView.cpp" />
-    <ClCompile Include="src\View\pagination.cpp" />
-    <ClCompile Include="src\Controller\addFriendController.cpp" />
->>>>>>> VragenDelen
+    <ClCompile Include="src\view\toggleSwitch.cpp" />
+    <ClCompile Include="src\tests\TestNetworkManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Controller\LoginController.h" />
+    <ClInclude Include="src\Controller\questioncontroller.h" />
+    <ClInclude Include="src\Controller\questionmanagercontroller.h" />
+    <ClInclude Include="src\Controller\questionsetcontroller.h" />
+    <ClInclude Include="src\Controller\ShareController.h" />
+    <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
+    <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />
+    <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
+    <ClInclude Include="src\Exceptions\loadException.h" />
+    <ClInclude Include="src\Exceptions\NoSavedSessionException.h" />
+    <ClInclude Include="src\Exceptions\saveException.h" />
+    <ClInclude Include="src\model\examination.h" />
+    <ClInclude Include="src\model\fileManager.h" />
+    <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
+    <ClInclude Include="src\View\Overlay.h" />
+    <ClInclude Include="src\view\QFlowLayout.h" />
+    <ClInclude Include="src\view\style.h" />
+    <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
+    <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
+    <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h" />
+    <ClInclude Include="src\model\Questions\Answer.h" />
+    <ClInclude Include="src\model\Questions\FillInQuestion.h" />
+    <ClInclude Include="src\model\Questions\Flashcard.h" />
+    <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
+    <ClInclude Include="src\model\Questions\questionType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\Controller\addFriendController.h" />
+    <QtMoc Include="src\Controller\examinationController.h" />
+    <QtMoc Include="src\Controller\inboxController.h" />
+    <QtMoc Include="src\view\toggleSwitch.h" />
+    <QtMoc Include="src\view\ToastMessage.h" />
+    <QtMoc Include="src\View\pagination.h" />
+    <QtMoc Include="src\view\focusoutlineedit.h" />
+    <QtMoc Include="src\view\EditableLabel.h" />
+    <QtMoc Include="src\view\chooseQuestionView.h" />
+    <QtMoc Include="src\View\Share\ShareView.h" />
+    <QtMoc Include="src\view\questions\MultipleChoiceView.h" />
+    <QtMoc Include="src\view\questions\FlashcardView.h" />
+    <QtMoc Include="src\view\questions\FillInView.h" />
+    <QtMoc Include="src\view\Login\LoginView.h" />
+    <QtMoc Include="src\View\HomeScreen\inboxView.h" />
+    <QtMoc Include="src\view\HomeScreen\homescreen.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetbutton.h" />
+    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.h" />
+    <QtMoc Include="src\view\Examination\scoreCardExaminationView.h" />
+    <QtMoc Include="src\view\Examination\examinationView.h" />
+    <QtMoc Include="src\view\Examination\createExaminationView.h" />
+    <QtMoc Include="src\view\create questions\CreateQuestionView.h" />
+    <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h" />
+    <QtMoc Include="src\view\create questions\BracketHighlighter.h" />
+    <QtMoc Include="src\View\add_friends\add_friend_view.h" />
+    <QtMoc Include="src\model\questionset.h" />
+    <QtMoc Include="src\model\countdownTimer.h" />
+    <QtMoc Include="src\model\Questions\Question.h" />
+    <QtMoc Include="src\model\manager\questionmanager.h" />
+    <QtMoc Include="src\model\manager\NetworkManager.h" />
+    <QtMoc Include="src\model\manager\examinationManager.h" />
+    <QtMoc Include="src\tests\TestNetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="leerhulpmiddel.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="src\Controller\examinationController.h" />
-    <QtMoc Include="src\model\manager\examinationManager.h" />
-    <QtMoc Include="src\model\manager\questionmanager.h" />
-    <QtMoc Include="src\model\Questions\Question.h" />
-    <QtMoc Include="src\model\countdownTimer.h" />
-    <QtMoc Include="src\model\questionset.h" />
-    <QtMoc Include="src\view\create questions\BracketHighlighter.h" />
-    <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h" />
-    <QtMoc Include="src\view\create questions\CreateQuestionView.h" />
-    <QtMoc Include="src\view\Examination\createExaminationView.h" />
-    <QtMoc Include="src\view\Examination\examinationView.h" />
-    <QtMoc Include="src\view\Examination\scoreCardExaminationView.h" />
-    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionbutton.h" />
-    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetbutton.h" />
-    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsettreewidget.h" />
-    <QtMoc Include="src\view\HomeScreen\QuestionsetBrowserWidgets\questionsetwidget.h" />
-    <QtMoc Include="src\view\questions\FillInView.h" />
-    <QtMoc Include="src\view\questions\FlashcardView.h" />
-    <QtMoc Include="src\view\questions\MultipleChoiceView.h" />
-    <QtMoc Include="src\view\chooseQuestionView.h" />
-    <QtMoc Include="src\view\EditableLabel.h" />
-    <QtMoc Include="src\view\focusoutlineedit.h" />
-    <QtMoc Include="src\view\ToastMessage.h" />
-    <QtMoc Include="src\view\toggleSwitch.h" />
-    <QtMoc Include="src\model\manager\NetworkManager.h" />
-    <QtMoc Include="src\view\Login\LoginView.h" />
-    <QtMoc Include="src\View\Share\ShareView.h" />
-    <QtMoc Include="src\View\HomeScreen\inboxView.h" />
-    <QtMoc Include="src\View\add_friends\add_friend_view.h" />
-    <QtMoc Include="src\View\pagination.h" />
-    <QtMoc Include="src\view\HomeScreen\homescreen.h" />
-    <QtMoc Include="src\Controller\addFriendController.h" />
-    <QtMoc Include="src\Controller\inboxController.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Controller\questioncontroller.h" />
-    <ClInclude Include="src\Controller\questionmanagercontroller.h" />
-    <ClInclude Include="src\Controller\questionsetcontroller.h" />
-    <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
-    <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />
-    <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
-    <ClInclude Include="src\Exceptions\loadException.h" />
-    <ClInclude Include="src\Exceptions\saveException.h" />
-    <ClInclude Include="src\model\Questions\Answer.h" />
-    <ClInclude Include="src\model\Questions\FillInQuestion.h" />
-    <ClInclude Include="src\model\Questions\Flashcard.h" />
-    <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
-    <ClInclude Include="src\model\Questions\questionType.h" />
-    <ClInclude Include="src\model\examination.h" />
-    <ClInclude Include="src\model\fileManager.h" />
-    <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
-    <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
-    <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h" />
-    <ClInclude Include="src\view\leerhulpmiddelmainwindow.h" />
-    <ClInclude Include="src\view\QFlowLayout.h" />
-    <ClInclude Include="src\view\style.h" />
-    <ClInclude Include="src\Controller\LoginController.h" />
-    <ClInclude Include="src\Controller\ShareController.h" />
-    <ClInclude Include="src\Exceptions\NoSavedSessionException.h" />
-    <ClInclude Include="src\View\Overlay.h" />
   </ItemGroup>
 </Project>

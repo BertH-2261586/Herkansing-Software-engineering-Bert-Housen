@@ -36,7 +36,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtModules>core;gui;widgets;network</QtModules>
+    <QtModules>core;gui;widgets;network;testlib</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -141,6 +141,7 @@
     <ClCompile Include="src\view\questions\MultipleChoiceView.cpp" />
     <ClCompile Include="src\View\Share\ShareView.cpp" />
     <ClCompile Include="src\view\toggleSwitch.cpp" />
+    <ClCompile Include="src\tests\TestNetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\addFriendController.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="src\View\Overlay.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />
     <ClInclude Include="src\view\style.h" />
+    <QtMoc Include="src\tests\TestNetworkManager.h" />
     <QtMoc Include="src\view\toggleSwitch.h" />
     <QtMoc Include="src\view\ToastMessage.h" />
     <QtMoc Include="src\View\pagination.h" />

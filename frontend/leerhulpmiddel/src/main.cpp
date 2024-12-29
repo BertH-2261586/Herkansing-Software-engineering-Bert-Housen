@@ -2,14 +2,20 @@
 #include <QMainWindow>
 #include <QSettings>
 
+#include <QtTest/QtTest>
+#include "tests/TestNetworkManager.h"
+
 #include "Controller/questionmanagercontroller.h"
 #include "model/manager/questionmanager.h"
 #include "view/leerhulpmiddelmainwindow.h"
-#include "view/Login/LoginView.h"
 
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
+
+
+    TestNetworkManager networkTest;
+    QTest::qExec(&networkTest, argc, argv);
 
     // Create the main window
     QuestionManager qManager;
