@@ -1,11 +1,12 @@
 #pragma once
 #include "../../Controller/ShareController.h"
 #include "../Overlay.h"
+#include "../chooseQuestionView.h"
 
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
-#include "../chooseQuestionView.h"
+#include <QListWidget>
 
 
 class ShareView : public QWidget
@@ -17,11 +18,16 @@ public:
 private:
 	void setUpQuestionSetChooser();
 
+	void getFriendUsernames() { m_shareController->getFriendUsernames(); }
+
 	ShareController* m_shareController;
 	Overlay* m_overlay;
 	QVBoxLayout* m_layout;
 	QPushButton* m_shareButton;
 	ChooseQuestionView* m_chooseQuestionView;
+
+	QListWidget* m_friendsList;
+
 public slots:
 	void showShareCode(QString code);
 	void showShareFailed();

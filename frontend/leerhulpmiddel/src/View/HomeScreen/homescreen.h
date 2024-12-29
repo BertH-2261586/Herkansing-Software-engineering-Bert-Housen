@@ -31,8 +31,10 @@ private:
     void setInboxButton(QHBoxLayout* container);
     QWidget* setInboxRequestLabel();
     void setIconButton(QPushButton* button, QString iconName);
-
+    void setSearchQuestionSet(QHBoxLayout* container);
     void setInboxRequestAmount();
+
+    void createQuestionSetToastMessage(const bool succes);
 
     QuestionsetBrowser* m_vragensetBrowser;
     QWidget* m_rightSideScreen;

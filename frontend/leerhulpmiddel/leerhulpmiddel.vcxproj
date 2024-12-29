@@ -156,7 +156,7 @@
     <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
     <ClInclude Include="src\Controller\questionsetcontroller.h" />
-    <ClInclude Include="src\Controller\ShareController.h" />
+    <QtMoc Include="src\Controller\ShareController.h" />
     <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
     <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />
     <ClInclude Include="src\Exceptions\invalidtypeerror.h" />

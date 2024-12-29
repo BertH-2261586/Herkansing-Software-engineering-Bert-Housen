@@ -5,8 +5,6 @@ from ..database import *
 from ..models import User, UserBase, UserLogin, UserIdInput, GroupInviteIdInput, UserSearchRequest, UsernameInput
 from ..security import PasswordHasher, UserSessionManager
 
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
-
 router = APIRouter()
 pw_hasher = PasswordHasher()
 session_manager = UserSessionManager()

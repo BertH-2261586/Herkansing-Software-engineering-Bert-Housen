@@ -25,9 +25,12 @@ public:
     unique_ptr<Question> loadQuestionFromJSON(const QString questionSet, const QString subset, const QString questionName) const;
     QVector<shared_ptr<Question>> getAllQuestionsFromQuestionSet(const QString questionSetPath) const;
     QByteArray createZip(const QStringList& questionSetPaths);
+    void unzip(const QByteArray zipData);
+
 private:
     QString getPath() const;
     QMap<QString, QVariantList> loadFilesAndQuestions(const QDir& dir, int currentDepth = 0) const;
+    QString getUniqueName(QString baseName, QStringList existingNames);
 };
 
 #endif 

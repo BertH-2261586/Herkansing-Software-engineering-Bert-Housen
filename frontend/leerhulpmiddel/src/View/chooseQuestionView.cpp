@@ -116,8 +116,6 @@ void ChooseQuestionView::populateTreeWithQuestionset(QTreeWidgetItem* parentItem
     }
 }
 
-
-
 // Handle the press of the checkbox for when you can only select one question set (for example examination). 
 // In this case deselect all the other checkboxes
 void ChooseQuestionView::handleQuestionSetOnlyItemCheckChange(QTreeWidgetItem* item, int column) {

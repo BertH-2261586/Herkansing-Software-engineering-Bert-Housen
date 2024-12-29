@@ -1,25 +1,17 @@
-#include "NetworkManager.h"
-
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QSettings>
-
-#include "../fileManager.h"
-
-#include "../../Exceptions/NoSavedSessionException.h"
-
 #include <QJsonDocument>
 #include <QSettings>
 #include <QJsonArray>
 #include <QByteArray>
 #include <QEventLoop>
 
-NetworkManager::NetworkManager()
-{
-	m_networkManager = new QNetworkAccessManager(this);
-}
-
+#include "../fileManager.h"
+#include "../../Exceptions/NoSavedSessionException.h"
+#include "../../Exceptions/unzipException.h"
+#include "NetworkManager.h"
 
 /**
  * Logs in a user with the provided username and password.
@@ -134,10 +126,9 @@ void NetworkManager::getLoggedInStatus() {
 */
 void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 {
-	QNetworkRequest request(QUrl("http://localhost:80/questionset/share"));
+	QNetworkRequest request(QUrl("http://localhost:80/question_set/add"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
 	request.setRawHeader("Token", getSessionCookie().toUtf8());
-
 
 	FileManager* fileManager = new FileManager();
 	QByteArray compressedData = fileManager->createZip(questionSetPaths);
@@ -146,20 +137,9 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 		emit shareFailed();
 		return;
 	}
-	
 
 	QNetworkReply* reply = m_networkManager->post(request, compressedData); 
 	connect(reply, &QNetworkReply::finished, [this, reply]() { 
-
-		//TEMP TO CHECK IF IT WORKS REMOVE ONCE API IS DONE
-
-
-		emit shareSuccess("1234");
-		reply->deleteLater();
-		return;
-
-
-
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) { 
 			QByteArray responseData = reply->readAll(); 
@@ -171,7 +151,7 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 		QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object(); 
 		QString code = "";
 		if (responseData.contains("code") && responseData["code"].isString()) { 
-			QString code = responseData["code"].toString();
+			code = responseData["code"].toString();
 		}
 
 		reply->deleteLater(); 
@@ -223,8 +203,6 @@ void NetworkManager::shareQuestionSetsWithFriends(QList<int> FriendIds, QString 
 
 
 	});
-
-
 }
 
 
@@ -395,7 +373,6 @@ int NetworkManager::getUserIdByUsername(const QString username) {
 	// Post data
 	QJsonObject json = QJsonObject();
 	json["username"] = username;
-	qDebug() << "nazengiao" << username;
 	QByteArray data = QJsonDocument(json).toJson();
 
 	// Send the request
@@ -552,4 +529,127 @@ void NetworkManager::addFriend(int sendingUserID) {
 	// Send the object to the backend
 	QByteArray data = QJsonDocument(json).toJson();
 	QNetworkReply* reply = m_networkManager->post(request, data);
+}
+
+void NetworkManager::acceptQuestionSet(QString code) {
+	// Build URL
+	QNetworkRequest request(QUrl("http://localhost:80/question_set/get_question_set"));
+	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+	// Create the object
+	QJsonObject json = QJsonObject();
+	json["code"] = code;
+
+	// Send the object to the backend
+	QByteArray data = QJsonDocument(json).toJson();
+	QNetworkReply* reply = m_networkManager->post(request, data);
+
+	connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+		// Check for network errors
+		if (reply->error() != QNetworkReply::NoError) {
+			qDebug() << "Network error:" << reply->errorString();
+			QByteArray responseData = reply->readAll();
+			qDebug() << "Response data:" << responseData;
+			reply->deleteLater();
+			emit questionSetFailed();
+			return;
+			//TODO: username already token
+		}
+
+		// Read the response
+		QByteArray responseData = reply->readAll();
+
+		// Try to parse the response as JSON
+		QJsonParseError jsonError;
+		QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData, &jsonError);
+
+		if (jsonError.error == QJsonParseError::NoError && jsonDoc.isObject()) {
+			QJsonObject jsonObj = jsonDoc.object();
+
+			// Check if `question_set` is null
+			if (jsonObj.contains("question_set") && jsonObj["question_set"].isNull()) {
+				qDebug() << "No question set found for the provided code.";
+				emit questionSetFailed();
+			}
+		}
+		else {
+			FileManager fileManager = FileManager();
+			try {
+				fileManager.unzip(responseData);
+			}
+			catch (const unzipException& e) {
+				qWarning() << e.what();
+				emit questionSetFailed();
+			}
+			catch (const std::exception& e) {
+				qWarning() << e.what();
+				emit questionSetFailed();
+			}
+		
+			emit questionSetSucces();
+		}
+
+		reply->deleteLater();
+	});
+}
+
+void NetworkManager::getFriendUsernames() {
+	// Get the user ID of the user accepting the friend request
+	int userID = getUserId();
+	if (userID == -1) {
+		return;
+		// TODO error handling
+	}
+
+	// Build URL
+	QNetworkRequest request(QUrl("http://localhost:80/friend/get_friend_usernames"));
+	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+	request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+	// Create the object
+	QJsonObject json = QJsonObject();
+	json["id"] = userID;
+
+	// Send the object to the backend
+	QByteArray data = QJsonDocument(json).toJson();
+	QNetworkReply* reply = m_networkManager->post(request, data);
+
+	connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+		// Check for network errors
+		if (reply->error() != QNetworkReply::NoError) {
+			qDebug() << "Network error:" << reply->errorString();
+			QByteArray responseData = reply->readAll();
+			qDebug() << "Response data:" << responseData;
+			reply->deleteLater();
+			return;
+		}
+
+		// Parse the response data as a JSON array
+		QByteArray response = reply->readAll();
+		QJsonDocument doc = QJsonDocument::fromJson(response);
+		// Check if the received data is an array of users
+		if (!doc.isObject()) {
+			qDebug() << "Error: Expected a JSON array!";
+			reply->deleteLater();
+			return;
+		}
+
+		// Set the list of received users
+		QJsonObject responseObject = doc.object();
+		QJsonArray userIDArray = responseObject["IDs"].toArray();
+		QJsonArray usernameArray = responseObject["friend_usernames"].toArray();
+		QList<int> userIDList;
+		QList<QString> usernameList;
+		for (const QJsonValue& value : userIDArray) {
+			userIDList.append(value.toInt());
+		}
+		for (const QJsonValue& value : usernameArray) {
+			usernameList.append(value.toString());
+		}
+
+		emit friendUsernamesFetched(userIDList, usernameList);
+
+		reply->deleteLater();
+	});
 }

@@ -5,7 +5,6 @@
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QMessageBox>
-#include <QListWidget>
 #include <QPushButton>
 
 ShareView::ShareView(ShareController* controller, QWidget* parent) : QWidget(parent), m_shareController{controller}, m_overlay{new Overlay(parent)}
@@ -40,8 +39,6 @@ ShareView::ShareView(ShareController* controller, QWidget* parent) : QWidget(par
 */
 void ShareView::showShareCode(QString code)
 {
-	
-	
 	m_chooseQuestionView->setDisabled(true);
 	m_shareButton->setDisabled(true);
 	m_shareButton->setText("Finished");	
@@ -67,28 +64,26 @@ void ShareView::showShareCode(QString code)
 
 
 	QLabel* friendsLabel = new QLabel("Share with friends:", this);
-	QListWidget* friendsList = new QListWidget(this);
-	friendsList->setSelectionMode(QAbstractItemView::MultiSelection);
+	m_friendsList = new QListWidget(this);
+	m_friendsList->setSelectionMode(QAbstractItemView::MultiSelection);
 
-	// Dummy data REPLACE WHEN CAN GET ACTUAL DATA
-	QStringList friends = { "Alice", "Bob", "Charlie", "Diana" };
-
-	for (QString i : friends) {
-		QListWidgetItem* item = new QListWidgetItem(i, friendsList);
-		item->setData(Qt::UserRole, 1234); // Friend ID
-	}
-
-
+	getFriendUsernames();
+	connect(m_shareController, &ShareController::friendUsernamesFetched, this, [=]() {
+		for (int i = 0; i < m_shareController->getFriendAmount(); ++i) {
+			QListWidgetItem* item = new QListWidgetItem(m_shareController->getFriendName(i), m_friendsList);
+			item->setData(Qt::UserRole, m_shareController->getFriendID(i));
+		}
+	});
 
 	QPushButton* sendBtn = new QPushButton("Send to Friends", this);
-	connect(sendBtn, &QPushButton::clicked, this, [this, friendsList, code]() {
+	connect(sendBtn, &QPushButton::clicked, this, [this, code]() {
 
-		QList<QListWidgetItem*> selectedItems = friendsList->selectedItems();
+		QList<QListWidgetItem*> selectedItems = m_friendsList->selectedItems();
 
 		if (!selectedItems.isEmpty()) {
 			QList<int> selectedFriendIDs;
 
-			QString selectedFriend = friendsList->currentItem()->text();
+			QString selectedFriend = m_friendsList->currentItem()->text();
 			for (QListWidgetItem* item : selectedItems) {
 				selectedFriendIDs << item->data(Qt::UserRole).toInt(); // Friend ID
 			}
@@ -107,7 +102,7 @@ void ShareView::showShareCode(QString code)
 	m_layout->addLayout(codeBox);
 	m_layout->addSpacing(20);
 	m_layout->addWidget(friendsLabel);
-	m_layout->addWidget(friendsList);
+	m_layout->addWidget(m_friendsList);
 	m_layout->addWidget(sendBtn);
 }
 

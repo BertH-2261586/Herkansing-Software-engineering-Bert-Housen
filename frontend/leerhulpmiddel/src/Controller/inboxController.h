@@ -3,6 +3,8 @@
 
 #include "../model/manager/NetworkManager.h"
 
+#include <QWidget>
+
 class inboxController : public QObject
 {
 	Q_OBJECT
@@ -19,6 +21,8 @@ public:
 
 signals:
 	void inboxMessagesFetched();
+	void questionSetSucces();
+	void questionSetFailed();
 
 private:
 	NetworkManager* m_networkManager;

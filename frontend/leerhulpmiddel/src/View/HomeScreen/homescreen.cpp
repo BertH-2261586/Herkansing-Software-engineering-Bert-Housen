@@ -7,6 +7,7 @@
 #include "../leerhulpmiddelmainwindow.h"
 #include "../add_friends/add_friend_view.h"
 #include "../../Exceptions/NoSavedSessionException.h"
+#include "../ToastMessage.h"
 
 HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent) : m_mainWindow(parent), QWidget(parent)
 {
@@ -58,6 +59,15 @@ void HomeScreen::setInboxView() {
     m_inboxAnimation->setDuration(500);
     m_inboxAnimation->setStartValue(QPoint(screenWidth, 75));            // Starting position off-screen
     m_inboxAnimation->setEndValue(QPoint(screenWidth - menuWidth, 75));
+
+
+    connect(m_inboxView, &InboxView::questionSetFailed, this, [=]() {
+        createQuestionSetToastMessage(false);
+    });
+    connect(m_inboxView, &InboxView::questionSetSucces, this, [=]() {
+        createQuestionSetToastMessage(true);
+    });
+
 }
 
 QWidget* HomeScreen::GenerateTopButtonBar()
@@ -76,15 +86,11 @@ QWidget* HomeScreen::GenerateTopButtonBar()
             shareView, &ShareView::showShareFailed);
 	});
 
-
-
     QPushButton* startExamButton = new QPushButton("Start examination");
     connect(startExamButton, &QPushButton::pressed, this, [=] {
         m_inboxView->move(QGuiApplication::primaryScreen()->geometry().width(), 75);        // Move the inbox view offscreen (so it doesnt stay in another window)
         m_mainWindow->PushMainViewport(new CreateExaminationView());
     });
-
-
 
     QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
 
@@ -93,7 +99,6 @@ QWidget* HomeScreen::GenerateTopButtonBar()
 
     QPushButton* loginButton = new QPushButton("Login/Register");
     loginButton->setFixedSize(100, 30);
-
 
     connect(m_networkManager, &NetworkManager::loggedIn, this, [=] {
         loginButton->hide();
@@ -147,6 +152,8 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     container->addWidget(makeNewQsetButton);
     container->addWidget(logoutButton);
     container->addWidget(loginButton);
+    setSearchQuestionSet(container);
+
     // Add the icon buttons to the layout
     setAddFriendButton(container);
     setInboxButton(container);
@@ -183,6 +190,7 @@ void HomeScreen::setAddFriendButton(QHBoxLayout* container) {
     m_addFriendButton = new QPushButton("");
     setIconButton(m_addFriendButton, "resources/add-friend.png");
     connect(m_addFriendButton, &QPushButton::pressed, this, [=]() {
+        m_inboxView->move(QGuiApplication::primaryScreen()->geometry().width(), 75);        // Move the inbox view offscreen (so it doesnt stay in another window)
         m_mainWindow->PushMainViewport(new AddFriendView());
     });
 
@@ -280,6 +288,47 @@ void HomeScreen::setIconButton(QPushButton* button, QString iconName){
     button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
+void HomeScreen::setSearchQuestionSet(QHBoxLayout* container) {
+    QLineEdit* searchQuestionSet = new QLineEdit("");
+    searchQuestionSet->setFixedSize(125, 30);
+    searchQuestionSet->setStyleSheet("background-color: white; color: black;");
+    searchQuestionSet->setPlaceholderText("Enter code ...");
+
+    // Create a search button
+    QPushButton* searchButton = new QPushButton("Search");
+    searchButton->setFixedSize(50, 30);
+    searchButton->setStyleSheet("background-color: lightgray; border: 1px solid black; color: black; padding-left: 5px; padding-right: 5px;");
+    connect(searchButton, &QPushButton::pressed, this, [=]() {
+        searchButton->setEnabled(false);
+        m_networkManager->acceptQuestionSet(searchQuestionSet->text());
+    });
+
+    connect(m_networkManager, &NetworkManager::questionSetFailed, this, [=]() {
+        createQuestionSetToastMessage(false);
+        searchButton->setEnabled(true);
+    });
+    connect(m_networkManager, &NetworkManager::questionSetSucces, this, [=]() {
+        createQuestionSetToastMessage(true);
+        searchButton->setEnabled(true);
+    });
+
+    QHBoxLayout* searchContainerLayout = new QHBoxLayout;
+    searchContainerLayout->setContentsMargins(0, 0, 0, 0);
+    searchContainerLayout->setSpacing(5);
+    searchContainerLayout->addWidget(searchQuestionSet);
+    searchContainerLayout->addWidget(searchButton);
+
+    QLabel* searchQuestionSetLabel = new QLabel("This code doesn't exist");
+    searchQuestionSetLabel->setStyleSheet("color: red;");
+    searchQuestionSetLabel->hide();
+
+    QVBoxLayout* searchQuestionSetLayout = new QVBoxLayout;
+    searchQuestionSetLayout->addLayout(searchContainerLayout);
+    searchQuestionSetLayout->addWidget(searchQuestionSetLabel);
+
+    container->addLayout(searchQuestionSetLayout);
+}
+
 void HomeScreen::DisplayWidget(QWidget* displayWidget)
 {
     m_container->replaceWidget(m_rightSideScreen, displayWidget);
@@ -288,4 +337,11 @@ void HomeScreen::DisplayWidget(QWidget* displayWidget)
     m_rightSideScreen->deleteLater();
 
     m_rightSideScreen = displayWidget;
+}
+
+void HomeScreen::createQuestionSetToastMessage(bool succes) {
+    QString text = succes ? "Question set downloaded" : "Something went wrong while downloading the question set";
+    ToastMessage* toast = new ToastMessage(text, this);
+    toast->move((width() - toast->width()) / 2, height() - 70);
+    toast->show();
 }

@@ -1,11 +1,11 @@
-import logging
 from fastapi import Request
 from sqlmodel import create_engine, Session, select
-from .models import User, UserBase, Group, GroupInvite, GroupMember, Inbox, Friend, GroupCodeInvite
+from .models import User, UserBase, Group, GroupInvite, GroupMember, Inbox, Friend, GroupCodeInvite, QuestionSet
 from sqlalchemy import func, or_  
 from typing import Optional, Tuple, List
 import sys
 from datetime import datetime, timezone
+import logging 
 
 DATABASE_URL = "mysql+pymysql://user:password@mysql-db:3306/dbname"
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -110,7 +110,11 @@ class UserManager:
         query = select(User.id).where(User.username == username)
         user_id = self.session.scalar(query)
         return user_id
-
+    
+    def get_usernames_from_IDs(self, user_IDs: list[int]) -> list[str]:
+        # Get all the usernames given a list of IDs
+        return self.session.exec(select(User.username).where(User.id.in_(user_IDs))).all()
+    
 class GroupManager:
     def __init__(self, session : Session):
         self.session = session
@@ -256,6 +260,7 @@ class InboxManager:
                 "type": inbox.type,
                 "sending_user_ID": inbox.sending_user,
                 "sending_user": username,               # Replaced sending user ID with username
+                "code": inbox.code
             }
             inbox_items.append(inbox_dict)
 
@@ -270,8 +275,6 @@ class InboxManager:
             self.session.commit()  # Commit the transaction to apply changes
             return True
         return False
-
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
     
 class FriendManager:
     def __init__(self, session : Session):
@@ -308,3 +311,37 @@ class FriendManager:
                 friendship_status[friend_relation.user1] = True
         
         return friendship_status
+    
+    def get_all_friends(self, user_ID : int) -> list[int]:
+        # Query all rows to find all the friends of the user
+        results = self.session.exec(select(Friend).where((Friend.user1 == user_ID) | (Friend.user2 == user_ID))).all()
+
+        # Find all the IDs of the friends
+        friend_IDs = []
+        for row in results:
+            if row.user1 == user_ID:
+                friend_IDs.append(row.user2)
+            else:
+                friend_IDs.append(row.user1)
+
+        return friend_IDs
+
+class QuestionSetManager:
+    def __init__(self, session : Session):
+        self.session = session
+    
+    # Creates a question set with a code in the Database
+    def add_question_set(self, question_set: QuestionSet):
+        self.session.add(question_set)
+        self.session.commit()
+        self.session.refresh(question_set)
+
+    def code_exists(self, generated_code: str) -> bool:
+        """Checks if a question set has this code"""
+        if self.session.exec(select(QuestionSet).filter_by(code = generated_code)).first():
+            return True
+        else:
+            return False
+    
+    def get_question_set(self, code_input: str) -> bytes:
+        return self.session.exec(select(QuestionSet.content).filter_by(code = code_input)).first()

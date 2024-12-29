@@ -15,7 +15,8 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
     goBackbtn->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoHome));
     goBackbtn->setToolTip("Go Back");
     goBackbtn->setIconSize(QSize(30, 30));
-
+    goBackbtn->setCursor(Qt::PointingHandCursor);
+    goBackbtn->setStyleSheet("border: none;");
 
     m_titleLabel = new QLabel("Login to Your Account", this);
     m_titleLabel->setAlignment(Qt::AlignCenter);

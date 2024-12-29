@@ -11,7 +11,7 @@ class NetworkManager : public QObject
 {
 	Q_OBJECT
 public:
-     NetworkManager();
+    inline NetworkManager() { m_networkManager = new QNetworkAccessManager(this); }
 
 	bool cookieExists();
 
@@ -21,12 +21,14 @@ public:
 	void getLoggedInStatus();
 	void shareQuestionSets(QList<QString> questionSetPaths);
 	void shareQuestionSetsWithFriends(QList<int> FriendIds, QString code);
+	void acceptQuestionSet(QString code);
 
 	void getUsersByPage(const int page, const QString userInput);
 	void sendFriendRequest(const QString userToAdd);
 	void addFriend(const int sendingUserID);
 	void getInboxMessages();
 	void removeInboxMessage(const int ID);
+	void getFriendUsernames();
 
 private:
 	QNetworkAccessManager* m_networkManager;
@@ -50,6 +52,9 @@ signals:
 	void shareQuestionSetsSuccess();
 	void usersFetched(int totalCount, QList<QString> users, QList<bool> areFriendsList, QList<bool> sentFriendRequest, QList<bool> receivedFriendRequest);
 	void inboxMessagesFetched(QList<QJsonObject> inboxMessages);
+	void friendUsernamesFetched(QList<int> userIDs, QList<QString> usernames);	
+	void questionSetSucces();
+	void questionSetFailed();
 };
 
 #endif

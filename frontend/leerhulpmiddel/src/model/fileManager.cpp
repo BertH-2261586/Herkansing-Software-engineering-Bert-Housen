@@ -8,11 +8,14 @@
 #include <QJsonArray>
 #include <QProcess>
 #include <QBuffer>
+#include <QTemporaryFile>
+#include <QThread>
 
 #include "fileManager.h"
 #include "Questions/MultipleChoiceQuestion.h"
 #include "Questions/Flashcard.h"
 #include "Questions/FillInQuestion.h"
+#include "../Exceptions/unzipException.h"
 
 namespace filesystem = std::filesystem; 
 
@@ -33,7 +36,6 @@ QString FileManager::getPath() const {
     QString newPath = segments.join('/');
     return newPath + "/leerhulpmiddel/questionSets";        // Add the questionSets folder to the path for where the question sets are stored locally
 }
-
 
 /**
  * Loads the question sets from the specified path.
@@ -353,65 +355,157 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
     return questions;
 }
 
+/*
+* This functions makes a zip of all the question set folders given to it
+* @param questionSetPaths all the question sets that need to be zipped
+* @return QByteArray is the zip file
+* @pre the list of question set paths need to be valid and readable
+* @post 
+*   - Returns a QByteArray containing the zip file data if successful.
+*   - Returns an empty QByteArray if zipping fails.
+*/
 QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
     QProcess zipProcess;
     QByteArray zipData;
     QBuffer buffer(&zipData);
     buffer.open(QIODevice::WriteOnly);
 
+    // Zipping command for windows
     #if defined(Q_OS_WIN)
 
-    // Construct a PowerShell command to create a zip file using Compress-Archive
+        // Construct a PowerShell command to create a zip file using Compress-Archive
+        QString script = "Compress-Archive -Path ";
+        for (const QString& path : questionSetPaths) {
+            // Append each question set path to the script
+            script += "\"" + (getPath() + "/" + path).replace("/", "\\") + "\",";
+        }
 
-    QString script = "Compress-Archive -Path ";
-    for (const QString& path : questionSetPaths) {
-        script += "\"" + (getPath() + "/" + path).replace("/", "\\") + "\",";
-    }
+        script.chop(1);                                             // Remove the trailing comma from the list of paths
+        script += " -DestinationPath \"$env:TEMP\\temp.zip\"";      // Use a temporary file
 
-    script.chop(1); // Remove the trailing comma from the list of paths
-    script += " -DestinationPath \"$env:TEMP\\temp.zip\""; // Use a temporary file
+        // Start the PowerShell process to execute the zipping command
+        QStringList args;
+        args << "-Command" << script;
+        zipProcess.start("powershell", args);
+        
+        // Check if the process finished successfully
+        if (!zipProcess.waitForFinished() || zipProcess.exitCode() != 0) {
+            qWarning() << "PowerShell zipping failed:" << zipProcess.readAllStandardError();
+            return QByteArray();
+        }
 
-    QStringList args;
-    args << "-Command" << script;
-
-    zipProcess.start("powershell", args);
-
-    if (!zipProcess.waitForFinished() || zipProcess.exitCode() != 0) {
-        qWarning() << "PowerShell zipping failed:" << zipProcess.readAllStandardError();
-        return QByteArray();
-    }
-
-    QFile tempFile(qgetenv("TEMP") + "/temp.zip");
-    if (tempFile.open(QIODevice::ReadOnly)) {
-        zipData = tempFile.readAll();
-        tempFile.remove(); // Clean up the temporary file
-    }
-    else {
-        qWarning() << "Failed to read temporary zip file!";
-    }
-    
-
-    #else
+        // Read the resulting zip file from the temporary location
+        QFile tempFile(qgetenv("TEMP") + "/temp.zip");
+        if (tempFile.open(QIODevice::ReadOnly)) {
+            zipData = tempFile.readAll();
+            tempFile.remove(); // Clean up the temporary file
+        }
+        else {
+            qWarning() << "Failed to read temporary zip file!";
+        }
     // Construct a zip command for Linux/macOS
-    QStringList zipArgs;
-    zipArgs << "-r" << "-"; 
-    for (const QString& path : questionSetPaths) {
-        zipArgs << getPath() + "/" + path;
+    #else
+        QStringList zipArgs;
+        zipArgs << "-r" << "-"; 
+        for (const QString& path : questionSetPaths) {
+            // Append each question set path to the zip arguments
+            zipArgs << getPath() + "/" + path;
+        }
+
+        // Start the PowerShell process to execute the zipping command
+        zipProcess.start("zip", zipArgs);
+
+        // Check if the process finished successfully
+        if (!zipProcess.waitForFinished() || zipProcess.exitCode() != 0) {
+            qWarning() << "Zipping failed:" << zipProcess.readAllStandardError();
+            return QByteArray();
+        }
+
+        // Read the zip output directly from the process's standard output
+        zipData = zipProcess.readAllStandardOutput();
+    #endif
+
+    // Return the zip file
+    return zipData;    
+}
+
+/*
+* Unzip a given file 
+* @pre zipData must contain valid zip data
+* @post add the unzipped question to the question set list 
+*/
+void FileManager::unzip(QByteArray zipData) {
+    // Write the zip data to a temporary file
+    QString tempZipPath = QDir::tempPath() + "/temp.zip";
+    QFile tempZipFile(tempZipPath);
+    if (!tempZipFile.open(QIODevice::WriteOnly)) {
+        qWarning() << "Failed to create temporary file for zip data!";
+        throw unzipException("Failed to download the file");
+    }
+    tempZipFile.write(zipData);
+    tempZipFile.close();
+
+    QString destinationDir = getPath(); // Get the destination path
+
+    // Zipping command for windows
+    #if defined(Q_OS_WIN)
+        // Use PowerShell to extract the zip
+        QString script = QString("Expand-Archive -Path \"%1\" -DestinationPath \"%2\"")
+            .arg(tempZipFile.fileName().replace("/", "\\"))
+            .arg(destinationDir.replace("/", "\\"));
+
+        // Start the PowerShell process to execute the unzipping command
+        QProcess process;
+        process.start("powershell", QStringList() << "-Command" << script);
+        // Check if the extraction process finished successfully
+        if (!process.waitForFinished() || process.exitCode() != 0) {
+            qWarning() << "PowerShell unzip failed:" << process.readAllStandardError();
+            throw unzipException("Failed to download the file");
+        }
+
+        // Rename duplicates to avoid overwriting
+        QDir dir(destinationDir);
+        QStringList existingNames = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        foreach(const QFileInfo & fileInfo, dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+            QString baseName = fileInfo.fileName();
+            QString uniqueName = getUniqueName(baseName, existingNames);
+
+            if (uniqueName != baseName) {
+                dir.rename(baseName, uniqueName);
+            }
+
+            // Update existing names after renaming
+            existingNames.append(uniqueName);
+        }
+
+    // Construct a unzip command for Linux/macOS
+    #else
+        QProcess process;
+        process.start("unzip", QStringList() << tempZipFile.fileName() << "-d" << destinationDir);
+        // Check if the extraction process finished 
+        if (!process.waitForFinished() || process.exitCode() != 0) {
+            qWarning() << "Unzip failed:" << process.readAllStandardError();
+            throw unzipException("Failed to download the file");
+        }
+    #endif
+    
+    // Delete the previously made temporary file
+    if (!QFile::remove(tempZipPath)) {
+        qWarning() << "Failed to delete temporary file:" << tempZipPath;
+        throw unzipException("Something went wrong while deleting the temporary file");
+    }
+}
+
+// Helper function to generate a unique name if a file or directory already exists
+QString FileManager::getUniqueName(QString baseName, QStringList existingNames) {
+    QString uniqueName = baseName;
+    int counter = 1;
+
+    // Adjust name format for duplicates
+    while (existingNames.contains(uniqueName)) {
+        uniqueName = QString("%1 (%2)").arg(baseName).arg(counter);
+        counter++;
     }
 
-    zipProcess.start("zip", zipArgs);
-
-    // Wait for the process to complete
-    if (!zipProcess.waitForFinished() || zipProcess.exitCode() != 0) {
-        qWarning() << "Zipping failed:" << zipProcess.readAllStandardError();
-        return QByteArray();
-    }
-
-    // Read the zip output directly from the process's standard output
-    zipData = zipProcess.readAllStandardOutput();
-
-    // The zip data is now in the buffer
-#endif
-
-    return zipData;
+    return uniqueName;
 }

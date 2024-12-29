@@ -1,5 +1,6 @@
 #include "inboxView.h"
 #include "homeScreen.h"  
+#include "../ToastMessage.h"
 
 InboxView::InboxView(QWidget* parent) : QWidget(parent) {
     setSlidingMenu();
@@ -50,6 +51,9 @@ void InboxView::setInboxRequests() {
         }
         else if (messageType == "question_set") {
             message = username + " has sent a question set";
+        }
+        else if (messageType == "group_invite") {
+            message = username + " has sent a group invite";
         }
         m_menuItemInfo.append(new QLabel(message));
         m_menuItemInfo[i]->setWordWrap(true);
@@ -175,6 +179,13 @@ void InboxView::inboxRequestResponse(int index, bool accepted) {
     m_inboxController.inboxRequestResponse(index, accepted);
     deleteInboxItem(index);
     emit removeInboxItem();
+
+    connect(&m_inboxController, &inboxController::questionSetFailed, this, [=]() {
+        emit questionSetFailed();
+    });
+    connect(&m_inboxController, &inboxController::questionSetSucces, this, [=]() {
+        emit questionSetSucces();
+    });
 }
 
 // Delete all the items and reset the inbox

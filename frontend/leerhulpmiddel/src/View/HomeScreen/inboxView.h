@@ -23,6 +23,8 @@ public:
 signals:
     void removeInboxItem();
     void updateInboxItemLabel();
+    void questionSetSucces();
+    void questionSetFailed();
 
 private:
     void inboxRequestResponse(const int index, const bool accepted);

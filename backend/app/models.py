@@ -47,8 +47,6 @@ class GroupCreate(SQLModel):
 class Group(GroupCreate, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
-
-
     owner: User = Relationship(back_populates="groups_owned")
 
 class GroupIdInput(SQLModel):
@@ -91,6 +89,8 @@ class FriendBase(SQLModel):
 class Friend(FriendBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
 
+class FriendIDInput(SQLModel):
+    id: int
 
 #Inbox model
 class InboxBase(SQLModel):
@@ -98,7 +98,22 @@ class InboxBase(SQLModel):
     sending_user: int = Field(foreign_key="user.id", ondelete="CASCADE")   
     receiving_user: int = Field(foreign_key="user.id", ondelete="CASCADE") 
     code: Optional[str] = Field(default=None)  
-    # message: str         uncomment if you want to add a message option for the user    
     
 class Inbox(InboxBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+
+
+# Question set model
+class QuestionSetBase(SQLModel):
+    code: str 
+    content: bytes
+    expires: datetime
+
+class QuestionSet(QuestionSetBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+class QuestionSetInput(SQLModel):
+    content: bytes
+
+class QuestionSetCode(SQLModel):
+    code: str
