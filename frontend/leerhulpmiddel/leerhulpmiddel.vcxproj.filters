@@ -47,12 +47,14 @@
     <ClCompile Include="src\view\questions\MultipleChoiceView.cpp" />
     <ClCompile Include="src\View\Share\ShareView.cpp" />
     <ClCompile Include="src\view\toggleSwitch.cpp" />
+    <ClCompile Include="src\tests\TestNetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\LoginController.h" />
     <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />
     <ClInclude Include="src\Controller\questionsetcontroller.h" />
+    <ClInclude Include="src\Controller\ShareController.h" />
     <ClInclude Include="src\Exceptions\EmptyFieldException.h" />
     <ClInclude Include="src\Exceptions\FolderQuestionSetMovedException.h" />
     <ClInclude Include="src\Exceptions\invalidtypeerror.h" />
@@ -109,6 +111,7 @@
     <QtMoc Include="src\model\manager\NetworkManager.h" />
     <QtMoc Include="src\model\manager\examinationManager.h" />
     <QtMoc Include="src\Controller\ShareController.h" />
+    <QtMoc Include="src\tests\TestNetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />
