@@ -200,7 +200,6 @@ void NetworkManager::shareQuestionSetsWithFriends(QList<int> FriendIds, QString 
 }
 
 
-
 /*
 * Saves session cookie to device
 * @param sessionCookie: session cookie in QString format

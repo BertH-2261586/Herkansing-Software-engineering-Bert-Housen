@@ -7,7 +7,7 @@ void TestNetworkManager::testLoginSuccess() {
 	NetworkManager manager;
 	QSignalSpy loginSuccess = QSignalSpy(&manager, &NetworkManager::loginSuccess);		
 
-	manager.login("TestUser", "12345678");
+	manager.login("thibe", "wachtwoord");
 
 	QVERIFY(loginSuccess.wait(3000));		//Verifies if logged in signal received
 }

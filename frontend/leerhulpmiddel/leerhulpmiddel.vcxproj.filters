@@ -8,7 +8,6 @@
     <ClCompile Include="src\Controller\questionmanagercontroller.cpp" />
     <ClCompile Include="src\Controller\questionsetcontroller.cpp" />
     <ClCompile Include="src\Controller\ShareController.cpp" />
-    <ClCompile Include="src\Exceptions\invalidtypeerror.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\countdownTimer.cpp" />
     <ClCompile Include="src\model\examination.cpp" />
