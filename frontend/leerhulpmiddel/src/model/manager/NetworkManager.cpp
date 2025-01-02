@@ -588,7 +588,7 @@ void NetworkManager::acceptQuestionSet(QString code) {
 			// Check if `question_set` is null
 			if (jsonObj.contains("question_set") && jsonObj["question_set"].isNull()) {
 				qDebug() << "No question set found for the provided code.";
-				emit questionSetFailed();
+				emit questionSetFailed(false);
 			}
 		}
 		else {

@@ -323,8 +323,8 @@ void HomeScreen::setSearchQuestionSet(QHBoxLayout* container) {
         m_networkManager->acceptQuestionSet(searchQuestionSet->text());
     });
 
-    connect(m_networkManager, &NetworkManager::questionSetFailed, this, [=]() {
-        createQuestionSetToastMessage(false);
+    connect(m_networkManager, &NetworkManager::questionSetFailed, this, [=](const bool codeExists) {
+        createQuestionSetToastMessage(false, codeExists);
         searchButton->setEnabled(true);
     });
     connect(m_networkManager, &NetworkManager::questionSetSucces, this, [=]() {
@@ -359,8 +359,8 @@ void HomeScreen::DisplayWidget(QWidget* displayWidget)
     m_rightSideScreen = displayWidget;
 }
 
-void HomeScreen::createQuestionSetToastMessage(bool succes) {
-    QString text = succes ? "Question set downloaded" : "Something went wrong while downloading the question set";
+void HomeScreen::createQuestionSetToastMessage(bool succes, bool codeExists) {
+    QString text = succes ? "Question set downloaded" : codeExists ? "Something went wrong while downloading the question set" : "This code doesn't exist";
     ToastMessage* toast = new ToastMessage(text, this);
     toast->move((width() - toast->width()) / 2, height() - 70);
     toast->show();
