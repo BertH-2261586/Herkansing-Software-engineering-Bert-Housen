@@ -127,7 +127,7 @@ void CreateMultipleChoiceQuestionView::addAnswer() {
 
 		QPushButton* removeButton = new QPushButton(this);
 
-		removeButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ListRemove));
+		removeButton->setIcon(QIcon::fromTheme("list-remove"));
 
 		QCheckBox* correctCheckBox = new QCheckBox(this);
 

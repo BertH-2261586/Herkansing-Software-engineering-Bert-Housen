@@ -74,7 +74,7 @@ void CreateExaminationView::setupSwitchToggle() {
 
 void CreateExaminationView::setupGoBack() {
     m_goBack = new QPushButton("Go back");
-    m_goBack->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoHome));
+    m_goBack->setIcon(QIcon::fromTheme("go-home"));
     m_goBack->setStyleSheet(
         "border: 0px;"
         "font-size: 25px;"
