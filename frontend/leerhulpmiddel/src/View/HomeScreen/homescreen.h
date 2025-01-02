@@ -34,7 +34,7 @@ private:
     void setSearchQuestionSet(QHBoxLayout* container);
     void setInboxRequestAmount();
 
-    void createQuestionSetToastMessage(const bool succes);
+    void createQuestionSetToastMessage(const bool succes, const bool codeExists = true);
 
     QuestionsetBrowser* m_vragensetBrowser;
     QWidget* m_rightSideScreen;

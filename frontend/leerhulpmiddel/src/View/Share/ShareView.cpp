@@ -53,7 +53,7 @@ void ShareView::showShareCode(QString code)
 
 
 	QPushButton* copyButton = new QPushButton();
-	copyButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy));
+	copyButton->setIcon(QIcon::fromTheme("edit-copy"));
 	copyButton->setToolTip("Copy to clipboard");
 	copyButton->setFixedSize(24, 24);
 

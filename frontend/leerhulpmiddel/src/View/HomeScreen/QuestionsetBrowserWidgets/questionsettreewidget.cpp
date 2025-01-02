@@ -2,7 +2,7 @@
 #include "questionbutton.h"
 #include "questionsetbutton.h"
 #include "../../focusoutlineedit.h"
-#include "../../create questions/CreateQuestionView.h"
+#include "../../create_questions/CreateQuestionView.h"
 
 QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
     m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation), m_controller(questionset)

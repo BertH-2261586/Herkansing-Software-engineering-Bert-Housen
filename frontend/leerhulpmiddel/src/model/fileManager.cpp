@@ -437,9 +437,11 @@ QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
 * Unzip a given file 
 * @pre zipData must contain valid zip data
 * @post add the unzipped question to the question set list 
+* @throw unzipException when something goes wrong
 */
 void FileManager::unzip(QByteArray zipData) {
     // Write the zip data to a temporary file
+    QString tempFolderPath;
     QString tempZipPath = QDir::tempPath() + "/temp.zip";
     QFile tempZipFile(tempZipPath);
     if (!tempZipFile.open(QIODevice::WriteOnly)) {
@@ -449,6 +451,14 @@ void FileManager::unzip(QByteArray zipData) {
     tempZipFile.write(zipData);
     tempZipFile.close();
 
+    // Create a temporary folder where you will unzip the items
+    try {
+        tempFolderPath = createTemporaryFolder();
+    }   
+    // The temporary file couldn't be created
+    catch (unzipException e) {
+        throw;
+    }
     QString destinationDir = getPath(); // Get the destination path
 
     // Zipping command for windows
@@ -456,7 +466,7 @@ void FileManager::unzip(QByteArray zipData) {
         // Use PowerShell to extract the zip
         QString script = QString("Expand-Archive -Path \"%1\" -DestinationPath \"%2\"")
             .arg(tempZipFile.fileName().replace("/", "\\"))
-            .arg(destinationDir.replace("/", "\\"));
+            .arg(tempFolderPath.replace("/", "\\"));
 
         // Start the PowerShell process to execute the unzipping command
         QProcess process;
@@ -465,22 +475,6 @@ void FileManager::unzip(QByteArray zipData) {
         if (!process.waitForFinished() || process.exitCode() != 0) {
             qWarning() << "PowerShell unzip failed:" << process.readAllStandardError();
             throw unzipException("Failed to download the file");
-        }
-
-        // Rename duplicates to avoid overwriting
-        // TODO: goede duplicaten namen check
-        QDir dir(destinationDir);
-        QStringList existingNames = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        foreach(const QFileInfo & fileInfo, dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-            QString baseName = fileInfo.fileName();
-            QString uniqueName = getUniqueName(baseName, existingNames);
-
-            if (uniqueName != baseName) {
-                dir.rename(baseName, uniqueName);
-            }
-
-            // Update existing names after renaming
-            existingNames.append(uniqueName);
         }
 
     // Construct a unzip command for Linux/macOS
@@ -493,11 +487,52 @@ void FileManager::unzip(QByteArray zipData) {
             throw unzipException("Failed to download the file");
         }
     #endif
+
+    renameDuplicates(tempFolderPath, destinationDir);
     
     // Delete the previously made temporary file
     if (!QFile::remove(tempZipPath)) {
         qWarning() << "Failed to delete temporary file:" << tempZipPath;
         throw unzipException("Something went wrong while deleting the temporary file");
+    }
+}
+
+// Create a temporary folder where you can unzip the folder
+QString FileManager::createTemporaryFolder() {
+    QString tempPath = QDir::tempPath();
+    QString uniqueFolderName = QString("tempFolder_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
+    QString tempFolderPath = tempPath + "/" + uniqueFolderName;
+
+    QDir dir;
+    if (dir.mkdir(tempFolderPath)) {
+        return tempFolderPath;
+    }
+    else {
+        throw unzipException("Could not create temporary folder");
+    }
+}
+
+void FileManager::renameDuplicates(QString tempFolderPath, QString destinationDir) {
+    // Get the name of the folder that was unzipped, and the destination folder names
+    QDir dirTemp(tempFolderPath);
+    QStringList existingNamesTemp = dirTemp.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    QDir dir(destinationDir);
+    QStringList existingNames = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+    // Rename duplicates to avoid overwriting
+    for (int i = 0; i < existingNamesTemp.size(); ++i) {
+        QString baseName = existingNamesTemp[i];
+        QString uniqueName = getUniqueName(baseName, existingNames);
+
+        // Check if a new name was generated because of duplicate names
+        if (uniqueName != baseName) {
+            dirTemp.rename(baseName, uniqueName);
+        }
+
+        // Move the file
+        if (!dir.rename(tempFolderPath + "/" + uniqueName, destinationDir + "/" + uniqueName)) {
+            throw unzipException("Failed to unzip the folder");
+        }
     }
 }
 

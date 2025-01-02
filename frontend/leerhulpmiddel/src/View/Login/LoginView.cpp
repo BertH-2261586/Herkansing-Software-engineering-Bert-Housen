@@ -12,7 +12,7 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
 
     QPushButton* goBackbtn = new QPushButton( this);
     goBackbtn->setText("Go Back");
-    goBackbtn->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::GoHome));
+    goBackbtn->setIcon(QIcon::fromTheme("go-home"));
     goBackbtn->setToolTip("Go Back");
     goBackbtn->setIconSize(QSize(30, 30));
     goBackbtn->setCursor(Qt::PointingHandCursor);

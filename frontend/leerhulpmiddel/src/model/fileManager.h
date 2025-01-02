@@ -33,6 +33,8 @@ public:
 private:
     QMap<QString, QVariantList> loadFilesAndQuestions(const QDir& dir, int currentDepth = 0) const;
     QString getUniqueName(QString baseName, QStringList existingNames);
+    QString createTemporaryFolder();
+    void renameDuplicates(const QString tempFolderPath, const QString destinationDir);
 };
 
 #endif 

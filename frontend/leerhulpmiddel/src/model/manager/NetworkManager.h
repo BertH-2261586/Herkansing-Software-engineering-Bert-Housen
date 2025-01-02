@@ -56,7 +56,7 @@ signals:
 	void inboxMessagesFetched(QList<QJsonObject> inboxMessages);
 	void friendUsernamesFetched(QList<int> userIDs, QList<QString> usernames);	
 	void questionSetSucces();
-	void questionSetFailed();
+	void questionSetFailed(const bool codeExists = true);
 };
 
 #endif
