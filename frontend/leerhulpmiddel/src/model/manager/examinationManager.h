@@ -19,7 +19,8 @@ signals:
 
 public slots:
     void examinationStarted(const QString questionSetPath);
-    void nextQuestion();
+    void examinationStartedL(const QList<QString> questionSetPath);
+    void nextQuestion(bool showWrong);
     void answeredWrong(bool timeout) { m_examination.addWrongCurrentQuestion(timeout); }
     void getExaminationData();
 

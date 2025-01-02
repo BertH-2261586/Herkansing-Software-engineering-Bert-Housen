@@ -11,7 +11,7 @@ public:
     Examination() : m_currentQuestionIndex(0), m_totalWrongAnswers(0), m_examinationDone(false), m_mostRetries(0), m_totalTimeouts(0) {}
 
     void setQuestions(QVector<shared_ptr<Question>> questions);
-    bool nextQuestion();
+    bool nextQuestion(bool showWrong);
     shared_ptr<Question> getCurrentQuestion() const { return m_questions[m_currentQuestionIndex]; }
     void addWrongCurrentQuestion(bool timeout);
     int getTotalSize() const { return m_totalSize; }
@@ -34,6 +34,7 @@ private:
     int m_mostRetries;
     int m_totalTimeouts;
     bool m_examinationDone;
+    bool m_showWrong = true;
 };
 
 #endif 

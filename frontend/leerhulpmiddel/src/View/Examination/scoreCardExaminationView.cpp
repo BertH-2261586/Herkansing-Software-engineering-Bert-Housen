@@ -1,7 +1,8 @@
 #include "scoreCardExaminationView.h"
 #include "examinationView.h"
 
-scoreCardExaminationView::scoreCardExaminationView(QWidget* parent) : QWidget(parent) {
+scoreCardExaminationView::scoreCardExaminationView(QWidget* parent, bool questionSelectOnly) : QWidget(parent) {
+    m_questionSelectOnly = questionSelectOnly;
     // Create a border 
     initializeBorderWidget();
 
@@ -13,8 +14,8 @@ scoreCardExaminationView::scoreCardExaminationView(QWidget* parent) : QWidget(pa
 
     // Initialize the layouts
     initializeLayouts();
-   
-    setLayout(m_mainLayout);
+
+    setLayout(m_mainLayout);    
 }
 
 void scoreCardExaminationView::initializeBorderWidget() {
@@ -37,6 +38,7 @@ void scoreCardExaminationView::initializeLabels() {
     m_percentage = createLabel();
     m_mostRetries = createLabel();
     m_totalTimeouts = createLabel();
+    m_score = createLabel();
 }
 
 QLabel* scoreCardExaminationView::createLabel() {
@@ -74,18 +76,28 @@ void scoreCardExaminationView::initializeLayouts() {
     m_borderLayout = new QVBoxLayout(m_borderWidget);
     m_borderLayout->setContentsMargins(35, 35, 35, 35);
 
-    // Initialize answered question layout (horizontal)
-    m_answeredQuestionLayout = new QHBoxLayout;
-    m_answeredQuestionLayout->setSpacing(50);
-    m_answeredQuestionLayout->addWidget(m_correctAnswers);
-    m_answeredQuestionLayout->addWidget(m_wrongAnswers);
-    m_answeredQuestionLayout->addWidget(m_percentage);
 
-    // Add widgets and layouts to the border layout
-    m_borderLayout->addWidget(m_totalAnswers);
-    m_borderLayout->addLayout(m_answeredQuestionLayout);
-    m_borderLayout->addWidget(m_mostRetries);
-    m_borderLayout->addWidget(m_totalTimeouts);
+
+    if (m_questionSelectOnly)
+    {
+        // Initialize answered question layout (horizontal)
+        m_answeredQuestionLayout = new QHBoxLayout;
+        m_answeredQuestionLayout->setSpacing(50);
+        m_answeredQuestionLayout->addWidget(m_correctAnswers);
+        m_answeredQuestionLayout->addWidget(m_wrongAnswers);
+        m_answeredQuestionLayout->addWidget(m_percentage);
+
+        // Add widgets and layouts to the border layout
+        m_borderLayout->addWidget(m_totalAnswers);
+        m_borderLayout->addLayout(m_answeredQuestionLayout);
+        m_borderLayout->addWidget(m_mostRetries);
+        m_borderLayout->addWidget(m_totalTimeouts);
+    }
+    else
+    {
+        m_borderLayout->addWidget(m_score);
+    }
+
     m_borderLayout->addWidget(m_closeButton, 0, Qt::AlignHCenter);
 
     // Set the main layout
@@ -99,4 +111,5 @@ void scoreCardExaminationView::showExaminationData(QMap<QString, QString> examin
     m_percentage->setText("Accuracy: " + examinationData.value("percentage") + "%");
     m_mostRetries->setText("Highest repeated question amount: " + examinationData.value("most_retries"));
     m_totalTimeouts->setText("Amount of questions timed out: " + examinationData.value("total_timeouts"));
+    m_score->setText("Score: " + QString::number(examinationData.value("right_answers").toInt() - examinationData.value("total_wrong_answers").toInt()) + "/" + examinationData.value("total_answers"));
 }

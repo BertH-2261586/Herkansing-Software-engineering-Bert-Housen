@@ -24,6 +24,7 @@ public:
     void saveQuestionToJSON(const QString questionSet, const QString subset, const Question& question) const;
     unique_ptr<Question> loadQuestionFromJSON(const QString questionSet, const QString subset, const QString questionName) const;
     QVector<shared_ptr<Question>> getAllQuestionsFromQuestionSet(const QString questionSetPath) const;
+    QVector<shared_ptr<Question>> getAllQuestionsFromQuestionSet(const QList<QString> questionSetPath) const;
     QByteArray createZip(const QStringList& questionSetPaths);
     void unzip(const QByteArray zipData);
 

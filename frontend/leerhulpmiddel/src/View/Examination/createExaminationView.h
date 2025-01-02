@@ -15,7 +15,7 @@ class CreateExaminationView : public QWidget {
     Q_OBJECT
 
 public:
-    CreateExaminationView(QWidget* parent = nullptr);
+    CreateExaminationView(QWidget* parent = nullptr, bool questionSelectOnly = true);
 
 private slots:
     void handleTimeChanged();
@@ -36,6 +36,8 @@ private:
     void clearLayout(QLayout* layout);
 
     ExaminationView* m_examinationView;
+
+    bool m_questionSelectOnly;
 
     QVBoxLayout* m_mainLayout;
     QVBoxLayout* m_timerLayout;

@@ -10,7 +10,7 @@ class scoreCardExaminationView : public QWidget {
     Q_OBJECT
 
 public:
-    scoreCardExaminationView(QWidget* parent = nullptr);
+    scoreCardExaminationView(QWidget* parent = nullptr, bool questionSelectOnly = true);
     ~scoreCardExaminationView() {}
     void showExaminationData(QMap<QString, QString> examinationData);
 
@@ -32,6 +32,9 @@ private:
     QLabel* m_percentage;
     QLabel* m_mostRetries;
     QLabel* m_totalTimeouts;
+    QLabel* m_score;
+
+    bool m_questionSelectOnly;
 
     QPushButton* m_closeButton;
 };

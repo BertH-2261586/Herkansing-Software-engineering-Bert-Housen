@@ -21,12 +21,14 @@ class ExaminationView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit ExaminationView(QWidget* parent = nullptr);
+    explicit ExaminationView(QWidget* parent = nullptr, bool questionSelectOnly = true);
     void startExamination(QString path, QTime timeLimit = QTime(-1, -1, -1));
+    void startExamination(QList<QString> path, QTime timeLimit = QTime(-1, -1, -1));
 
 signals:
     void examinationStarted(const QString questionSetPath);
-    void nextQuestion();
+    void examinationStartedL(const QList<QString> questionSetPath);
+    void nextQuestion(bool showWrong);
     void getExaminationData();
 
 public slots:
@@ -40,6 +42,9 @@ private slots:
     void closeEvent(QCloseEvent* event) override; // Override close event
 
 private:
+    void next();
+    bool m_questionSelectOnly;
+
     void setCurrentQuestionView();
     void clearPreviousQuestionView();
 

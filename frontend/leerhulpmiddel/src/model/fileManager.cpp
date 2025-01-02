@@ -281,8 +281,8 @@ Answer FileManager::convertToAnswerObject(QJsonObject answer) const {
 }
 
 /*
-* Given a path to a question set return all the questions associated with it 
-* 
+* Given a path to a question set return all the questions associated with it
+*
 * @param questionSetPath this is the path to the question set where you want all the questions from
 * @return QVector<Question*> this vector contains all the questions in the question set
 */
@@ -337,6 +337,52 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
             catch (const std::exception& e) {
                 qWarning() << "Error loading question from file:" << fileFolderInfo.absoluteFilePath() << e.what();
             }
+        }
+    }
+
+    return questions;
+}
+
+/*
+* Given a path to a question set return all the questions associated with it 
+* 
+* @param questionSetPath this is the path to the question set where you want all the questions from
+* @return QVector<Question*> this vector contains all the questions in the question set
+*/
+QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const QList<QString> questionSetPath) const {
+    QVector<shared_ptr<Question>> questions;  // Create the vector where you'll store the questions 
+
+    for (auto setPath : questionSetPath) {
+        try {
+            // Load question from the main directory
+            QString filePath = setPath;
+            QString fileName = "";
+
+            if (setPath.contains('/'))
+            {
+                for (int i = setPath.length() - 1; i >= 0; i--)
+                {
+
+                    if (setPath.at(i) == "/")
+                    {
+                        filePath = filePath.mid(0, i);
+                        break;
+                    }
+
+                    fileName = setPath.at(i) + fileName;
+                }
+            }
+            else
+            {
+                filePath = "";
+                fileName = setPath;
+            }
+
+            auto question = loadQuestionFromJSON(filePath, "", fileName);
+            questions.append(std::move(question));  // Add the loaded question to the vector
+        }
+        catch (const std::exception& e) {
+            qWarning() << "Error loading question from file:" << setPath << e.what();
         }
     }
 
