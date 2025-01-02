@@ -22,18 +22,7 @@ namespace filesystem = std::filesystem;
 QString FileManager::getPath() const {
     // Gets the path to the .exe file. Pay attention this isnt the file to the project folder
     QString projectDirPath = QCoreApplication::applicationDirPath();
-
-    QStringList segments = projectDirPath.split('/');
-    // Remove the last 2 segments of the path to the .exe file to get to the project folder
-    segments.removeLast(); // Remove 'Debug'
-    if (segments.last() != "frontend")
-    {
-        segments.removeLast(); // Remove 'x64'
-    }
-
-    // Combine all the segments
-    QString newPath = segments.join('/');
-    return newPath + "/leerhulpmiddel/questionSets";        // Add the questionSets folder to the path for where the question sets are stored locally
+    return projectDirPath + "/questionSets";        // Add the questionSets folder to the path for where the question sets are stored locally
 }
 
 /**
