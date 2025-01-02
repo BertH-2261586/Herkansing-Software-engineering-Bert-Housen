@@ -1,4 +1,4 @@
-#include "CountdownTimer.h"
+#include "countdownTimer.h"
 
 CountdownTimer::CountdownTimer(QWidget* parent) : QWidget(parent)
 {

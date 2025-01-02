@@ -7,7 +7,7 @@
 
 #include "Controller/questionmanagercontroller.h"
 #include "model/manager/questionmanager.h"
-#include "view/leerhulpmiddelmainwindow.h"
+#include "View/leerhulpmiddelmainwindow.h"
 
 
 int main(int argc, char* argv[]) {

@@ -1,7 +1,7 @@
 #ifndef EXAMINATIONCONTROLLER_H
 #define EXAMINATIONCONTROLLER_H
 
-#include "../model/manager/ExaminationManager.h"
+#include "../model/manager/examinationManager.h"
 
 class ExaminationView;
 

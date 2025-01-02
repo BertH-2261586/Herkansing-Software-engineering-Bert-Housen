@@ -1,5 +1,5 @@
 #include "examinationController.h"
-#include "../view/Examination/examinationView.h"
+#include "../View/Examination/examinationView.h"
 
 // Connect all the signals and slots between the manager, controller and the view
 ExaminationController::ExaminationController(ExaminationView* examinationView) 

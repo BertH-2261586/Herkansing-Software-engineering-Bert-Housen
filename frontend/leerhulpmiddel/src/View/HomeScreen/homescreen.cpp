@@ -3,7 +3,7 @@
 #include "../Login/LoginView.h"
 #include "../../Controller/LoginController.h"
 #include "../../model/manager/NetworkManager.h"
-#include "../Share/shareview.h"
+#include "../Share/ShareView.h"
 #include "../leerhulpmiddelmainwindow.h"
 #include "../add_friends/add_friend_view.h"
 #include "../../Exceptions/NoSavedSessionException.h"

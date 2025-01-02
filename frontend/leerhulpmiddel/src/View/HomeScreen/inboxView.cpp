@@ -1,5 +1,5 @@
 #include "inboxView.h"
-#include "homeScreen.h"  
+#include "homescreen.h"  
 #include "../ToastMessage.h"
 
 InboxView::InboxView(QWidget* parent) : QWidget(parent) {

@@ -9,6 +9,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
+#include <QGuiApplication>
 
 class AddFriendView : public QWidget
 {

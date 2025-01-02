@@ -11,6 +11,7 @@
 #include <QList>
 #include <QScrollArea>
 #include <QPushButton>
+#include <QGuiApplication>
 
 class InboxView : public QWidget
 {
