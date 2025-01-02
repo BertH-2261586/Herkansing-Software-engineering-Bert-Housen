@@ -136,7 +136,7 @@ void ShareView::setUpQuestionSetChooser()
 
 	connect(m_shareButton, &QPushButton::pressed, this, [=] {
 
-		QList<QString> questionSetPaths = m_chooseQuestionView->getQuestionSetPaths();
+		QList<QString> questionSetPaths = m_chooseQuestionView->getQuestionSets();
 		if (questionSetPaths.size() == 0) {
 			ToastMessage* toast = new ToastMessage("You must select at least one question set", this);
 			toast->move((width() - toast->width()) / 2, height() - 70);

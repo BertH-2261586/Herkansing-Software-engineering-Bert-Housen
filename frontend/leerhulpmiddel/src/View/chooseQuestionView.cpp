@@ -160,21 +160,86 @@ QList<QString> ChooseQuestionView::getQuestionSetPaths()
     QList<QString> paths;
     // Iterate over all top level question sets
     for (int i = 0; i < m_treeWidget->topLevelItemCount(); ++i) {
-		QTreeWidgetItem* item = m_treeWidget->topLevelItem(i);
+        QTreeWidgetItem* item = m_treeWidget->topLevelItem(i);
 
-		if (item->checkState(0) == Qt::Checked) {
-			paths.append(item->text(0));
-		}
-	}
-	return paths;
+        QList<QString> children = getCheckedChildren(item);
+        for (auto c : children)
+        {
+            paths.append(c);
+        }
+    }
+
+    return paths;
+}
+
+QList<QString> ChooseQuestionView::getQuestionSets()
+{
+    QList<QString> paths;
+    // Iterate over all top level question sets
+    for (int i = 0; i < m_treeWidget->topLevelItemCount(); ++i) {
+        QTreeWidgetItem* item = m_treeWidget->topLevelItem(i);
+
+        if (item->checkState(0) == Qt::Checked) {
+            paths.append(item->text(0));
+        }
+    }
+    return paths;
+}
+
+
+QList<QString> ChooseQuestionView::getCheckedChildren(QTreeWidgetItem* parent)
+{
+    QList<QString> paths;
+    if (parent == nullptr)
+        return paths;
+    if (parent->checkState(0) && !parent->childCount()) {
+        paths.append(parent->text(0));
+        return paths;
+    }
+    for (int i = 0; i < parent->childCount(); ++i) {
+        QTreeWidgetItem* item = parent->child(i);
+
+        QList<QString> children = getCheckedChildren(item);
+        for (auto c : children)
+        {
+            paths.append(parent->text(0) + "/" + c);
+        }
+    }
+    return paths;
 }
 
 /*
-* Handle the press of the checkbox for when you can select whatever you want (for example practice exam). 
+* Handle the press of the checkbox for when you can select whatever you want (for example practice exam).
 * In this case make it so that all the other checkboxes on a lower level also get selected
 * TODO
 */
 void ChooseQuestionView::handleItemCheckChange(QTreeWidgetItem* item, int column) {
-    qDebug() << "went in";
+    // Check if the current question set is checked
+    this->CheckChildren(item, item->checkState(0));
+    this->CheckParents(item, item->checkState(0));
 }
 
+void ChooseQuestionView::CheckChildren(QTreeWidgetItem* parent, Qt::CheckState state)
+{
+    parent->setCheckState(0, state);
+    for (int i = 0; i < parent->childCount(); i++)
+    {
+        this->CheckChildren(parent->child(i), state);
+    }
+}
+
+void ChooseQuestionView::CheckParents(QTreeWidgetItem* child, Qt::CheckState state)
+{
+    child->setCheckState(0, state);
+    QTreeWidgetItem* parent = child->parent();
+    if (parent == nullptr)
+        return;
+    int count = parent->childCount();
+    int checked_brothers = 0;
+    for (int i = 0; i < count; i++)
+        checked_brothers += (parent->child(i)->checkState(0) == Qt::Checked);
+    if (count == checked_brothers)
+        this->CheckParents(parent, Qt::Checked);
+    else
+        this->CheckParents(parent, Qt::Unchecked);
+}

@@ -7,6 +7,8 @@ ExaminationController::ExaminationController(ExaminationView* examinationView)
 {
 	// Notify the manager that the user started an examination
 	connect(m_examinationView, &ExaminationView::examinationStarted, m_examinationManager, &ExaminationManager::examinationStarted);
+	// Notify the manager that the user started an examination
+	connect(m_examinationView, &ExaminationView::examinationStartedL, m_examinationManager, &ExaminationManager::examinationStartedL);
 	// Notify the controller that the first question has been loaded
 	connect(m_examinationManager, &ExaminationManager::firstQuestion, this, &ExaminationController::firstQuestion);
 	// Notify the view that the current question is loaded

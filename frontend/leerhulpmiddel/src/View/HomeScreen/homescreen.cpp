@@ -98,6 +98,11 @@ QWidget* HomeScreen::GenerateTopButtonBar()
         m_mainWindow->PushMainViewport(new CreateExaminationView());
     });
 
+    QPushButton* startPracticeExamButton = new QPushButton("Start practice exam");
+    connect(startPracticeExamButton, &QPushButton::pressed, this, [=] {
+        m_mainWindow->PushMainViewport(new CreateExaminationView(nullptr, false));
+     });
+
     QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
 
     QPushButton* logoutButton = new QPushButton("Logout");
@@ -155,6 +160,7 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     QHBoxLayout* container = new QHBoxLayout();
     container->addWidget(shareButton);
     container->addWidget(startExamButton);
+    container->addWidget(startPracticeExamButton);
     container->addWidget(makeNewQsetButton);
     container->addWidget(logoutButton);
     container->addWidget(loginButton);

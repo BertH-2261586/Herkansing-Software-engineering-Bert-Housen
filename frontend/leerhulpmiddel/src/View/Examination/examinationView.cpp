@@ -4,8 +4,10 @@
 #include <QCloseEvent>
 #include <QToolTip>
 
-ExaminationView::ExaminationView(QWidget* parent) : QWidget(parent), m_examinationController(new ExaminationController(this)) {
+ExaminationView::ExaminationView(QWidget* parent, bool questionSelectOnly) : QWidget(parent), m_examinationController(new ExaminationController(this)) {
     this->setAttribute(Qt::WA_DeleteOnClose, true);
+
+    m_questionSelectOnly = questionSelectOnly;
 
     // Create the widgets directly for the page
     setupAmountQuestionsAnswered();
@@ -168,7 +170,8 @@ void ExaminationView::initializeLayouts() {
     m_mainLayout->addWidget(m_endExaminationButton, 0, Qt::AlignHCenter);
 
     // Create the scorecard for after the examination
-    m_scoreCard = new scoreCardExaminationView(this);
+    
+    m_scoreCard = new scoreCardExaminationView(this, m_questionSelectOnly);
     m_scoreCard->hide();
     m_mainLayout->addWidget(m_scoreCard, 0, Qt::AlignCenter);
 }
@@ -181,6 +184,16 @@ void ExaminationView::startExamination(QString path, QTime timeLimit) {
     }
 
     emit examinationStarted(path);
+}
+
+void ExaminationView::startExamination(QList<QString> path, QTime timeLimit) {
+    if (timeLimit != QTime(-1, -1, -1)) {
+        m_timePerQuestion->setupTimer(timeLimit);
+        m_timePerQuestion->show();
+        m_examinationController->setShowTimer(true);
+    }
+
+    emit examinationStartedL(path);
 }
 
 void ExaminationView::questionLoadedView() {
@@ -198,9 +211,14 @@ void ExaminationView::questionLoadedView() {
 }
 
 void ExaminationView::nextQuestionView() {
+    next();
+}
+
+void ExaminationView::next()
+{
     clearPreviousQuestionView();
 
-    emit nextQuestion();
+    emit nextQuestion(m_questionSelectOnly);
 
     if (m_examinationController->getCurrentQuestionType() != QuestionType::Flashcard) {
         m_submitButton->show();
@@ -238,11 +256,20 @@ void ExaminationView::showAnswer(bool timeout) {
         && m_examinationController->finishedExamination())
     {
         m_endExaminationButton->show();
+        m_submitButton->hide();
+        if (!m_questionSelectOnly)
+        {
+            m_closeFromExaminationEnd = true;
+            emit getExaminationData();
+        }
     }
     else {
         m_nextQuestionButton->show();
+        m_submitButton->hide();
+        if (!m_questionSelectOnly)
+            next();
     }
-    m_submitButton->hide();
+
 }
 
 void ExaminationView::setCurrentQuestionView() {

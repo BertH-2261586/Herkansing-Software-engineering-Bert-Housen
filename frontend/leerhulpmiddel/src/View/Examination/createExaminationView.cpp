@@ -1,10 +1,10 @@
 #include "createExaminationView.h"
 #include "../ToastMessage.h"
 
-CreateExaminationView::CreateExaminationView(QWidget* parent) : QWidget(parent) {
+CreateExaminationView::CreateExaminationView(QWidget* parent, bool questionSelectOnly) : QWidget(parent) {
     this->setAttribute(Qt::WA_DeleteOnClose, true);
-
-    m_chooseQuestionView = new ChooseQuestionView(true);
+    m_questionSelectOnly = questionSelectOnly;
+    m_chooseQuestionView = new ChooseQuestionView(questionSelectOnly, !questionSelectOnly);
     setupGoBack();
     setupTimerLabel();
     setupTimer();
@@ -128,33 +128,68 @@ void CreateExaminationView::switchToggle(){
 }
 
 void CreateExaminationView::startExamination() {
-    QString questionSetPath = m_chooseQuestionView->getQuestionSetPath();
-    // No question set was selected, so show a toast message to alert the user
-    if (questionSetPath == "") {
-        ToastMessage* toast = new ToastMessage("You have to select a question set", this);
-        toast->move((width() - toast->width()) / 2, height() - 85);
-        toast->show();
-        return;
+    if (m_questionSelectOnly) {
+        QString questionSetPath = m_chooseQuestionView->getQuestionSetPath();
+        // No question set was selected, so show a toast message to alert the user
+        if (questionSetPath == "") {
+            ToastMessage* toast = new ToastMessage("You have to select a question set", this);
+            toast->move((width() - toast->width()) / 2, height() - 85);
+            toast->show();
+            return;
+        }
+
+        m_examinationView = new ExaminationView(nullptr, m_questionSelectOnly);
+        if (m_toggle->isChecked()) {
+            QTime currentTime = m_timer->time();
+            m_examinationView->startExamination(questionSetPath, currentTime);
+        }
+        else {
+            m_examinationView->startExamination(questionSetPath, QTime(-1, -1, -1));
+        }
+
+
+        clearLayout(m_mainLayout);
+        m_mainLayout->addWidget(m_examinationView);
+        // If m_examinationView is closed also close this 
+        connect(m_examinationView, &QWidget::destroyed, this, [=] {
+            // Delete the remaining widgets
+            //delete m_examinationView;
+            delete m_mainLayout;
+            this->close();
+            });
     }
 
-    m_examinationView = new ExaminationView;
-    if (m_toggle->isChecked()) {
-        QTime currentTime = m_timer->time();
-        m_examinationView->startExamination(questionSetPath, currentTime);
-    }
-    else {
-        m_examinationView->startExamination(questionSetPath, QTime(-1, -1, -1));
+    else
+    {
+        QList <QString> questionSetPath = m_chooseQuestionView->getQuestionSetPaths();
+        // No question set was selected, so show a toast message to alert the user
+        if (questionSetPath.size() == 0) {
+            ToastMessage* toast = new ToastMessage("You have to select a question set", this);
+            toast->move((width() - toast->width()) / 2, height() - 85);
+            toast->show();
+            return;
+        }
+
+        m_examinationView = new ExaminationView(nullptr, m_questionSelectOnly);
+        if (m_toggle->isChecked()) {
+            QTime currentTime = m_timer->time();
+            m_examinationView->startExamination(questionSetPath, currentTime);
+        }
+        else {
+            m_examinationView->startExamination(questionSetPath, QTime(-1, -1, -1));
+        }
+
+        clearLayout(m_mainLayout);
+        m_mainLayout->addWidget(m_examinationView);
+        // If m_examinationView is closed also close this 
+        connect(m_examinationView, &QWidget::destroyed, this, [=] {
+            // Delete the remaining widgets
+            //delete m_examinationView;
+            delete m_mainLayout;
+            this->close();
+            });
     }
 
-    clearLayout(m_mainLayout);
-    m_mainLayout->addWidget(m_examinationView);
-    // If m_examinationView is closed also close this 
-    connect(m_examinationView, &QWidget::destroyed, this, [=] {
-        // Delete the remaining widgets
-        //delete m_examinationView;
-        delete m_mainLayout;
-        this->close();
-    });
 }
 
 void CreateExaminationView::clearLayout(QLayout* layout) {

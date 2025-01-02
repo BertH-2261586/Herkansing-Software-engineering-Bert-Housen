@@ -16,11 +16,11 @@ void Examination::randomizeQuestions(QVector<shared_ptr<Question>>& questions) {
     std::shuffle(questions.begin(), questions.end(), gen);
 }
 
-bool Examination::nextQuestion() {
+bool Examination::nextQuestion(bool showWrong) {
     ++m_currentQuestionIndex;
-
+    m_showWrong = showWrong;
     // All questions have been answered, show the wrong questions now
-    if (m_currentQuestionIndex + 1 > m_questions.size()) {        // Index starts at 0 and size at 1 so compensate the difference with +1
+    if (m_currentQuestionIndex + 1 > m_questions.size() && showWrong) {         // Index starts at 0 and size at 1 so compensate the difference with +1
         m_currentQuestionIndex = 0;
         randomizeQuestions(m_wrongQuestions);
         m_questions = m_wrongQuestions;
@@ -49,7 +49,7 @@ void Examination::addWrongCurrentQuestion(bool timeout) {
 }
 
 bool Examination::finishedExamination() const {
-    if (m_currentQuestionIndex + 1 == m_questions.size() && m_wrongQuestions.isEmpty()) {        // Index starts at 0 and size at 1 so compensate the difference with +1
+    if (m_currentQuestionIndex + 1 == m_questions.size() && (m_wrongQuestions.isEmpty() || !m_showWrong)) {        // Index starts at 0 and size at 1 so compensate the difference with +1
         return true;
     }
     return false;
