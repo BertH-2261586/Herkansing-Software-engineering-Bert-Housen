@@ -13,6 +13,13 @@
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
+    // Set the color palette of the main background
+    QPalette currentPalette = app.palette();
+    QColor baseColor = currentPalette.color(QPalette::Window);
+    QColor lighterColor = baseColor.lighter(110);
+    app.setStyleSheet(
+        QString("QMainWindow { background-color: %1; }").arg(lighterColor.name())
+    );
 
     TestNetworkManager networkTest;
     QTest::qExec(&networkTest, argc, argv);

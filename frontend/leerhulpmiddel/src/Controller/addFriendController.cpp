@@ -5,6 +5,7 @@
 addFriendController::addFriendController() : m_networkManager{ new NetworkManager } {
 	const int maxUsersPerPage = 10;
 
+	// All users are fetched from the database
 	connect(m_networkManager, &NetworkManager::usersFetched, this, [=](int totalCount, QList<QString> userList, QList<bool> areFriendsList, 
 																		QList<bool> sentFriendRequest, QList<bool> receivedFriendRequest) {
 		m_totalAmountOfPages = (totalCount + maxUsersPerPage - 1) / maxUsersPerPage;		// Calculate the amount of user pages there are

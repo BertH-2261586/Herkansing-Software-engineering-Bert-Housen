@@ -1,7 +1,5 @@
-
 #include "questionsetbrowser.h"
 #include "homescreen.h"
-#include <QDebug>
 
 #include <QGraphicsProxyWidget>
 #include <QTimer>
@@ -138,8 +136,6 @@ void QuestionsetBrowser::CreateNewQuestionset()
 
     connect(textfield, &FocusOutLineEdit::returnPressed, m_container, [=]{
             QString input = textfield->text();
-
-            qDebug() << input;
 
             if (input != "")
             {

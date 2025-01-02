@@ -1,4 +1,3 @@
-import logging
 from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlmodel import Session
 from ..database import *
@@ -12,8 +11,6 @@ from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 session_manager = UserSessionManager()
-
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_database(session: Session = Depends(get_session)) -> QuestionSetManager:
     return QuestionSetManager(session)

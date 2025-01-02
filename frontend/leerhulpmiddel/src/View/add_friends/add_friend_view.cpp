@@ -190,7 +190,6 @@ void AddFriendView::setAllUsers() {
     }
 
     int totalPageAmount = m_addFriendController.getPageAmount();
-    qDebug() << totalPageAmount;
     // Check if there is more than 1 page
     if (totalPageAmount > 1) {
         // Add pagination

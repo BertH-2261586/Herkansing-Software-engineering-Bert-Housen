@@ -129,7 +129,6 @@ void CreateExaminationView::switchToggle(){
 
 void CreateExaminationView::startExamination() {
     QString questionSetPath = m_chooseQuestionView->getQuestionSetPath();
-    qDebug() << questionSetPath;
     // No question set was selected, so show a toast message to alert the user
     if (questionSetPath == "") {
         ToastMessage* toast = new ToastMessage("You have to select a question set", this);

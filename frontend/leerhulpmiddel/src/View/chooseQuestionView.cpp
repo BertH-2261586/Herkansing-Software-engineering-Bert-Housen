@@ -34,14 +34,21 @@ ChooseQuestionView::ChooseQuestionView(bool questionSetSelectOnly, bool selectMu
 void ChooseQuestionView::setupTreeWidget(bool questionSetSelectOnly,bool selectMultiple) {
     m_treeWidget = new QTreeWidget(this);
     m_treeWidget->setHeaderLabel(questionSetSelectOnly ? "Choose a question set" : "Choose the questions you want");
-
     m_treeWidget->setSelectionMode(selectMultiple ? QAbstractItemView::MultiSelection : QAbstractItemView::SingleSelection);
 
+    // Set the color palette of the choose question view
+    QPalette currentPalette = m_treeWidget->palette();
+    QColor baseColor = currentPalette.color(QPalette::Window);
+    QColor darkerColor = baseColor.darker(115);
     m_treeWidget->setStyleSheet(
-        "QTreeWidget::item {"
-        "    margin-bottom: 5px;"
-        "}"
-        "font-size: 14px;");
+        QString(
+            "background-color: %1;"
+            "QTreeWidget::item {"
+            "    margin-bottom: 5px;"
+            "    font-size: 14px;"
+            "}"
+        ).arg(darkerColor.name())
+    );
 
     // Center the header text
     QTreeWidgetItem* headerItem = m_treeWidget->headerItem();

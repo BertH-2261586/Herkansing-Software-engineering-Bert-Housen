@@ -55,7 +55,10 @@ void InboxView::setInboxRequests() {
         else if (messageType == "group_invite") {
             message = username + " has sent a group invite";
         }
-        m_menuItemInfo.append(new QLabel(message));
+        QLabel* msgLabel = new QLabel(message);
+        QColor color = msgLabel->palette().color(QPalette::Window).darker(115);
+        msgLabel->setStyleSheet(QString("background-color: %1;").arg(color.name()));
+        m_menuItemInfo.append(msgLabel);
         m_menuItemInfo[i]->setWordWrap(true);
 
         setAcceptButton(i);
@@ -135,12 +138,16 @@ void InboxView::addFrame(int index) {
 
     // Set the stylesheet
     m_itemFrames[index]->setObjectName("itemFrame");      // Set an object name for specific styling of the frame
+    QColor color = m_itemFrames[index]->palette().color(QPalette::Window).darker(115);
     m_itemFrames[index]->setStyleSheet(
-        "#itemFrame {"
-        "  border-width: 1px;"
-        "  border-style: solid;"
-        "  border-color: black;"
-        "}"
+        QString(
+            "#itemFrame {"
+            "   border-width: 1px;"
+            "   border-style: solid;"
+            "   border-color: black;"
+            "   background-color: %1;"
+            "}"
+        ).arg(color.name())
     );
     m_itemFrames[index]->setMaximumHeight(125);
     m_itemFrames[index]->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -167,7 +174,13 @@ void InboxView::setSlidingMenu() {
 
     // Create the sliding menu widget
     m_slidingMenu = new QWidget(this);
-    m_slidingMenu->setStyleSheet("background-color: #5c5c5c;");
+    // Set the color palette of the sliding menu
+    QPalette currentPalette = m_slidingMenu->palette();
+    QColor baseColor = currentPalette.color(QPalette::Window);
+    QColor darkerColor = baseColor.darker(130);
+    m_slidingMenu->setStyleSheet(
+        QString("background-color: %1;").arg(darkerColor.name())
+    );
     m_slidingMenu->setFixedSize(menuWidth, screenGeometry.height() - 150);       
 
     // Set a layout for the sliding menu

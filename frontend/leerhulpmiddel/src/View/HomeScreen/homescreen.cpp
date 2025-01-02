@@ -23,6 +23,12 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
     m_container->setContentsMargins(0, 0, 0, 0);
 
     m_vragensetBrowser = new QuestionsetBrowser(questionManagerController->getAllQuestionsets(), questionManagerController, this);
+    // Set the color palette of the vragenset browser
+    QColor color = m_vragensetBrowser->palette().color(QPalette::Window).lighter(110);
+    m_vragensetBrowser->setStyleSheet(
+        QString("background-color: %1;").arg(color.name())
+    );   
+
     m_container->addWidget(m_vragensetBrowser, 1);
 
     m_rightSideScreen = new QWidget();
@@ -41,6 +47,7 @@ HomeScreen::~HomeScreen() {
     delete m_loginController;
     delete m_networkManager;
 }
+
 
 void HomeScreen::setInboxView() {
     // Create the inbox sliding menu
@@ -67,7 +74,6 @@ void HomeScreen::setInboxView() {
     connect(m_inboxView, &InboxView::questionSetSucces, this, [=]() {
         createQuestionSetToastMessage(true);
     });
-
 }
 
 QWidget* HomeScreen::GenerateTopButtonBar()
@@ -161,7 +167,13 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     m_loginController->getLoggedInStatus();
 
     QWidget* outputWidget = new QWidget();
-    outputWidget->setStyleSheet("background-color: #5c5c5c;");
+
+    // Set the color palette of the top button bar
+    QColor color = outputWidget->palette().color(QPalette::Window).darker(130);
+    outputWidget->setStyleSheet(
+        QString("background-color: %1;").arg(color.name())
+    );
+
     outputWidget->setLayout(container);
     return outputWidget;
 }
@@ -274,12 +286,12 @@ void HomeScreen::setIconButton(QPushButton* button, QString iconName){
         "QPushButton {"
         "   border: 1px solid black;"
         "   border-radius: 15px;"
-        "   background-color: #5c5c5c;"
+        "   background-color: grey;"
         "   width: 35px;"
         "   height: 35px;"
         "}"
         "QPushButton:hover {"
-        "   background-color: white;"
+        "   background-color: lightgrey;"
         "}"
     );
 
@@ -297,7 +309,15 @@ void HomeScreen::setSearchQuestionSet(QHBoxLayout* container) {
     // Create a search button
     QPushButton* searchButton = new QPushButton("Search");
     searchButton->setFixedSize(50, 30);
-    searchButton->setStyleSheet("background-color: lightgray; border: 1px solid black; color: black; padding-left: 5px; padding-right: 5px;");
+    searchButton->setStyleSheet(
+        "QPushButton {"
+        "   border: 1px solid black;"
+        "   border-radius: 5px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: lightgrey;"
+        "}"
+    );
     connect(searchButton, &QPushButton::pressed, this, [=]() {
         searchButton->setEnabled(false);
         m_networkManager->acceptQuestionSet(searchQuestionSet->text());

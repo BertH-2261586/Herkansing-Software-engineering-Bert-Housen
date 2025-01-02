@@ -1,5 +1,4 @@
-
-from fastapi import APIRouter, Depends, HTTPException, Header,Request
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from ..database import *
 from ..models import User, UserBase, UserLogin, UserIdInput, GroupInviteIdInput, UserSearchRequest, UsernameInput

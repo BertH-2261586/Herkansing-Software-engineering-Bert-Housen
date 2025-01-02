@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QDir>
-#include <QDebug>
 #include <QString>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -359,7 +358,7 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
 * This functions makes a zip of all the question set folders given to it
 * @param questionSetPaths all the question sets that need to be zipped
 * @return QByteArray is the zip file
-* @pre the list of question set paths need to be valid and readable
+* @pre the list of question set paths need to be valid and readable. It must contain at least one readable file
 * @post 
 *   - Returns a QByteArray containing the zip file data if successful.
 *   - Returns an empty QByteArray if zipping fails.
@@ -376,8 +375,16 @@ QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
         // Construct a PowerShell command to create a zip file using Compress-Archive
         QString script = "Compress-Archive -Path ";
         for (const QString& path : questionSetPaths) {
-            // Append each question set path to the script
-            script += "\"" + (getPath() + "/" + path).replace("/", "\\") + "\",";
+            // Construct the full path
+            QString fullPath = getPath() + "/" + path;
+            // Check if the path exists
+            if (QFileInfo(fullPath).exists()) {
+                // Append the valid path to the script
+                script += "\"" + fullPath.replace("/", "\\") + "\",";
+            }
+            else {
+                return QByteArray();
+            }
         }
 
         script.chop(1);                                             // Remove the trailing comma from the list of paths
@@ -408,8 +415,16 @@ QByteArray FileManager::createZip(const QStringList& questionSetPaths) {
         QStringList zipArgs;
         zipArgs << "-r" << "-"; 
         for (const QString& path : questionSetPaths) {
-            // Append each question set path to the zip arguments
-            zipArgs << getPath() + "/" + path;
+            // Construct the full path
+            QString fullPath = getPath() + "/" + path;
+            // Check if the path exists
+            if (QFileInfo(fullPath).exists()) {
+                // Append the valid path to the zip arguments
+                zipArgs << fullPath;
+}
+            else {
+                return QByteArray();
+            }
         }
 
         // Start the PowerShell process to execute the zipping command
@@ -464,6 +479,7 @@ void FileManager::unzip(QByteArray zipData) {
         }
 
         // Rename duplicates to avoid overwriting
+        // TODO: goede duplicaten namen check
         QDir dir(destinationDir);
         QStringList existingNames = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         foreach(const QFileInfo & fileInfo, dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {

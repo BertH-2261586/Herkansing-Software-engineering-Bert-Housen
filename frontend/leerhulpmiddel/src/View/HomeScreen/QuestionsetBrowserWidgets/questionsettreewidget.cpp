@@ -1,7 +1,4 @@
 #include "questionsettreewidget.h"
-
-#include <QDebug>
-
 #include "questionbutton.h"
 #include "questionsetbutton.h"
 #include "../../focusoutlineedit.h"
@@ -174,7 +171,6 @@ void QuestionsetTreeWidget::CreateNewQuestionset()
     textfield->setFocus();
 
     connect(textfield, &FocusOutLineEdit::lostFocus, m_underlyingTreeContainer, [=]{            //zodat de invulbox er niet blijft staan als je eruit klikt en hij is leeg
-            qDebug() << "fire";
             QString input = textfield->text();
 
             if (input != "")
@@ -214,9 +210,5 @@ void QuestionsetTreeWidget::insertQuestion(Question* newQuestion, int index)
     QObject::connect(newQButton, &QuestionButton::clicked, this, [this, newQuestion]() {
         sendDisplayQuestionSignal(new QLabel(newQuestion->getName()));        //TODO nog de goede widgets versturen
         });
-    qDebug() << "Added Question";
     emit Display(new QWidget());
 }
-
-
-

@@ -102,22 +102,13 @@ void NetworkManager::registerUser(QString username, QString password)
 		
 		reply->deleteLater();
 		emit loginSuccess();
-
 	});
 }
 
 void NetworkManager::getLoggedInStatus() {
 	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
 	QString loginStatus = settings.value("loggedIn").toString();
-
-	if (loginStatus == "true") {
-		qDebug() << "logged in";
-		emit loggedIn();
-	}
-	else {
-		qDebug() << "logged out";
-		emit loggedOut();
-	}
+	loginStatus == "true" ? emit loggedIn() : loggedOut();
 }
 
 /*
@@ -135,7 +126,6 @@ void NetworkManager::shareQuestionSets(QList<QString> questionSetPaths)
 
 	if (compressedData.isEmpty()) {
 		emit shareFailed();
-		return;
 	}
 
 	QNetworkReply* reply = m_networkManager->post(request, compressedData); 
@@ -184,7 +174,6 @@ void NetworkManager::shareQuestionSetsWithFriends(QList<int> FriendIds, QString 
 	QByteArray data = QJsonDocument(json).toJson();
 
 	QNetworkReply* reply = m_networkManager->post(request, data);
-
 	connect(reply, &QNetworkReply::finished, [this, reply]() {
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
@@ -235,20 +224,17 @@ QString NetworkManager::getSessionCookie() {
 */
 void NetworkManager::setLoginStatus(bool status) {
 	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
-
 	settings.setValue("loggedIn", status);
 }
 
 void NetworkManager::setUserId(int id) {
 	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
-
 	settings.setValue("userId", id);
 }
 
 int NetworkManager::getUserId() const {
 	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
 	int userId = settings.value("userId").toInt();
-
 	return userId;
 }
 
@@ -256,10 +242,15 @@ int NetworkManager::getUserId() const {
 bool NetworkManager::cookieExists() {
 	QSettings settings("groep_7", "leerhulpmiddel");
 	QString sessionCookie = settings.value("sessionCookie").toString();
-
 	return !sessionCookie.isEmpty();
 }
 
+/*
+* Get a list of users 
+* @param page this is the current page the user is trying to reach
+* @userInput this is the letters the user has put in to search for a certain user
+* @emit usersFetched(...) with all the necessary data for the search page for users
+*/
 void NetworkManager::getUsersByPage(const int page, const QString userInput)
 {
 	// Build the URL
@@ -284,6 +275,11 @@ void NetworkManager::getUsersByPage(const int page, const QString userInput)
 	});
 }
 
+/*
+* This is a subfunction of getUsersByPage, this handles the reply of the database
+* @param reply the reply with all the data from the database
+* @emit usersFetched(...) with all the necessary data for the search page for users
+*/
 void NetworkManager::receiveUserByPageHandler(QNetworkReply* reply) {
 	// Check if an error has occurred
 	if (reply->error() != QNetworkReply::NoError) {
@@ -357,6 +353,11 @@ void NetworkManager::receiveUserByPageHandler(QNetworkReply* reply) {
 	emit usersFetched(responseObject["total_count"].toInt(), userList, areFriendsList, sentFriendRequests, receivedFriendRequests);
 }
 
+/*
+* Get the ID of a user given a username
+* @param the username you're trying to get the ID from
+* @return the ID of the user, -1 means that no ID has been found
+*/
 int NetworkManager::getUserIdByUsername(const QString username) {
 	// Build the URL
 	QNetworkRequest request(QUrl("http://localhost:80/user/get_user_id"));
@@ -398,6 +399,11 @@ int NetworkManager::getUserIdByUsername(const QString username) {
 	return -1;
 }
 
+/*
+* Send a certain user a friend request
+* @param userToAdd the user you're sending the friend request to
+* @post the request will be placed in the inbox of the user
+*/
 void NetworkManager::sendFriendRequest(const QString userToAdd)
 {
 	// Build the URL
@@ -426,6 +432,10 @@ void NetworkManager::sendFriendRequest(const QString userToAdd)
 	QNetworkReply* reply = m_networkManager->post(request, data);
 }
 
+/*
+* Get all the inbox messages of a certain user
+* @post loaded all the inbox messages of the user
+*/
 void NetworkManager::getInboxMessages() {
 	// Build the URL
 	QNetworkRequest request(QUrl("http://localhost:80/inbox/GetInboxMessages"));
@@ -458,11 +468,9 @@ void NetworkManager::getInboxMessages() {
 
 		if (jsonResponse.isArray()) {
 			QJsonArray jsonArray = jsonResponse.array();
-			qDebug() << "Received an array with" << jsonArray.size() << "items:";
 			for (const QJsonValue& value : jsonArray) {
 				QJsonObject obj = value.toObject();
 				inboxItems.append(obj); // Add each object to the list
-				qDebug() << obj; // Log each item
 			}
 			emit inboxMessagesFetched(inboxItems);
 		}
@@ -478,6 +486,11 @@ void NetworkManager::getInboxMessages() {
 	});
 }
 
+/*
+* Remove a certain inbox item from the users inbox
+* @param inboxID the ID of the inbox you want to delete
+* @post the item is deleted from the database
+*/
 void NetworkManager::removeInboxMessage(int inboxID) {
 	// Build the URL 
 	QNetworkRequest request(QUrl("http://localhost:80/inbox/remove?userID=" + QString::number(getUserId()) + "&inbox_message_id=" + QString::number(inboxID)));
@@ -501,6 +514,11 @@ void NetworkManager::removeInboxMessage(int inboxID) {
 	});
 }
 
+/*
+* Add a friend (from the inbox accept a friend request)
+* @param sendingUserID this is the ID of the user that sent the friend request
+* @post you're now friends with the user, this information gets added to the database
+*/
 void NetworkManager::addFriend(int sendingUserID) {
 	// Get the user ID of the user accepting the friend request
 	int userID = getUserId();
@@ -524,6 +542,13 @@ void NetworkManager::addFriend(int sendingUserID) {
 	QNetworkReply* reply = m_networkManager->post(request, data);
 }
 
+/*
+* Accept a question set
+* @param code this is the code of a certain question set
+* @post get the question set associated with the code
+* @emit questionSetFailed() the acquisition or unzipping of the question set failed
+* @emit questionSetSucces() the question set is 'downloaded'
+*/
 void NetworkManager::acceptQuestionSet(QString code) {
 	// Build URL
 	QNetworkRequest request(QUrl("http://localhost:80/question_set/get_question_set"));
@@ -587,6 +612,10 @@ void NetworkManager::acceptQuestionSet(QString code) {
 	});
 }
 
+/*
+* Get the usernames of the users friends
+* @emit friendUsernamesFetched() signal that all friends usernames are found, and what the usernames are
+*/
 void NetworkManager::getFriendUsernames() {
 	// Get the user ID of the user accepting the friend request
 	int userID = getUserId();

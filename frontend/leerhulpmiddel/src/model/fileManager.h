@@ -27,8 +27,10 @@ public:
     QByteArray createZip(const QStringList& questionSetPaths);
     void unzip(const QByteArray zipData);
 
-private:
+    // = PRIVATE, is for unit testing 
     QString getPath() const;
+
+private:
     QMap<QString, QVariantList> loadFilesAndQuestions(const QDir& dir, int currentDepth = 0) const;
     QString getUniqueName(QString baseName, QStringList existingNames);
 };

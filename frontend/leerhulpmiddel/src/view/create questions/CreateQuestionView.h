@@ -15,6 +15,8 @@ class CreateQuestionView : public  QWidget {
 public:
     CreateQuestionView(QuestionsetController questionsetController, QWidget* parent = nullptr);
 private:
+	void showToastMessage(const QString textToDisplay);
+	
 	QLineEdit* m_txtQuestionName;
 	QComboBox* m_cboQuestionType;
 	QStackedWidget* m_questionSelection;

@@ -1,6 +1,5 @@
 #include "leerhulpmiddelmainwindow.h"
 #include "HomeScreen/homescreen.h"
-#include <QDebug>
 #include <QPushButton>
 
 #include "Examination/createExaminationView.h"
@@ -36,10 +35,7 @@ void LeerhulpmiddelMainWindow::PushMainViewport(QWidget* newViewport)
     m_container->replaceWidget(m_mainViewStack.top(), newViewport);
     m_mainViewStack.top()->setParent(nullptr);
 
-    connect(newViewport, &QWidget::destroyed, this, [=]{
-        qDebug() << "pooped";
-        PopMainViewport();
-    });
+    connect(newViewport, &QWidget::destroyed, this, &LeerhulpmiddelMainWindow::PopMainViewport);
 
     m_mainViewStack.push(newViewport);
 }

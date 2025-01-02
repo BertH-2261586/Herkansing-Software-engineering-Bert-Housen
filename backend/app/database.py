@@ -1,14 +1,10 @@
-from fastapi import Request
 from sqlmodel import create_engine, Session, select
 from .models import User, UserBase, Group, GroupInvite, GroupMember, Inbox, Friend, GroupCodeInvite, QuestionSet
 from sqlalchemy import func, or_  
 from typing import Optional, Tuple, List
-import sys
 from datetime import datetime, timezone
-import logging 
 
 DATABASE_URL = "mysql+pymysql://user:password@mysql-db:3306/dbname"
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Create the database engine
 engine = create_engine(DATABASE_URL, echo=True)

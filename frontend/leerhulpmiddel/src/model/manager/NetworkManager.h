@@ -30,12 +30,14 @@ public:
 	void removeInboxMessage(const int ID);
 	void getFriendUsernames();
 
+	// = PRIVATE, this is for unit test purposes
+	void setLoginStatus(bool status);
+	QString getSessionCookie();
+
 private:
 	QNetworkAccessManager* m_networkManager;
 
 	void saveSessionCookie(QString sessionCookie);
-	QString getSessionCookie();
-	void setLoginStatus(bool status);
 	void setUserId(int id);
 	int getUserId() const;
 	int getUserIdByUsername(const QString username);

@@ -27,7 +27,6 @@ void ExaminationManager::nextQuestion() {
 }
 
 void ExaminationManager::getExaminationData() {
-	qDebug() << "Get data";
 	QMap<QString, QString> data = m_examination.getExaminationData();
 	emit sendExaminationData(data);
 }

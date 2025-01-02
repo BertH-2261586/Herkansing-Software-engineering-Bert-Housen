@@ -5,7 +5,6 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QList>
-#include <QDebug>
 
 class Pagination : public QWidget {
     Q_OBJECT
@@ -25,6 +24,7 @@ private:
 
     int m_currentPage;
     int m_totalPageAmount;
+
     QHBoxLayout* m_paginationLayout;
     QList<QPushButton*> m_paginationButtons;
 };

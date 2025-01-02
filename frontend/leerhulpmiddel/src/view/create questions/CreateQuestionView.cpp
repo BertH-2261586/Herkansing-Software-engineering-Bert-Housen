@@ -58,7 +58,6 @@ CreateQuestionView::CreateQuestionView(QuestionsetController questionsetControll
 }
 
 void CreateQuestionView::confirm() {
-	QMessageBox msgBox;
 	try {
 		if (m_txtQuestionName->text().isEmpty())
 		{
@@ -66,48 +65,46 @@ void CreateQuestionView::confirm() {
 		}
 
 		switch (m_questionSelection->currentIndex()) {
-		case 0: {
-			msgBox.setText("Created Flashcard");
-			//Create flashcard object
-			Flashcard* question = new Flashcard(m_txtQuestionName->text(), m_createFlashcardView->getQuestion(), m_createFlashcardView->getAnswer());
+			case 0: {
+				showToastMessage("Created Flashcard Question");
+				//Create flashcard object
+				Flashcard* question = new Flashcard(m_txtQuestionName->text(), m_createFlashcardView->getQuestion(), m_createFlashcardView->getAnswer());
 
-            m_questionsetController.addQuestion(question);
-			break;
-		}
-		case 1: {
-			msgBox.setText("Created Multiple Choice Question");
-			//Create multipleChoiceQuestion object
-			MultipleChoiceQuestion* question = new MultipleChoiceQuestion(m_txtQuestionName->text(), m_createMultipleChoiceQuestionView->getQuestion(), m_createMultipleChoiceQuestionView->getAnswer());
+				m_questionsetController.addQuestion(question);
+				break;
+			}
+			case 1: {
+				showToastMessage("Created Multiple Choice Question");
+				//Create multipleChoiceQuestion object
+				MultipleChoiceQuestion* question = new MultipleChoiceQuestion(m_txtQuestionName->text(), m_createMultipleChoiceQuestionView->getQuestion(), m_createMultipleChoiceQuestionView->getAnswer());
 
-            m_questionsetController.addQuestion(question);
-			break;
-		}
-		case 2: {
-			msgBox.setText("Created Fill In Question");
-			//Create FillInQuestion object
-			FillInQuestion* question = new FillInQuestion(m_txtQuestionName->text(), m_createFillInQuestionView->getQuestion(), m_createFillInQuestionView->getAnswer());
+				m_questionsetController.addQuestion(question);
+				break;
+			}
+			case 2: {
+				showToastMessage("Created Fill In Question");
+				//Create FillInQuestion object
+				FillInQuestion* question = new FillInQuestion(m_txtQuestionName->text(), m_createFillInQuestionView->getQuestion(), m_createFillInQuestionView->getAnswer());
 
-            m_questionsetController.addQuestion(question);
-			break;
+				m_questionsetController.addQuestion(question);
+				break;
+			}
+			default: {
+				showToastMessage("Something went wrong, please close and try again!");
+				break;
+			}
 		}
-		default: {
-			msgBox.setText("Something went wrong, please close and try again!");
-			break;
-		}
-		}
-		msgBox.exec();
-
 	}
 	catch (const EmptyFieldException &e) {
-		ToastMessage* toast = new ToastMessage(e.what(), this);
-		toast->move((width() - toast->width()) / 2, height() - 70);
-		toast->show();
+		showToastMessage(e.what());
 	}
 	catch (const std::exception &e) {
-		ToastMessage* toast = new ToastMessage(e.what(), this);
-		toast->move((width() - toast->width()) / 2, height() - 70);
-		toast->show();
+		showToastMessage(e.what());
 	}
+}
 
-
+void CreateQuestionView::showToastMessage(const QString textToDisplay) {
+	ToastMessage* toast = new ToastMessage(textToDisplay, this);
+	toast->move((width() - toast->width()) / 2, height() - 70);
+	toast->show();
 }

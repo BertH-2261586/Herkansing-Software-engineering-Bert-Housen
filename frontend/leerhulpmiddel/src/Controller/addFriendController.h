@@ -10,6 +10,7 @@ public:
 	addFriendController();
 
 	void getUsersByPage(const int page, QString userInput = ""); 
+
 	int getUserPageSize() const { return m_userList.size(); }
 	QString getUser(const int index) const { return m_userList[index]; }
 	int getPageAmount() const { return m_totalAmountOfPages; }
@@ -33,9 +34,9 @@ private:
 	QList<bool> m_areFriendsList;
 	QList<bool> m_sentFriendRequest;
 	QList<bool> m_receivedFriendRequest;
+
 	int m_totalAmountOfPages;
 	int m_currentPage;
-
 	QString m_previousInput;
 };
 
