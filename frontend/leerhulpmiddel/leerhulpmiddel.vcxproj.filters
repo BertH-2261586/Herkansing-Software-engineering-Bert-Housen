@@ -23,10 +23,6 @@
     <ClCompile Include="src\model\Questions\Question.cpp" />
     <ClCompile Include="src\View\add_friends\add_friend_view.cpp" />
     <ClCompile Include="src\view\chooseQuestionView.cpp" />
-    <ClCompile Include="src\view\create questions\CreateFillInQuestionView.cpp" />
-    <ClCompile Include="src\view\create questions\CreateFlashcardView.cpp" />
-    <ClCompile Include="src\view\create questions\CreateMultipleChoiceQuestionView.cpp" />
-    <ClCompile Include="src\view\create questions\CreateQuestionView.cpp" />
     <ClCompile Include="src\view\Examination\createExaminationView.cpp" />
     <ClCompile Include="src\view\Examination\examinationView.cpp" />
     <ClCompile Include="src\view\Examination\scoreCardExaminationView.cpp" />
@@ -47,6 +43,11 @@
     <ClCompile Include="src\View\Share\ShareView.cpp" />
     <ClCompile Include="src\view\toggleSwitch.cpp" />
     <ClCompile Include="src\tests\TestNetworkManager.cpp" />
+    <ClCompile Include="src\View\create_questions\CreateFillInQuestionView.cpp" />
+    <ClCompile Include="src\View\create_questions\CreateFlashcardView.cpp" />
+    <ClCompile Include="src\View\create_questions\CreateMultipleChoiceQuestionView.cpp" />
+    <ClCompile Include="src\View\create_questions\CreateQuestionView.cpp" />
+    <ClCompile Include="src\View\questions\QuestionDisplay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Controller\LoginController.h" />
@@ -65,14 +66,14 @@
     <ClInclude Include="src\View\Overlay.h" />
     <ClInclude Include="src\view\QFlowLayout.h" />
     <ClInclude Include="src\view\style.h" />
-    <ClInclude Include="src\view\create questions\CreateFlashcardView.h" />
-    <ClInclude Include="src\view\create questions\CreateMultipleChoiceQuestionView.h" />
     <ClInclude Include="src\view\HomeScreen\questionsetbrowser.h" />
     <ClInclude Include="src\model\Questions\Answer.h" />
     <ClInclude Include="src\model\Questions\FillInQuestion.h" />
     <ClInclude Include="src\model\Questions\Flashcard.h" />
     <ClInclude Include="src\model\Questions\MultipleChoiceQuestion.h" />
     <ClInclude Include="src\model\Questions\questionType.h" />
+    <ClInclude Include="src\View\create_questions\CreateFlashcardView.h" />
+    <ClInclude Include="src\View\create_questions\CreateMultipleChoiceQuestionView.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\Controller\addFriendController.h" />
@@ -98,9 +99,6 @@
     <QtMoc Include="src\view\Examination\scoreCardExaminationView.h" />
     <QtMoc Include="src\view\Examination\examinationView.h" />
     <QtMoc Include="src\view\Examination\createExaminationView.h" />
-    <QtMoc Include="src\view\create questions\CreateQuestionView.h" />
-    <QtMoc Include="src\view\create questions\CreateFillInQuestionView.h" />
-    <QtMoc Include="src\view\create questions\BracketHighlighter.h" />
     <QtMoc Include="src\View\add_friends\add_friend_view.h" />
     <QtMoc Include="src\model\questionset.h" />
     <QtMoc Include="src\model\countdownTimer.h" />
@@ -110,6 +108,10 @@
     <QtMoc Include="src\model\manager\examinationManager.h" />
     <QtMoc Include="src\Controller\ShareController.h" />
     <QtMoc Include="src\tests\TestNetworkManager.h" />
+    <QtMoc Include="src\View\create_questions\CreateQuestionView.h" />
+    <QtMoc Include="src\View\create_questions\CreateFillInQuestionView.h" />
+    <QtMoc Include="src\View\create_questions\BracketHighlighter.h" />
+    <QtMoc Include="src\View\questions\QuestionDisplay.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="leerhulpmiddel.qrc" />

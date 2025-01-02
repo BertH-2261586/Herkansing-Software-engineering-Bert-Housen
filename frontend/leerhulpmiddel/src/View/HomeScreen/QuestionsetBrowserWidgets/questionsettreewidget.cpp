@@ -3,6 +3,7 @@
 #include "questionsetbutton.h"
 #include "../../focusoutlineedit.h"
 #include "../../create_questions/CreateQuestionView.h"
+#include "../../questions/QuestionDisplay.h"
 
 QuestionsetTreeWidget::QuestionsetTreeWidget(Questionset* questionset, int indentation, QuestionsetTreeWidget* questionsetWidgetParent) :
     m_questionset(questionset), m_questionsetWidgetParent(questionsetWidgetParent), m_indentation(indentation), m_controller(questionset)
@@ -137,7 +138,7 @@ void QuestionsetTreeWidget::AddLooseQuestionsToTree(QVBoxLayout* container, QLis
         QuestionButton* loosQuestionButton = new QuestionButton(list[i], indentation);
 
         QObject::connect(loosQuestionButton, &QuestionButton::clicked, this, [this, list, i]() {
-            sendDisplayQuestionSignal(new QLabel(list[i]->getName()));        //TODO nog de goede widgets versturen
+            sendDisplayQuestionSignal(new QuestionDisplay(list[i]));        //TODO nog de goede widgets versturen
         });
 
         container->addWidget(loosQuestionButton);

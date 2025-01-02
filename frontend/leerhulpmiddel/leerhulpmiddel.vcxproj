@@ -95,6 +95,7 @@
     <QtUic Include="leerhulpmiddel.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\View\questions\QuestionDisplay.cpp" />
     <ClCompile Include="src\Controller\addFriendController.cpp" />
     <ClCompile Include="src\Controller\examinationController.cpp" />
     <ClCompile Include="src\Controller\inboxController.cpp" />
@@ -152,6 +153,7 @@
     <QtMoc Include="src\Controller\inboxController.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\View\questions\QuestionDisplay.h" />
     <ClInclude Include="src\Controller\LoginController.h" />
     <ClInclude Include="src\Controller\questioncontroller.h" />
     <ClInclude Include="src\Controller\questionmanagercontroller.h" />

@@ -21,9 +21,10 @@ int main(int argc, char* argv[]) {
         QString("QMainWindow { background-color: %1; }").arg(lighterColor.name())
     );
 
+    /*
     TestNetworkManager networkTest;
     QTest::qExec(&networkTest, argc, argv);
-
+    */
     // Create the main window
     QuestionManager qManager;
     QuestionManagerController* questionManagerController = new QuestionManagerController(qManager);
