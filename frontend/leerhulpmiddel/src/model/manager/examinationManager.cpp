@@ -18,7 +18,7 @@ void ExaminationManager::examinationStarted(const QString questionSetPath) {
 void ExaminationManager::examinationStartedL(const QList<QString> questionSetPath) {
 	// Get all the questions from the path
 	FileManager fileManager;
-	QVector<shared_ptr<Question>> questions = fileManager.getAllQuestionsFromQuestionSet(questionSetPath);
+	QVector<shared_ptr<Question>> questions = fileManager.getAllQuestionsFromQuestionSetMulti(questionSetPath);
 
 	// Initialize the questions inside the examination class
 	m_examination.setQuestions(questions);

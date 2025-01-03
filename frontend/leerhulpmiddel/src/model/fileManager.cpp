@@ -54,7 +54,7 @@ QMap<QString, QVariantList> FileManager::loadQuestionSets(QString path) const {
 // Makes a new folder for a new question set
 void FileManager::makeQuestionSet(QString path, QString fileName) const {
     try {
-        QString pathName = getPath() /*path*/ + "/" + fileName;
+        QString pathName = getPath() + "/" + fileName;
         filesystem::create_directory(pathName.toStdString());
     }
     catch (const filesystem::filesystem_error& e) {
@@ -349,7 +349,7 @@ QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const 
 * @param questionSetPath this is the path to the question set where you want all the questions from
 * @return QVector<Question*> this vector contains all the questions in the question set
 */
-QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSet(const QList<QString> questionSetPath) const {
+QVector<shared_ptr<Question>> FileManager::getAllQuestionsFromQuestionSetMulti(const QList<QString> questionSetPath) const {
     QVector<shared_ptr<Question>> questions;  // Create the vector where you'll store the questions 
 
     for (auto setPath : questionSetPath) {
