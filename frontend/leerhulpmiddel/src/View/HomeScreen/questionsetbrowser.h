@@ -18,13 +18,15 @@ class QuestionsetBrowser: public QWidget
 {
 public:
     QuestionsetBrowser(QList<Questionset*> allQuestionsets, QuestionManagerController* questionManagerController, HomeScreen* parent = nullptr);
-
+    void CreateNewQuestionset();
 private:
     QGraphicsView* GenerateQuestionsetTabs();
     QPushButton* GenerateCreateNewQuestionsetButton();
-    void CreateNewQuestionset();
 
-    void setPermaDisplayTab(QGraphicsProxyWidget* proxy, QuestionsetWidget* questionsetWidget);
+
+    void SetPermaDisplayTab(QGraphicsProxyWidget* proxy, QuestionsetWidget* questionsetWidget);
+
+    void renderAgain();
 
     QHBoxLayout* m_container;
     HomeScreen* m_parent;
@@ -34,6 +36,7 @@ private:
     QLayout* m_displayedTreeContainer;
     QList<QuestionsetWidget*> m_allQuestionsetWidgets;
     QuestionManagerController* m_questionManagerController;
+    QGraphicsView* m_questionsetsTab;
 };
 
 #endif // QUESTIONSETBROWSER_H

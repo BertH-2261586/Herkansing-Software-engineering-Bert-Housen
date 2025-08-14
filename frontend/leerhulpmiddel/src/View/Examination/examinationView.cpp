@@ -196,6 +196,17 @@ void ExaminationView::startExamination(QList<QString> path, QTime timeLimit) {
     emit examinationStartedL(path);
 }
 
+void ExaminationView::startExamination(QVector<std::shared_ptr<Question>> questions, QTime timeLimit)
+{
+    if (timeLimit != QTime(-1, -1, -1) && timeLimit != QTime(0, 0, 0)) {
+        m_timePerQuestion->setupTimer(timeLimit);
+        m_timePerQuestion->show();
+        m_examinationController->setShowTimer(true);
+    }
+
+    emit examinationStartedQ(questions);
+}
+
 void ExaminationView::questionLoadedView() {
     int questionIndex = m_examinationController->getCurrentQuestionNumber();
     int totalQuestionAmount = m_examinationController->getTotalAmountOfQuestions();
@@ -312,6 +323,8 @@ void ExaminationView::receiveExaminationData(QMap<QString, QString> examinationD
     hideAllWidgets(m_mainLayout);
     m_scoreCard->show();
     m_scoreCard->showExaminationData(examinationData);
+
+    emit sendData(examinationData);
 }
 
 // Make sure to hide all widgets so that you properly show the scorecard

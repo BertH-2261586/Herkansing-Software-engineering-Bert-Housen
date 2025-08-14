@@ -69,15 +69,15 @@ QPushButton* QuestionsetButton::GenerateMenuButton()
     outputButton->setFixedWidth(20);
 
     QMenu* menu = new QMenu(this);
-    QAction* addSubsetAction = menu->addAction("Add subfolder");      //TODO deze strings aanpassen naar wat gepast is
-    QAction* addQuestionAction = menu->addAction("Add question");
+    //QAction* addSubsetAction = menu->addAction("Voeg subfolder toe");      //TODO deze strings aanpassen naar wat gepast is
+    QAction* addQuestionAction = menu->addAction("Voeg vraag toe");
     menu->setStyleSheet("background-color: #AFAFAF; color: #000000;");
 
     connect(outputButton, &QPushButton::clicked, menu, [=]{
         menu->popup(outputButton->mapToGlobal(QPoint(0, outputButton->height())));
     });
 
-    connect(addSubsetAction, &QAction::triggered, m_parent, &QuestionsetTreeWidget::CreateNewQuestionset);
+    //connect(addSubsetAction, &QAction::triggered, m_parent, &QuestionsetTreeWidget::CreateNewQuestionset);
     connect(addQuestionAction, &QAction::triggered, this, [=] {
         m_parent->sendDisplayQuestionSignal(new CreateQuestionView(QuestionsetController(m_questionset), this));
     });

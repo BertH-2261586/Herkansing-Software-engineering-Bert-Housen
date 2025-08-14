@@ -1,11 +1,15 @@
+
 #include "questionsetbrowser.h"
+#include "QuestionsetBrowserWidgets/questionsettreewidget.h"
 #include "homescreen.h"
+#include "QuestionsetBrowserWidgets/questionsetwidget.h"
+#include <QDebug>
 
 #include <QGraphicsProxyWidget>
 #include <QTimer>
 
-QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, QuestionManagerController* questionManagerController, HomeScreen* parent) 
-    : m_parent(parent), m_allQuestionsets(allQuestionsets), m_questionManagerController(questionManagerController)
+QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, QuestionManagerController* questionManagerController, HomeScreen* parent)
+    : m_parent(parent), m_allQuestionsets(), m_questionManagerController(questionManagerController)
 {
     m_container = new QHBoxLayout(this);
     m_container->setSpacing(0);
@@ -18,8 +22,12 @@ QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, Que
     m_displayedTreeContainer->setContentsMargins(0, 0, 0, 0);
     m_displayedTreeContainer->addWidget(m_displayedTree);
 
+    connect(questionManagerController->getManager(), &QuestionManager::changed, this, &QuestionsetBrowser::renderAgain);
+
     m_container->addLayout(m_displayedTreeContainer);
-    m_container->addWidget(GenerateQuestionsetTabs());
+
+    m_questionsetsTab = GenerateQuestionsetTabs();
+    m_container->addWidget(m_questionsetsTab);
 
     setLayout(m_container);
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -28,12 +36,13 @@ QuestionsetBrowser::QuestionsetBrowser(QList<Questionset *> allQuestionsets, Que
 //Gaat de tabladen met zijwaartse text genereren in een QgraphicsView
 QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
 {
+    m_allQuestionsets = m_questionManagerController->getAllQuestionsets();
+
     QGraphicsScene* scene = new QGraphicsScene();
 
     QGraphicsView* view = new QGraphicsView(scene);
     view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     view->setFrameShape(QFrame::NoFrame);
-
 
     int questionsetWidgetPosition = 0;
 
@@ -52,7 +61,7 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
             QuestionsetTreeWidget* tree = questionsetWidget->getUnderlyingTree();
             tree->setStyleSheet(QString("background-color: %1;").arg(m_allQuestionsets[i]->GetColor().name()));
 
-            setPermaDisplayTab(widgetProxy, questionsetWidget);
+            SetPermaDisplayTab(widgetProxy, questionsetWidget);
 
             m_displayedTreeContainer->replaceWidget(m_displayedTree, tree);
             m_displayedTree->hide();
@@ -85,12 +94,17 @@ QGraphicsView* QuestionsetBrowser::GenerateQuestionsetTabs()
         questionsetWidgetPosition += questionsetWidget->width() * 3 / 4;            //hier wordt de spacing tussen tabladen gezet
     }
 
+    QGraphicsProxyWidget* newQuestionsetButton = scene->addWidget(GenerateCreateNewQuestionsetButton());
+
+    newQuestionsetButton->setPos(0, questionsetWidgetPosition + 50);
+    newQuestionsetButton->setRotation(90);
+
     return view;
 }
 
 
 //Gaat een tablad van een questionset permanent vanboven zetten en de alle rest op hun originele z-coordinaat
-void QuestionsetBrowser::setPermaDisplayTab(QGraphicsProxyWidget* proxy, QuestionsetWidget* questionsetWidget)
+void QuestionsetBrowser::SetPermaDisplayTab(QGraphicsProxyWidget* proxy, QuestionsetWidget* questionsetWidget)
 {
     questionsetWidget->setPermaDisplay(true);
     proxy->setZValue(500);
@@ -108,11 +122,20 @@ void QuestionsetBrowser::setPermaDisplayTab(QGraphicsProxyWidget* proxy, Questio
 
 QPushButton* QuestionsetBrowser::GenerateCreateNewQuestionsetButton()
 {
-    QPushButton* button = new QPushButton("nieuwe vragenset maken");
+    QPushButton* button = new QPushButton("+");
+    button->setStyleSheet("   background-color: #afafaf; color: #000000;"
+                          "   border: 1px solid #000000;"
+                          "   border-radius: 15px;"
+                          "   padding-top: 10px;"
+                          "   padding-left: 20px;"
+                          "   padding-bottom: 10px;"
+                          "   padding-right: 20px;");
 
-    //TODO nog styling toevoegen
+    button->setContentsMargins(0, 0, 0, 0);
+
+    button->setAttribute(Qt::WA_TranslucentBackground);
+
     connect(button, &QPushButton::clicked, this, &QuestionsetBrowser::CreateNewQuestionset);
-
 
     return button;
 }
@@ -123,41 +146,17 @@ QPushButton* QuestionsetBrowser::GenerateCreateNewQuestionsetButton()
 //TODO dit aanpassen zodat je een vragenset kunt toevoegen en verder ook de namen moeten aanpassen van alles
 void QuestionsetBrowser::CreateNewQuestionset()
 {
-    FocusOutLineEdit* textfield = new FocusOutLineEdit();
+    m_questionManagerController->addQuestionset();
+}
 
-    m_container->insertWidget(1, textfield, 0);
-    textfield->setFocus();
+void QuestionsetBrowser::renderAgain()
+{
+    QGraphicsView* temp = GenerateQuestionsetTabs();
 
-    connect(textfield, &FocusOutLineEdit::lostFocus, m_container, [=]{            //zodat de invulbox er niet blijft staan als je eruit klikt en hij is leeg
-        m_container->removeWidget(textfield);
-        textfield->setParent(nullptr);
-        textfield->deleteLater();
-    }, Qt::AutoConnection);
+    m_questionsetsTab->hide();
+    m_container->replaceWidget(m_questionsetsTab, temp);
 
-    connect(textfield, &FocusOutLineEdit::returnPressed, m_container, [=]{
-            QString input = textfield->text();
-
-            if (input != "")
-            {
-                m_container->removeWidget(textfield);
-                textfield->setParent(nullptr);
-                textfield->deleteLater();
-
-
-                QuestionsetTreeWidget* tempVragensetWidget = new QuestionsetTreeWidget(new Questionset(input, {}, {}));     //TODO er voor zorgen dat de memory veilig werdt behandelt
-                if (m_parent != nullptr)
-                {
-                    connect(tempVragensetWidget, &QuestionsetTreeWidget::Display, m_parent, &HomeScreen::DisplayWidget);
-                }
-                m_container->insertWidget(1, tempVragensetWidget, 0);
-            }
-            else
-            {
-                m_container->removeWidget(textfield);
-                textfield->setParent(nullptr);
-                textfield->deleteLater();
-            }
-
-    }, Qt::AutoConnection);
+    m_questionsetsTab->deleteLater();
+    m_questionsetsTab = temp;
 }
 

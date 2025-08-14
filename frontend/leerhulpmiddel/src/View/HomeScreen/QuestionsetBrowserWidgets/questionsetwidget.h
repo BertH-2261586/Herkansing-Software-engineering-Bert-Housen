@@ -13,6 +13,7 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include "../../../Controller/questionmanagercontroller.h"
+#include "../../EditableLabel.h"
 
 class HomeScreen;
 
@@ -57,7 +58,7 @@ protected:
 
 private:
     Questionset* m_questionset;
-    QLabel* m_label;
+    EditableLabel* m_label;
 
     QuestionsetTreeWidget* m_underlyingTree;
     bool m_permaDisplay = false;

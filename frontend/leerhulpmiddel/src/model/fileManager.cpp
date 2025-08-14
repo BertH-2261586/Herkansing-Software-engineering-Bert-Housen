@@ -22,6 +22,12 @@ namespace filesystem = std::filesystem;
 QString FileManager::getPath() const {
     // Gets the path to the .exe file. Pay attention this isnt the file to the project folder
     QString projectDirPath = QCoreApplication::applicationDirPath();
+    if (!QDir().exists(projectDirPath + "/questionSets"))
+    {
+        QString path = projectDirPath + "/questionSets";
+        filesystem::create_directory(path.toStdString());
+    }
+
     return projectDirPath + "/questionSets";        // Add the questionSets folder to the path for where the question sets are stored locally
 }
 
@@ -52,9 +58,12 @@ QMap<QString, QVariantList> FileManager::loadQuestionSets(QString path) const {
 }
 
 // Makes a new folder for a new question set
-void FileManager::makeQuestionSet(QString path, QString fileName) const {
+void FileManager::makeQuestionSet(QString path, QString dirName) const {
     try {
-        QString pathName = getPath() + "/" + fileName;
+        QString pathName = getPath() + "/" + path + "/" + dirName;
+
+        qDebug() << pathName;
+
         filesystem::create_directory(pathName.toStdString());
     }
     catch (const filesystem::filesystem_error& e) {
@@ -122,7 +131,7 @@ QMap<QString, QVariantList> FileManager::loadFilesAndQuestions(const QDir& dir, 
  * @throw saveException if a file with the same name already exists or if something goes wrong while saving the file.
  * @return bool Returns true if the save was successful.
  */
-void FileManager::saveQuestionToJSON(const QString questionSet, const QString subset, const Question& question) const {
+void FileManager::saveQuestionToJSON(const QString path, const Question& question) const {
     QJsonObject jsonObject;
 
     jsonObject["QuestionType"] = question.questionTypeToString();
@@ -134,15 +143,12 @@ void FileManager::saveQuestionToJSON(const QString questionSet, const QString su
 
 
     // Path created from the question set and subset
-    QString addedPath = "/" + questionSet;
-    if (subset != "")
-    {
-        addedPath += "/" + subset;
-    }
+    QString addedPath = "/" + path;
+
 
     // Open the file in write-only mode. This makes the JSON file incase it doesn't exist
-    QString path = getPath()+ addedPath + "/" + QString::fromStdString(question.getName().toStdString()) + ".json";
-    QFile file(path);
+    QString pathFinal = getPath()+ addedPath + "/" + QString::fromStdString(question.getName().toStdString()) + ".json";
+    QFile file(pathFinal);
     if (file.exists()) {
         throw saveException("This file already exists.");
     }
@@ -217,6 +223,27 @@ unique_ptr<Question> FileManager::loadQuestionFromJSON(const QString questionSet
     }
 }
 
+//gaat een question maken gegeven een jsonObject
+shared_ptr<Question> FileManager::loadQuestionFromJSONObject(const QJsonObject jsonObject) {
+    // Gets the needed data from the JSON object
+    QString questionTypeString = jsonObject["QuestionType"].toString();
+    QuestionType questionType = Question::stringToQuestionType(questionTypeString);
+    QString question = jsonObject["Question"].toString();
+    Answer answer = convertToAnswerObject(jsonObject["Answer"].toObject());
+    QString questionName = "";
+
+    switch (questionType) {
+    case QuestionType::FillIn:
+            return std::make_unique<FillInQuestion>(questionName, question, answer);
+    case QuestionType::MultipleChoice:
+            return std::make_unique<MultipleChoiceQuestion>(questionName, question, answer);
+    case QuestionType::Flashcard:
+            return std::make_unique<Flashcard>(questionName, question, answer);
+    default:
+            throw loadException("Unsupported QuestionType");
+    }
+}
+
 
 /* Loads the question sets from the given path.
  *
@@ -230,36 +257,36 @@ QList<Questionset*> FileManager::loadQuestionSetsObject(const QString path) cons
 
 
    for (const QString& folderName : MapFolders.keys()) {
-	   QVariantList folder = MapFolders[folderName];
-	   QList<Question*> questions = QList<Question*>();
-	   QList<Questionset*> subsets = QList<Questionset*>();
+       QVariantList folder = MapFolders[folderName];
+       QList<Question*> questions = QList<Question*>();
+       QList<Questionset*> subsets = QList<Questionset*>();
 
-	   for (const QVariant& file : folder) {
+       for (const QVariant& file : folder) {
            //if a json File is found
-		   if (file.canConvert<QString>()) {
-			   QString questionName = file.toString();
+           if (file.canConvert<QString>()) {
+               QString questionName = file.toString();
                questionName.chop(5); //remove .json
-			   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName, "", questionName);
-			   questions.append(loadedQuestion.release());
-		   }
+               unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName, "", questionName);
+               questions.append(loadedQuestion.release());
+           }
 
            //if an other folder (subset) is found
            //IF ADDING MULTIPLE NESTED SUBSETS NEEDS TO BE CHANGED
 
-		   else if (file.canConvert<QVariantList>()) {
-			   QVariantList subsetValue = file.toList();
-			   QString subsetName = subsetValue[0].toString();
-			   QList<Question*> subsetQuestions = QList<Question*>();
-			   for (int i = 1; i < subsetValue.length(); i++) {
-				   QString questionName = subsetValue[i].toString();
+           else if (file.canConvert<QVariantList>()) {
+               QVariantList subsetValue = file.toList();
+               QString subsetName = subsetValue[0].toString();
+               QList<Question*> subsetQuestions = QList<Question*>();
+               for (int i = 1; i < subsetValue.length(); i++) {
+                   QString questionName = subsetValue[i].toString();
                    questionName.chop(5); //remove .json
-				   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName, subsetName, questionName);
-				   subsetQuestions.append(loadedQuestion.release());
-			   }
+                   unique_ptr<Question> loadedQuestion = loadQuestionFromJSON(folderName, subsetName, questionName);
+                   subsetQuestions.append(loadedQuestion.release());
+               }
                subsets.append(new Questionset(subsetName, subsetQuestions, {}));
-		   }
-	   }
-	   questionSets.append(new Questionset(folderName, questions, subsets));
+           }
+       }
+       questionSets.append(new Questionset(folderName, questions, subsets));
    }
     return questionSets;
 }

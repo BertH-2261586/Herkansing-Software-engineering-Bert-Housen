@@ -7,6 +7,7 @@
 #include <QJsonArray>
 #include <QByteArray>
 #include <QEventLoop>
+#include <QCoreApplication>
 
 #include "../fileManager.h"
 #include "../../Exceptions/NoSavedSessionException.h"
@@ -35,7 +36,7 @@ void NetworkManager::login(QString username, QString password)
 	QByteArray data = QJsonDocument(json).toJson();
 
 	QNetworkReply* reply = m_networkManager->post(request, data);
-	connect(reply, &QNetworkReply::finished, [this,reply]() {
+    connect(reply, &QNetworkReply::finished, [this,reply,username](){
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
 			qDebug() << "Network error:" << reply->errorString();
@@ -51,11 +52,146 @@ void NetworkManager::login(QString username, QString password)
 			saveSessionCookie(responseData["token"].toString());
 			setLoginStatus(true);
 			setUserId(responseData["id"].toInt());
+            setDocentStatus(responseData["isDocent"].toBool());
 		}
 
 		reply->deleteLater();
+
+        QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+        settings.setValue("username", username);
 		emit loginSuccess();
 	});
+}
+
+//gaat alle vakken data van de server opvragen
+void NetworkManager::getAllVakData()
+{
+    QNetworkRequest request(QUrl("http://localhost:80/vakken/getAllVakkenInfo"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply* reply = m_networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, [this, reply]() {
+        // Check for network errors
+        if (reply->error() != QNetworkReply::NoError) {
+            reply->deleteLater();
+            return;
+        }
+
+        QJsonObject responseData = QJsonDocument::fromJson(reply->readAll()).object();
+        emit vakkenChanged(responseData["vakken"].toArray());
+        emit docentenChanged(responseData["docenten"].toArray());
+        reply->deleteLater();
+    });
+}
+
+void NetworkManager::addVak(QString vakNaam)
+{
+    QNetworkRequest request(QUrl("http://localhost:80/vakken/addVak"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+    QJsonObject json = QJsonObject();
+    json["vaknaam"] = vakNaam;
+
+    QByteArray data = QJsonDocument(json).toJson();
+
+    vakkenNetwerkHelper(request, data);
+}
+
+
+void NetworkManager::addDocentToVak(int docentId, int vakId, QString titel)
+{
+    QNetworkRequest request(QUrl("http://localhost:80/vakken/addDocentToVak"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+    QJsonObject json = QJsonObject();
+    json["user_id"] = docentId;
+    json["vak_id"] = vakId;
+    json["titel"] = titel;
+
+    QByteArray data = QJsonDocument(json).toJson();
+
+    vakkenNetwerkHelper(request, data);
+}
+
+void NetworkManager::removeDocent(int docentId, int vakId)
+{
+    QNetworkRequest request(QUrl("http://localhost:80/vakken/removeDocentFromVak"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+    QJsonObject json = QJsonObject();
+    json["user_id"] = docentId;
+    json["vak_id"] = vakId;
+    json["titel"] = "";
+
+    QByteArray data = QJsonDocument(json).toJson();
+
+    vakkenNetwerkHelper(request, data);
+}
+
+void NetworkManager::addExamToVak(QString fileNaam, int vakId)
+{
+    QNetworkRequest request(QUrl("http://localhost:80/vakken/addExamToVak"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+    QString projectDirPath = QCoreApplication::applicationDirPath();
+
+    QString temppath = projectDirPath + "/examens/" +  fileNaam;
+    QFile file(temppath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Failed to open file:" << temppath;
+        return;
+    }
+
+    QByteArray fileContent = file.readAll();
+    file.close();
+
+    QJsonDocument innerDoc = QJsonDocument::fromJson(fileContent);
+
+    QJsonObject json = QJsonObject();
+    json["data"] = QString::fromUtf8(innerDoc.toJson(QJsonDocument::Indented));
+    json["vak_id"] = vakId;
+
+    QByteArray data = QJsonDocument(json).toJson();
+    vakkenNetwerkHelper(request, data);
+}
+
+void NetworkManager::sendScore(int percent, int examId)
+{
+    QNetworkRequest request(QUrl("http://localhost:80/vakken/addScoreToExam"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Token", getSessionCookie().toUtf8());
+
+    QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+
+
+    QJsonObject json = QJsonObject();
+    json["percent"] = percent;
+    json["examen_id"] = examId;
+    json["student"] = settings.value("username").toString();
+    QByteArray data = QJsonDocument(json).toJson();
+
+    vakkenNetwerkHelper(request, data);
+}
+
+
+//gaat data naar een request sturen en de response afhandelen, aparte functie want alle response afhandelingen voor vakken is hetzelfde
+void NetworkManager::vakkenNetwerkHelper(QNetworkRequest request, QByteArray data)
+{
+    QNetworkReply* reply = m_networkManager->post(request, data);
+    connect(reply, &QNetworkReply::finished, [this, reply]() {
+        // Check for network errors
+        if (reply->error() != QNetworkReply::NoError) {
+            reply->deleteLater();
+            return;
+        }
+
+        QJsonArray responseData = QJsonDocument::fromJson(reply->readAll()).array();
+        emit vakkenChanged(responseData);
+        reply->deleteLater();
+    });
 }
 
 /*
@@ -72,7 +208,7 @@ void NetworkManager::logout() {
 * @param username: string of username
 * @param password: string of password
 */
-void NetworkManager::registerUser(QString username, QString password)
+void NetworkManager::registerUser(QString username, QString password, bool isDocent)
 {
 	QNetworkRequest request(QUrl("http://localhost:80/user/register"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -80,11 +216,12 @@ void NetworkManager::registerUser(QString username, QString password)
 	QJsonObject json = QJsonObject();
 	json["username"] = username;
 	json["password"] = password;
+    json["isDocent"] = isDocent;
 
 	QByteArray data = QJsonDocument(json).toJson();
 
 	QNetworkReply* reply = m_networkManager->post(request, data);
-	connect(reply, &QNetworkReply::finished, [this, reply]() {
+    connect(reply, &QNetworkReply::finished, [this, reply,username]() {
 		// Check for network errors
 		if (reply->error() != QNetworkReply::NoError) {
 			QByteArray responseData = reply->readAll();
@@ -98,12 +235,17 @@ void NetworkManager::registerUser(QString username, QString password)
 			saveSessionCookie(responseData["token"].toString());
 			setLoginStatus(true);
 			setUserId(responseData["id"].toInt());
+            setDocentStatus(responseData["isDocent"].toBool());
 		}		
 		
 		reply->deleteLater();
+        QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+        settings.setValue("username", username);
 		emit loginSuccess();
 	});
 }
+
+
 
 void NetworkManager::getLoggedInStatus() {
 	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
@@ -230,6 +372,11 @@ void NetworkManager::setLoginStatus(bool status) {
 void NetworkManager::setUserId(int id) {
 	QSettings settings = QSettings("groep_7", "leerhulpmiddel");
 	settings.setValue("userId", id);
+}
+
+void NetworkManager::setDocentStatus(bool isDocent) {
+    QSettings settings = QSettings("groep_7", "leerhulpmiddel");
+    settings.setValue("isDocent", isDocent);
 }
 
 int NetworkManager::getUserId() const {

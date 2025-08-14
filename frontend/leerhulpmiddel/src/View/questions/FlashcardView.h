@@ -34,13 +34,13 @@ private:
     
     void initializeLayouts();
 
-    QVBoxLayout* m_mainQuestionLayout;
-    QVBoxLayout* m_toggleLayout;
+    QVBoxLayout* m_mainQuestionLayout = nullptr;
+    QVBoxLayout* m_toggleLayout = nullptr;
 
-    QLabel* m_questionLabel;
-    QScrollArea* m_scrollArea;
-    QLabel* m_toggleLabel;
-    Switch* m_toggleSwitch;
+    QLabel* m_questionLabel = nullptr;
+    QScrollArea* m_scrollArea = nullptr;
+    QLabel* m_toggleLabel = nullptr;
+    Switch* m_toggleSwitch = nullptr;
 
     const Flashcard* m_currentQuestion;
     bool m_showingQuestion = true;

@@ -21,8 +21,8 @@ public:
     void clearPreviousQuestion();
 
 private:
-    QVBoxLayout* m_mainLayout;
-    QFlowLayout* m_questionLayout;
+    QVBoxLayout* m_mainLayout = nullptr;
+    QFlowLayout* m_questionLayout = nullptr;
     QList<QVBoxLayout*> m_fillInLayouts;
 
     QList<QLabel*> m_textLabels;

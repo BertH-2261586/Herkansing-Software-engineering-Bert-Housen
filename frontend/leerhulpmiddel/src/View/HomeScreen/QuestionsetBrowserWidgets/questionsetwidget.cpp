@@ -9,7 +9,13 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
 
     QHBoxLayout* container = new QHBoxLayout();
     container->setContentsMargins(0, 0, 0, 0);
-    m_label = new QLabel(questionset->GetName());
+    m_label = new EditableLabel(questionset->GetName());
+
+    connect(m_label, &EditableLabel::textChanged, this, [=](QString newText){
+        questionManagerController->changeQuestionsetName(newText, m_questionset);
+    });
+
+
     QString styleSheet(
         "   background-color: %1;"
         "   color: #000000;"
@@ -26,8 +32,6 @@ QuestionsetWidget::QuestionsetWidget(Questionset* questionset, HomeScreen* homeS
                   "   padding-left: 20px;"
                   "   padding-bottom: 10px;"
                   "   padding-right: 20px;";
-
-
 
     m_label->setStyleSheet(styleSheet.arg(questionset->GetColor().name()));
 

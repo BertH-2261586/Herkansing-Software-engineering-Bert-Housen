@@ -8,10 +8,13 @@
 #include "../add_friends/add_friend_view.h"
 #include "../../Exceptions/NoSavedSessionException.h"
 #include "../ToastMessage.h"
+#include "../vakken_views/allvakkendialog.h"
+#include "../Examination/saveexamdialog.h"
 
 HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, LeerhulpmiddelMainWindow* parent) : m_mainWindow(parent), QWidget(parent)
 {
     m_networkManager = new NetworkManager();
+    m_vakkenManager = new VakkenManager(m_networkManager);
     m_loginController = new LoginController(m_networkManager);
     m_shareController = new ShareController(m_networkManager);
 
@@ -45,6 +48,7 @@ HomeScreen::HomeScreen(QuestionManagerController* questionManagerController, Lee
 HomeScreen::~HomeScreen() {
     delete m_shareController;
     delete m_loginController;
+    delete m_vakkenManager;
     delete m_networkManager;
 }
 
@@ -103,7 +107,17 @@ QWidget* HomeScreen::GenerateTopButtonBar()
         m_mainWindow->PushMainViewport(new CreateExaminationView(nullptr, false));
      });
 
-    QPushButton* makeNewQsetButton = new QPushButton("Make new Question set");
+    QPushButton* saveExamButton = new QPushButton("Examen creeren + opslaan");
+    connect(saveExamButton, &QPushButton::pressed, this, [=] {
+        SaveExamDialog dialog;
+        dialog.exec();
+    });
+
+    QPushButton* vakkenButton = new QPushButton("Vakken");
+    connect(vakkenButton, &QPushButton::pressed, this, [=] {
+        AllVakkenDialog dialog(m_vakkenManager);
+        dialog.exec();
+    });
 
     QPushButton* logoutButton = new QPushButton("Logout");
     logoutButton->setFixedSize(100, 30);    //Fixed size to prevent Qt from throwing errors when switching between hide and show
@@ -161,7 +175,8 @@ QWidget* HomeScreen::GenerateTopButtonBar()
     container->addWidget(shareButton);
     container->addWidget(startExamButton);
     container->addWidget(startPracticeExamButton);
-    container->addWidget(makeNewQsetButton);
+    container->addWidget(saveExamButton);
+    container->addWidget(vakkenButton);
     container->addWidget(logoutButton);
     container->addWidget(loginButton);
     setSearchQuestionSet(container);

@@ -1,6 +1,6 @@
 from sqlmodel import create_engine, Session, select
-from .models import User, UserBase, Group, GroupInvite, GroupMember, Inbox, Friend, GroupCodeInvite, QuestionSet
-from sqlalchemy import func, or_  
+from .models import *
+from sqlalchemy import func, or_, and_
 from typing import Optional, Tuple, List
 from datetime import datetime, timezone
 
@@ -13,6 +13,69 @@ engine = create_engine(DATABASE_URL, echo=True)
 def get_session():
     with Session(engine) as session:
         yield session
+
+class VakkenManager:
+    def __init__(self, session : Session):
+        self.session = session
+
+    def get_users_with_titel_for_vak(self, vak_id: int) -> List[DocentWithTitel]:
+        querry = (
+            select(User, UserVakLink.titel)
+            .join(UserVakLink, User.id == UserVakLink.user_id)
+            .where(UserVakLink.vak_id == vak_id)
+        )
+        results = self.session.exec(querry).all()
+        output = []
+        for temp in results:
+            output.append(DocentWithTitel(username=temp[0].username, id=temp[0].id, titel=temp[1]))
+        return output
+
+    def get_all_vak_data(self) -> List[Vak]: 
+        vakken = self.session.exec(select(Vak)).all()
+        return list(vakken)
+    
+    def get_all_docenten(self) -> List[User]:
+        docenten = self.session.exec(select(User).where(User.isDocent == True))
+        return list(docenten)
+    
+    def part_of_onderwijsteam(self, user: User, vak_id: int) -> bool:
+        querry = (
+            select(User)
+            .join(UserVakLink, User.id == UserVakLink.user_id)
+            .where(and_(UserVakLink.vak_id == vak_id, UserVakLink.user_id == user.id))
+        )
+        result = self.session.exec(querry).all()
+        return len(result) > 0
+    
+    def create_vak(self, user: User, vakNaam: str):
+        newVak = Vak(vaknaam=vakNaam)
+        self.session.add(newVak)
+        self.session.flush()
+
+        self.session.add(UserVakLink(user_id=user.id, vak_id=newVak.id, titel="beheerder"))
+
+        self.session.commit()
+    
+    def add_docent_to_vak(self, uservaklink: UserVakLink):
+        self.session.add(uservaklink)
+        self.session.commit()
+
+    def remove_docent_from_vak(self, uservaklink: UserVakLink):
+        fullvaklink = self.session.exec(
+            select(UserVakLink).where(and_(UserVakLink.vak_id == uservaklink.vak_id, UserVakLink.user_id == uservaklink.user_id))).first()
+        print("DEBUG:", fullvaklink)
+        self.session.delete(fullvaklink)
+        self.session.commit()
+
+    def add_exam_to_vak(self, examen: ProefexamenIn):
+        self.session.add(Proefexamen(vak_id=examen.vak_id, data=examen.data.encode("utf-8")))
+        self.session.commit()
+
+    def add_score_to_exam(self, score: Scores):
+        self.session.add(score)
+        self.session.commit()
+        
+        
 
 class UserManager:
     def __init__(self, session : Session):
@@ -27,8 +90,11 @@ class UserManager:
         return user
     
     # Gets user from database based on username
-    def get_user(self, user: UserBase) -> User:
-        return self.session.exec(select(User).filter_by(username=user.username)).first()
+#    def get_user(self, user: UserBase) -> User:
+#        return self.session.exec(select(User).filter_by(username=user.username)).first()
+    
+    def get_user(self, username: str) -> User:
+        return self.session.exec(select(User).filter_by(username=username)).first()
 
     def remove_user(self, user_id):
         """Removes user with given id"""

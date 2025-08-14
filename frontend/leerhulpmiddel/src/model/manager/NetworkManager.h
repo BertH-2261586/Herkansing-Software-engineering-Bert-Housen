@@ -17,7 +17,7 @@ public:
 
 	void login(QString username, QString password);
 	void logout();
-	void registerUser(QString username, QString password);
+    void registerUser(QString username, QString password, bool isDocent);
 	void getLoggedInStatus();
 	void shareQuestionSets(QList<QString> questionSetPaths);
 	void shareQuestionSetsWithFriends(QList<int> FriendIds, QString code);
@@ -29,6 +29,13 @@ public:
 	void getInboxMessages();
 	void removeInboxMessage(const int ID);
 	void getFriendUsernames();
+
+    void getAllVakData();
+    void addVak(QString vakNaam);
+    void addDocentToVak(int docentId, int vakId, QString titel);
+    void removeDocent(int docentId, int vakId);
+    void addExamToVak(QString fileNaam, int vakId);
+    void sendScore(int percent, int examId);
 
 	// = PRIVATE, this is for unit test purposes
 	void setLoginStatus(bool status);
@@ -42,6 +49,10 @@ private:
 	int getUserId() const;
 	int getUserIdByUsername(const QString username);
 	void receiveUserByPageHandler(QNetworkReply* reply);
+
+    void vakkenNetwerkHelper(QNetworkRequest request, QByteArray data);
+
+    void setDocentStatus(bool isDocent);
 
 signals:
 	void loginFailed();
@@ -57,6 +68,9 @@ signals:
 	void friendUsernamesFetched(QList<int> userIDs, QList<QString> usernames);	
 	void questionSetSucces();
 	void questionSetFailed(const bool codeExists = true);
+
+    void vakkenChanged(QJsonArray jsonData);
+    void docentenChanged(QJsonArray jsonData);
 };
 
 #endif

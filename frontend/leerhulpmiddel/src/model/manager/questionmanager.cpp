@@ -21,6 +21,66 @@ QuestionManager::~QuestionManager()
     }
 }
 
+void QuestionManager::changeQuestionsetName(QString newName, Questionset* questionset)
+{
+    for (int i = 0; i < m_questionsets.length(); i++)
+    {
+        if (m_questionsets[i]->GetName() == newName)
+        {
+            //TODO fout emitten
+
+            return;
+        }
+    }
+
+    questionset->SetName(newName);
+    emit changed();
+}
+
+void QuestionManager::addQuestionset()
+{
+    QString newName = "Nieuwe vragenset";
+    int number = 1;
+
+    while (true)
+    {
+        QString tempName;
+        if (number == 1)
+        {
+            tempName = newName;
+        }
+        else
+        {
+            tempName = newName + QString::number(number);
+        }
+
+        bool found = true;
+        for (int i = 0; i < m_questionsets.length(); i++)
+        {
+            if (tempName == m_questionsets[i]->GetName())
+            {
+                found = false;
+                number += 1;
+                break;
+            }
+        }
+
+        if (found)
+        {
+            newName = tempName;
+            break;
+        }
+    }
+
+    FileManager fManager = FileManager();
+    fManager.makeQuestionSet("", newName);
+
+    m_questionsets.append(new Questionset(newName, {}, {}));
+
+
+    emit changed();
+}
+
 //void QuestionManager::addQuestion(QString questionSetName, QString subsection, Question* question) {
 //    FileManager fManager = FileManager();
 

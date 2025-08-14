@@ -20,8 +20,8 @@ public:
     QList<Questionset*> loadQuestionSetsObject(const QString path = "") const;
     Answer convertToAnswerObject(QJsonObject answer) const;
     QMap<QString, QVariantList> loadQuestionSets(QString path = "") const;
-    void makeQuestionSet(QString path, QString fileName) const;
-    void saveQuestionToJSON(const QString questionSet, const QString subset, const Question& question) const;
+    void makeQuestionSet(QString path, QString dirName) const;
+    void saveQuestionToJSON(const QString path, const Question& question) const;
     unique_ptr<Question> loadQuestionFromJSON(const QString questionSet, const QString subset, const QString questionName) const;
     QVector<shared_ptr<Question>> getAllQuestionsFromQuestionSet(const QString questionSetPath) const;
     QVector<shared_ptr<Question>> getAllQuestionsFromQuestionSetMulti(const QList<QString> questionSetPath) const;
@@ -31,6 +31,8 @@ public:
     // = PRIVATE, is for unit testing 
     QString getPath() const;
 
+    shared_ptr<Question> loadQuestionFromJSONObject(const QJsonObject jsonObject);
+
 private:
     QMap<QString, QVariantList> loadFilesAndQuestions(const QDir& dir, int currentDepth = 0) const;
     QString getUniqueName(QString baseName, QStringList existingNames);
@@ -38,4 +40,4 @@ private:
     void renameDuplicates(const QString tempFolderPath, const QString destinationDir);
 };
 
-#endif 
+#endif

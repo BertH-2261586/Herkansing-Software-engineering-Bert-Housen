@@ -110,7 +110,7 @@ void FlashcardView::handleQuestionClicked() {
 
 // Delete all the data from a previous question so that you can display a new one 
 void FlashcardView::clearPreviousQuestion() {
-    if (m_toggleLayout) {
+    if (m_toggleLayout != nullptr) {
         // Iterate through and delete all items in m_toggleLayout
         QLayoutItem* item;
         while ((item = m_toggleLayout->takeAt(0)) != nullptr) {

@@ -25,7 +25,7 @@ async def create_user_route(db: UserManager = Depends(get_database)):
 # Handles the registration of a user
 @router.post("/register/", response_model=dict)
 async def register_user(user: UserBase, db: UserManager = Depends(get_database)):
-    username_exists = db.get_user(user)
+    username_exists = db.get_user(user.username)
 
     # Check if the username is already taken
     if username_exists:
@@ -34,27 +34,28 @@ async def register_user(user: UserBase, db: UserManager = Depends(get_database))
     # If not taken, make a new user object
     new_user = User(
         username=user.username,
-        password=pw_hasher.hash_password(user.password)
+        password=pw_hasher.hash_password(user.password),
+        isDocent = user.isDocent
     )
 
     # Add the user to the database
     new_user = db.create_user(new_user)
-    user_token = session_manager.create_session_token({"id": new_user.id, "username": new_user.username})
+    user_token = session_manager.create_session_token({"id": new_user.id, "username": new_user.username, "isDocent": new_user.isDocent})
 
-    return {"message": "User registered", "id": new_user.id, "username": new_user.username,"token": user_token}
+    return {"message": "User registered", "id": new_user.id, "username": new_user.username,"token": user_token, "isDocent": new_user.isDocent}
 
 # Logs in a user and returns a session token if credentials are valid
 @router.post("/login/", response_model=dict)
 async def check_user_login(user: UserLogin, db: UserManager = Depends(get_database)):
-    db_user = db.get_user(user)
+    db_user = db.get_user(user.username)
 
     # Check if the fields entered by the user are correct
     if not db_user or not pw_hasher.verify_password(user.password, db_user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     # If the fields are correct make a session token
-    user_token = session_manager.create_session_token({"id": db_user.id, "username": db_user.username})
-    return {"message": "User logged in", "id": db_user.id, "username":db_user.username, "token": user_token}
+    user_token = session_manager.create_session_token({"id": db_user.id, "username": db_user.username, "isDocent": db_user.isDocent})
+    return {"message": "User logged in", "id": db_user.id, "username":db_user.username, "token": user_token, "isDocent": db_user.isDocent}
 
 @router.post("/remove/", response_model=dict)
 async def remove_user(user: UserIdInput, token_data: dict = Depends(session_manager.token_verification), db: UserManager = Depends(get_database)):

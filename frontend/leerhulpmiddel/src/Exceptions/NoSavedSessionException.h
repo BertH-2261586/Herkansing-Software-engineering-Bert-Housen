@@ -1,8 +1,14 @@
 #pragma once
 #include <exception>
-
+#include <string>
 
 class NoSavedSessionException : public std::exception {
+    std::string msg;
 public:
-	NoSavedSessionException(const char* message = "No saved session could be retrieved from device!") : std::exception(message) {}
+    explicit NoSavedSessionException(const char* message = "EmptyFieldInputGiven")
+        : msg(message) {}
+
+    const char* what() const noexcept override {
+        return msg.c_str();
+    }
 };

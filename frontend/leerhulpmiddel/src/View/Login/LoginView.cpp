@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QRadioButton>
 
 
 LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_loginController{ loginController }, QWidget{ parent } {
@@ -39,6 +40,19 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
 
     //Hidden Elements
 
+    QButtonGroup* group = new QButtonGroup(this);
+    m_studentButton = new QRadioButton("Student");
+    m_docentButton = new QRadioButton("Docent");
+
+    m_studentButton->setChecked(true);
+
+    group->addButton(m_studentButton);
+    group->addButton(m_docentButton);
+
+    m_studentButton->hide();
+    m_docentButton->hide();
+
+
     m_passwordConfirmEdit = new QLineEdit(this);
     m_passwordConfirmEdit->setPlaceholderText("Confirm Password");
     m_passwordConfirmEdit->setEchoMode(QLineEdit::Password);
@@ -73,6 +87,8 @@ LoginView::LoginView(LoginController* loginController,QWidget* parent) : m_login
     layout->addWidget(goBackbtn,0, Qt::AlignLeft);
     layout->addWidget(m_titleLabel);
     layout->addWidget(m_serverFeedback);
+    layout->addWidget(m_studentButton);
+    layout->addWidget(m_docentButton);
     layout->addWidget(m_usernameEdit);
     layout->addWidget(m_usernameErrorLabel);
     layout->addWidget(m_passwordEdit);
@@ -140,6 +156,9 @@ void LoginView::changeToLogin() {
 	m_passwordConfirmEdit->hide();
 	m_usernameEdit->setValidator(nullptr);
     m_passwordEdit->setValidator(nullptr);
+
+    m_studentButton->hide();
+    m_docentButton->hide();
 }
 
 
@@ -158,6 +177,9 @@ void LoginView::changeToRegister() {
     m_passwordEdit->setToolTip("Password must be at least 8 characters.");
     m_passwordConfirmEdit->show();
     setupValidators();
+
+    m_studentButton->show();
+    m_docentButton->show();
 }
 
 
@@ -208,11 +230,17 @@ void LoginView::onLoginOrRegisterClicked() {
         isValid = false;
     }
 
+    bool isDocent = false;
+    if (m_docentButton->isChecked())
+    {
+        isDocent = true;
+    }
+
     if (isValid)
     {
         if (m_passwordConfirmEdit->isVisible()) //if the m_passwordConfirmEdit is visible, then we are registering
         {
-            m_loginController->registerUser(username, password);
+            m_loginController->registerUser(username, password, isDocent);
         }
         else {
             m_loginController->login(username, password);

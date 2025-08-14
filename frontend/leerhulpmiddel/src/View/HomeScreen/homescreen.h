@@ -7,6 +7,7 @@
 
 #include "../../Controller/LoginController.h"
 #include "../../model/manager/NetworkManager.h"
+#include "../../model/manager/vakkenmanager.h"
 
 #include "../../Controller/ShareController.h"
 
@@ -48,6 +49,7 @@ private:
     QLabel* m_requestAmountLabel;
     QPropertyAnimation* m_inboxAnimation;
 
+    VakkenManager* m_vakkenManager;
     NetworkManager* m_networkManager;
     LoginController* m_loginController;
     ShareController* m_shareController;

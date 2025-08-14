@@ -24,12 +24,17 @@ public:
     explicit ExaminationView(QWidget* parent = nullptr, bool questionSelectOnly = true);
     void startExamination(QString path, QTime timeLimit = QTime(-1, -1, -1));
     void startExamination(QList<QString> path, QTime timeLimit = QTime(-1, -1, -1));
+    void startExamination(QVector<std::shared_ptr<Question> > questions, QTime timeLimit = QTime(-1, -1, -1));
+
+    ExaminationController* getController(){return m_examinationController;};
 
 signals:
     void examinationStarted(const QString questionSetPath);
     void examinationStartedL(const QList<QString> questionSetPath);
+    void examinationStartedQ(const QVector<std::shared_ptr<Question>> questions);
     void nextQuestion(bool showWrong);
     void getExaminationData();
+    void sendData(QMap<QString, QString> data);
 
 public slots:
     void questionLoadedView();

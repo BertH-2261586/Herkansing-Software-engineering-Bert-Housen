@@ -4,6 +4,8 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QPushButton>
+#include <QButtonGroup>
+#include <QRadioButton>
 
 class LoginView : public QWidget
 {
@@ -18,6 +20,11 @@ private:
 	QLineEdit* m_usernameEdit;
 	QLineEdit* m_passwordEdit;
 	QLineEdit* m_passwordConfirmEdit;
+
+    QRadioButton* m_studentButton;
+    QRadioButton* m_docentButton;
+
+
 	QLabel* m_usernameErrorLabel;
 	QLabel* m_passwordErrorLabel;
 	QLabel* m_passwordConfirmErrorLabel;

@@ -40,10 +40,10 @@ void Questionset::addQuestion(Question* question) {
 
     FileManager fManager = FileManager();
     if (m_parent == nullptr) {
-        fManager.saveQuestionToJSON(m_name, "", *question);
+        fManager.saveQuestionToJSON(m_name, *question);
     }
     else {
-        fManager.saveQuestionToJSON(m_parent->GetName(), m_name, *question);
+        fManager.saveQuestionToJSON(getPath(), *question);
     }
 
     m_looseQuestions.append(question);
@@ -56,9 +56,32 @@ void Questionset::addSubSet(QString name)
 {
     Questionset* newSubSet = new Questionset(name, {}, {});
 
+    newSubSet->addParent(this);
+
+    FileManager fManager = FileManager();
+    if (m_parent == nullptr) {
+        fManager.makeQuestionSet(m_name, name);
+    }
+    else {
+        fManager.makeQuestionSet(getPath(), name);
+    }
+
+
     m_subSets.append(newSubSet);
 
     emit displayNewSubSet(newSubSet, 0);
+}
+
+
+QString Questionset::getPath()
+{
+    if (m_parent != nullptr)
+    {
+        QString out = m_parent->getPath() + m_name + "/";
+        return out;
+    }
+    QString out = m_name + "/";
+    return out;
 }
 
 

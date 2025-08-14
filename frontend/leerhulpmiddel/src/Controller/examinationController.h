@@ -18,8 +18,12 @@ public:
     int getCurrentQuestionNumber() const { return m_currentQuestionIndex; }
     QuestionType getCurrentQuestionType() const { return m_currentQuestion->getQuestionType(); }
     const Question* getQuestion() const { return m_currentQuestion.get(); }
-    bool finishedExamination() const { return m_examinationManager->finishedExamination(); }
+    bool finishedExamination() {
+        emit ended();
+        return m_examinationManager->finishedExamination(); }
     bool showTimer() const { return m_showTimer; }
+
+    //int getScore(){return m_examinationManager->getExaminationData()}
 
     void setShowTimer(bool showTimer) { m_showTimer = showTimer; }
 
@@ -32,6 +36,8 @@ signals:
     void questionLoadedView();
     void answeredWrong(bool timeout);
     void wrongQuestionsLoadedView();
+
+    void ended();
 
 public slots:
     void firstQuestion(shared_ptr<Question> question, int totalAmountOfQuestions);

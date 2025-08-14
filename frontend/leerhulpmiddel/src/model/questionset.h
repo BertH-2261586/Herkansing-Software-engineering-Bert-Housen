@@ -41,6 +41,8 @@ private:
 
     inline void addParent(Questionset* parent) { m_parent = parent; }
 
+    QString getPath();
+
 signals:
     void displayNewSubSet(Questionset* subSet, int index);
     void displayNewQuestion(Question* newQuestion, int index);

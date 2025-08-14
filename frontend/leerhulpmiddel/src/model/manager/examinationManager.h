@@ -20,6 +20,7 @@ signals:
 public slots:
     void examinationStarted(const QString questionSetPath);
     void examinationStartedL(const QList<QString> questionSetPath);
+    void examinationStartedQ(const QVector<shared_ptr<Question>> questions);
     void nextQuestion(bool showWrong);
     void answeredWrong(bool timeout) { m_examination.addWrongCurrentQuestion(timeout); }
     void getExaminationData();

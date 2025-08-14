@@ -33,7 +33,7 @@ void TestNetworkManager::testRegisterUserFailed() {
 	NetworkManager manager;
 	QSignalSpy failedSpy(&manager, &NetworkManager::registerFailed);
 
-	manager.registerUser("", ""); // Invalid credentials
+    manager.registerUser("", "", false); // Invalid credentials
 
 	QVERIFY(failedSpy.wait(3000)); // Verifies if registerFailed signal is received
 }
@@ -50,7 +50,7 @@ void TestNetworkManager::testRegisterUserSuccess() {
 		randomName += randomChar;
 	}
 
-	manager.registerUser(randomName, "password");
+    manager.registerUser(randomName, "password", false);
 
 	QVERIFY(successSpy.wait(3000));						// Verifies if loginSuccess signal is received
 }
